@@ -1,0 +1,14 @@
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\bin\Debug\net9.0\LibraryManagementThree.exe
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\bin\Debug\net9.0\LibraryManagementThree.deps.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\bin\Debug\net9.0\LibraryManagementThree.runtimeconfig.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\bin\Debug\net9.0\LibraryManagementThree.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\bin\Debug\net9.0\LibraryManagementThree.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.GeneratedMSBuildEditorConfig.editorconfig
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.AssemblyInfoInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.AssemblyInfo.cs
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.csproj.CoreCompileInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\refint\LibraryManagementThree.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\LibraryManagementThree.genruntimeconfig.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementThree\obj\Debug\net9.0\ref\LibraryManagementThree.dll

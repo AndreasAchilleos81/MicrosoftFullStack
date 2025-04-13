@@ -1,0 +1,153 @@
+HTML Page Walk Through
+
+Key Components of an HTML Web Page
+
+Have you ever opened a website and wondered how all of it comes together? Every element you interact with—from text to forms—exists because of HTML, the backbone of all web pages.
+
+Mastering HTML isn’t just the first step; it’s the foundation for creating well-designed, functional web pages. In this guide, we will identify key components of an HTML web page.
+1️⃣ The Basic Structure of an HTML Document
+
+A web page starts with a structured HTML document.
+🔹 DOCTYPE Declaration
+
+At the very top, we declare the HTML version:
+
+<!DOCTYPE HTML>
+
+✅ This tells the browser that we’re using HTML5.
+🔹 The <html> Tag
+
+<html>
+
+✅ This wraps everything inside the document.
+🔹 The <head> Section
+
+The <head> contains metadata about the page, such as:
+
+<head>
+    <meta charset="UTF-8"> <!-- Sets character encoding -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
+    <title>My Website</title> <!-- Appears in the browser tab -->
+</head>
+
+✅ The title appears in the browser tab.
+✅ Meta tags ensure proper character encoding and responsive design.
+2️⃣ The <body> Section (Visible Content)
+
+The <body> tag contains everything that users see on the web page.
+
+<body>
+    <!-- All visible content goes here -->
+</body>
+
+3️⃣ The <header> Section (Navigation & Titles)
+
+Headers typically contain navigation and branding elements.
+
+<header>
+    <h1>Welcome to My Website</h1> <!-- Main page title -->
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+✅ The <nav> tag holds the navigation menu.
+✅ The unordered list (<ul>) contains menu links inside <li> tags.
+4️⃣ The <section> Tag (Organizing Content)
+
+Sections group related content.
+
+<section>
+    <h2>About Us</h2>
+    <p>We are a company that values innovation and quality.</p>
+</section>
+
+✅ The <h2> tag acts as a subheading.
+✅ The <p> tag groups paragraphs for readability.
+5️⃣ Embedding Media (Images & Videos)
+
+Web pages often include media elements like images and videos.
+🔹 Adding a Video
+
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+✅ The controls attribute enables play/pause buttons.
+🔹 Adding an Image
+
+<img src="logo.png" alt="Company Logo">
+
+✅ The alt attribute provides alternative text for accessibility.
+6️⃣ The <form> Tag (User Input & Forms)
+
+Forms allow users to submit data to a server.
+
+<form>
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+    
+    <button type="submit">Submit</button>
+</form>
+
+✅ The required attribute ensures users must fill out fields before submission.
+7️⃣ The <table> Tag (Displaying Data in Rows & Columns)
+
+Tables are used to structure data neatly.
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Role</th>
+    </tr>
+    <tr>
+        <td>Jane Doe</td>
+        <td>Developer</td>
+    </tr>
+</table>
+
+✅ The <th> tag defines headers.
+✅ The <td> tag defines data cells.
+8️⃣ Lists in HTML (Ordered & Unordered)
+
+Lists help organize content clearly.
+🔹 Ordered Lists (<ol>)
+
+For step-by-step instructions:
+
+<ol>
+    <li>Open your text editor</li>
+    <li>Write your HTML code</li>
+    <li>Save the file as .html</li>
+</ol>
+
+✅ The list items are numbered automatically.
+🔹 Unordered Lists (<ul>)
+
+For grouping related items:
+
+<ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+</ul>
+
+✅ The list items appear with bullet points.
+🎯 Conclusion
+
+In this lesson, we explored the key components of an HTML web page, including:
+
+✅ The structure (<html>, <head>, <body>)
+✅ Navigation & content organization (<header>, <nav>, <section>)
+✅ Media & forms (<video>, <img>, <form>)
+✅ Tables & lists (<table>, <ol>, <ul>)
+
+Mastering these core elements will help you build functional, user-friendly web pages. 🚀 Now, it's time to experiment with these components in your own projects!

@@ -1,0 +1,94 @@
+Writing and Running JavaScript Code
+
+Introduction to Writing and Running JavaScript in a Web Browser
+
+Have you ever wondered how websites become interactive? JavaScript is a common language used to make static pages come alive. In this guide, we will explore how to write and run basic JavaScript code in a web browser, enabling you to create dynamic and interactive web pages.
+
+JavaScript is a programming language that enhances web pages by adding interactive features, making them more engaging and dynamic for users. When paired with HTML, JavaScript allows your code to run as soon as the web page loads.
+
+To get started, we need a text editor. A text editor lets you write and edit the HTML and JavaScript code that makes up your web page. It is essential to use a text editor instead of a word processor, as word processors may add hidden formatting that could corrupt your code. Text editors also provide useful features like:
+
+    Syntax highlighting: Colors different parts of your code for better readability.
+
+    Code completion: Helps you write code faster by suggesting completions.
+
+    Error checking: Flags potential mistakes in your code.
+
+Commonly used text editors include Notepad++, Brackets, and Sublime Text.
+Creating Your First HTML File
+
+To begin, open your text editor and create a new HTML file. Name it index.html—this follows the standard naming convention for a website's home page.
+
+Inside your index.html file, write the basic HTML structure:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First JavaScript</title>
+</head>
+<body>
+    <h1>Welcome to My Web Page</h1>
+</body>
+</html>
+
+Adding JavaScript to Your HTML File
+
+Writing basic JavaScript code involves creating simple programs that can run directly in your web browser. To get started, we'll write a simple JavaScript program inside a <script> tag within the HTML file.
+
+    Open your index.html file in the text editor.
+
+    Locate where you'd like to add your JavaScript code, typically at the bottom of the <body> tag or within the <head> tag.
+
+Add the following code inside the <script> tag to display a message in the browser's console:
+
+<script>
+    console.log("Hello, World!");
+</script>
+
+The console.log() function is one of the most commonly used methods for developers to print information to the browser's console. The console is a tool that logs messages or outputs results during the execution of JavaScript.
+
+Note: This function will print "Hello, World!" inside the console when the page is loaded.
+Testing Your JavaScript Code
+
+To test your JavaScript, follow these steps:
+
+    Open the index.html file in your web browser.
+
+    Right-click anywhere on the web page, select Inspect, and then navigate to the Console tab.
+
+    You should see the message "Hello, World!" displayed in the console. This confirms that your JavaScript code is running correctly.
+
+Using the console for testing and debugging is very helpful, as it lets you output values, check variable states, and view program behavior in real time.
+Best Practices: Using External JavaScript Files
+
+One of the best practices in web development is to use external JavaScript files. This approach helps keep your HTML code clean and your JavaScript organized. Let’s walk through the process:
+
+    Create an External JavaScript File: Open your text editor and create a new file named script.js. This file will store your JavaScript code.
+
+    Write JavaScript Code: In the script.js file, add the following code:
+
+console.log("Hello, World!");
+
+This code will log the message "Hello, World!" to the browser's console when the web page is loaded.
+
+Link the JavaScript File to Your HTML: Now, open your index.html file and link the script.js file by adding the following <script> tag just before the closing </body> tag:
+
+    <script src="script.js"></script>
+
+    This ensures that your JavaScript is separated from the HTML, making your project easier to manage.
+
+Testing External JavaScript
+
+To test if the external JavaScript file is working:
+
+    Open the index.html file in your web browser.
+
+    Right-click anywhere on the page, select Inspect, and navigate to the Console tab.
+
+    You should see the message "Hello, World!" displayed, confirming that the external JavaScript file is working properly.
+
+Conclusion
+
+Writing and running JavaScript code in a web browser involves adding JavaScript code inside <script> tags in an HTML document and testing it using the browser's console. By mastering these basics, you can start building dynamic and interactive web pages with JavaScript.

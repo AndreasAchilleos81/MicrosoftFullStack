@@ -1,0 +1,218 @@
+/* General Styles */
+body {
+    font-family: Arial, Helvetica, sans-serif; /* Added Helvetica as a fallback */
+    font-size: 100%; /* Default font size for scalability */
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Light gray background */
+    color: #333; /* Dark gray text for good contrast */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header Styles */
+header {
+    background-color: #356ba1; /* Dark blue background */
+    color: #ffffff; /* White text */
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;    
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-direction: row;
+}
+
+header nav ul li {
+    margin-right: 1rem;
+}
+
+header nav ul li:last-child {
+    margin-right: 0;
+}
+
+header nav ul li a {
+    font-size: 1rem; /* Relative font size for scalability */
+    color: #ffffff; /* White text */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Section Styles */
+section {
+    font-size: 1rem; /* Relative font size for readability */
+    padding: 2rem;
+    margin: 1rem auto;
+    max-width: 800px;
+    background-color: #ffffff; /* White background */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+section h1, section h2, section h3 {
+    font-size: 2rem; /* Larger font size for headings */
+    color: #004080; /* Dark blue headings */
+    margin-bottom: 10px;
+
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+form label {
+    font-size: 1rem; /* Relative font size for labels */
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+form input, form textarea, form button {
+    font-size: 1rem; /* Relative font size for inputs and buttons */
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    font-size: 1rem; /* Relative font size for buttons */
+    background-color: #004080; /* Dark blue button */
+    color: #ffffff; /* White text */
+    border: none;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+/* Footer Styles */
+footer {
+    font-size: 0.9rem; /* Slightly smaller font size for footer */
+    text-align: center;
+    padding: 1rem 0;
+    background-color: #004080; /* Dark blue background */
+    color: #ffffff; /* White text */
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Image and Figure Styles */
+figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+figure figcaption {
+    font-size: 0.9rem; /* Slightly smaller font size for captions */
+    margin-top: 0.5rem;
+    font-style: italic;
+    color: #555; /* Medium gray for captions */
+}
+
+/* List Styles */
+ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    font-size: 1rem; /* Relative font size for list items */
+    margin-bottom: 0.5rem;
+}
+
+/* Accessibility Focus Styles */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 2px solid #ffcc00; /* Yellow focus outline for accessibility */
+    outline-offset: 2px;
+}
+
+p {
+    display: flex;
+    margin-bottom: 15px;
+    text-align: left ;
+}
+
+#projects {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 20px;
+ margin: 20px 0;
+ padding: 10px;
+}
+
+#projects h2 {
+    flex: 1 1 calc(33.333% - 20px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    padding: 15px;
+    margin: 0;
+}
+
+figure {
+    flex: 1 1 calc(33.333% - 20px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    padding: 15px;
+    margin: 0;
+}
+figure img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+figure figcaption {
+    font-size: 0.9rem; /* Slightly smaller font size for captions */
+    margin-top: 0.5rem;
+    font-style: italic;
+    color: #555; /* Medium gray for captions */
+}
+
+
+li::before {
+    content: "\2713"; /* Unicode character for a checkmark */
+    margin-right: 10px;
+    color: green; /* Optional, sets icon color */
+    font-size: 1.2em; /* Optional, adjusts icon size */
+  }
+
+  .header__nav {
+    display: flex; /* Keeps the nav visible */
+}
+
+.header__menu-button {
+    display: none; /* Keeps the button hidden on larger screens */
+}
+
+@media (max-width: 768px) {
+    .header__nav--active {
+        display: flex;
+        flex-direction: column;
+    }
+}
+

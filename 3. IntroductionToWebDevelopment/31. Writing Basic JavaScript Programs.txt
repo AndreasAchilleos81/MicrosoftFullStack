@@ -1,0 +1,159 @@
+Writing Basic JavaScript Programs
+
+JavaScript Lab
+
+Introduction
+
+At the end of this lab, you'll know how to create an HTML file that includes JavaScript. You'll learn how to:
+
+Declare variables using let, const, and var.
+
+Use if statements and loops to control the flow of your code.
+
+Write simple JavaScript functions that work inside your web pages.
+
+Creating a Basic HTML Document with JavaScript
+
+Let's start by creating a basic HTML document and embedding some JavaScript into it.
+
+Steps:
+
+Define the document type for HTML5.
+
+Specify the language for the document (English).
+
+Set the character encoding for the document.
+
+Set the viewport for responsive web design.
+
+Set the title of the document to JavaScript Lab.
+
+Add the heading Hello JavaScript inside the body.
+
+Insert a JavaScript statement to log a message.
+
+Code:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Lab</title>
+</head>
+<body>
+    <h1>Hello JavaScript</h1>
+    <script>
+        console.log("Hello from JavaScript!");
+    </script>
+</body>
+</html>
+
+Declaring Variables
+
+JavaScript allows you to declare variables using let, const, and var:
+
+let is used when the variable's value can change.
+
+const is used for variables that should not change once they are set.
+
+var is an older way of declaring variables and should generally be avoided in modern JavaScript.
+
+Steps:
+
+Declare the variable name as "Alice".
+
+Declare the constant age as 30.
+
+Declare the variable city as "New York".
+
+Print the values to the console.
+
+Code:
+
+<script>
+    let name = "Alice";
+    const age = 30;
+    let city = "New York";
+    
+    console.log(name);
+    console.log(age);
+    console.log(city);
+</script>
+
+Using If Statements
+
+Control structures allow you to dictate the flow of your program. An if statement checks whether a condition is true or false and executes the corresponding code.
+
+Steps:
+
+Declare a variable number and assign it the value 10.
+
+Write a condition to check if number is greater than 5.
+
+Display a message in the console if the condition is true.
+
+Code:
+
+<script>
+    let number = 10;
+    if (number > 5) {
+        console.log("The number is greater than 5");
+    }
+</script>
+
+Using Loops
+
+Loops allow you to repeat a block of code multiple times. The most common loop in JavaScript is the for loop.
+
+Steps:
+
+Initialize the loop with i = 1.
+
+Set the condition i <= 5.
+
+Print the value of i inside the loop.
+
+Code:
+
+<script>
+    for (let i = 1; i <= 5; i++) {
+        console.log(i);
+    }
+</script>
+
+Writing Functions
+
+Functions allow you to encapsulate blocks of code and reuse them throughout your program.
+
+Steps:
+
+Declare a function that takes a number as a parameter.
+
+Return the square of the parameter.
+
+Print the result to the console.
+
+Code:
+
+<script>
+    function square(number) {
+        return number * number;
+    }
+    console.log(square(4)); // Output: 16
+</script>
+
+Conclusion
+
+Great job on completing this guided lab! You've learned how to:
+
+Create an HTML file with embedded JavaScript.
+
+Declare and use variables.
+
+Control program flow with if statements and loops.
+
+Write and use functions in JavaScript.
+
+Happy coding!
+

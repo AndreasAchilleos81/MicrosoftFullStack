@@ -1,0 +1,100 @@
+Media Queries
+
+Understanding Media Queries in Responsive Web Design
+
+Have you ever tried to read an article on your phone, only to find the text too small and the images misaligned? If you're like most people, you might give up and move on to something easier to read.
+
+When designing websites, how do you ensure that this doesn’t happen to your visitors? This is where media queries come in. They are a key CSS tool that ensures websites are well-designed and functional, no matter what device is being used. In this guide, we will explain the function and use of media queries in responsive design.
+
+What Are Media Queries?
+
+Media queries are CSS techniques that apply styles to a web page based on the characteristics of the device, such as:
+
+Screen width
+
+Screen height
+
+Device orientation (portrait or landscape)
+
+Why Are Media Queries Important?
+
+Media queries are essential for responsive design, ensuring that websites remain usable and visually appealing across all devices.
+
+Syntax of Media Queries
+
+A media query consists of a CSS rule that applies styles based on device characteristics. The syntax is straightforward:
+
+@media (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+In this example, styles inside the curly braces will only apply when the screen width is 600 pixels or less. This flexibility allows you to tailor your design to different devices, ensuring a consistent user experience.
+
+Understanding Breakpoints
+
+Breakpoints are specific screen widths where the design adapts to maintain usability. Think of them as thresholds where changes occur in layout, font sizes, or element visibility.
+
+Common Breakpoints:
+
+320px - 480px: Mobile devices
+
+481px - 768px: Tablets
+
+769px and above: Desktops and larger screens
+
+At each breakpoint, different styles are applied to optimize the user experience.
+
+Practical Applications of Media Queries
+
+1. Adjusting Font Sizes for Smaller Screens
+
+When viewing content on small screens, large font sizes might cause readability issues. Here's how media queries help:
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+This ensures the font size is reduced to 14px on screens 480px wide or smaller, improving readability and preventing unwanted horizontal scrolling.
+
+2. Changing Layouts for Larger Screens
+
+On larger screens, you might want a two-column layout with a sidebar. This media query applies when the screen width is at least 769 pixels:
+
+@media (min-width: 769px) {
+    .container {
+        display: flex;
+    }
+    .main-content {
+        width: 70%;
+    }
+    .sidebar {
+        width: 30%;
+    }
+}
+
+3. Hiding Unnecessary Elements on Smaller Screens
+
+Some elements are better suited for larger screens. The following media query hides elements with the .desktop-only class on screens 768 pixels wide or smaller:
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+}
+
+Summary
+
+In this guide, we explained the function and use of media queries in responsive design. We covered:
+
+The syntax of media queries
+
+The concept of breakpoints
+
+Practical examples of adjusting font sizes, layouts, and element visibility
+
+Mastering media queries will help you create responsive designs that provide an excellent user experience on any device.
+

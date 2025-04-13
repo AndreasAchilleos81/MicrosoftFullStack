@@ -1,0 +1,117 @@
+JavaScript Design Patterns
+
+Introduction
+
+JavaScript design patterns offer structured solutions to recurring coding problems. They improve code readability, maintainability, and scalability by providing proven strategies to organize and manage code.
+Key Patterns
+🔹 Module Pattern
+
+The Module Pattern encapsulates private variables and functions, helping avoid pollution of the global namespace.
+
+It creates self-contained, reusable blocks of code, making your codebase more organized and modular.
+✅ Example (Using IIFE):
+
+const CounterModule = (function () {
+  let count = 0; // Private variable
+
+  function increment() {
+    count++;
+    console.log(count);
+  }
+
+  function reset() {
+    count = 0;
+    console.log('Reset to', count);
+  }
+
+  // Public API
+  return {
+    increment,
+    reset
+  };
+})();
+
+// Usage
+CounterModule.increment(); // 1
+CounterModule.increment(); // 2
+CounterModule.reset();     // Reset to 0
+
+🔹 Observer Pattern
+
+The Observer Pattern allows objects (observers) to subscribe to another object (subject) and get notified of state changes, making it ideal for event-driven systems.
+
+This pattern is especially useful for coordinating updates across various parts of an application.
+✅ Example:
+
+class Subject {
+  constructor() {
+    this.observers = [];
+  }
+
+  subscribe(observer) {
+    this.observers.push(observer);
+  }
+
+  unsubscribe(observer) {
+    this.observers = this.observers.filter(obs => obs !== observer);
+  }
+
+  notify(data) {
+    this.observers.forEach(observer => observer.update(data));
+  }
+}
+
+class Observer {
+  constructor(name) {
+    this.name = name;
+  }
+
+  update(data) {
+    console.log(`${this.name} received update:`, data);
+  }
+}
+
+// Usage
+const subject = new Subject();
+const observerA = new Observer("Observer A");
+const observerB = new Observer("Observer B");
+
+subject.subscribe(observerA);
+subject.subscribe(observerB);
+
+subject.notify("New data available!");
+// Observer A received update: New data available!
+// Observer B received update: New data available!
+
+🔹 Singleton Pattern
+
+The Singleton Pattern ensures that only one instance of a class exists throughout the system.
+
+This pattern is ideal when you need a centralized resource, such as a global configuration manager or controller.
+✅ Example:
+
+class Singleton {
+  constructor() {
+    if (Singleton.instance) {
+      return Singleton.instance;
+    }
+
+    this.timestamp = Date.now(); // Example property
+    Singleton.instance = this;
+  }
+
+  getTime() {
+    return this.timestamp;
+  }
+}
+
+// Usage
+const instance1 = new Singleton();
+const instance2 = new Singleton();
+
+console.log(instance1 === instance2); // true
+console.log(instance1.getTime(), instance2.getTime()); // Same timestamp
+
+Conclusion
+
+Applying JavaScript design patterns like Module, Observer, and Singleton allows developers to write clean, organized, and scalable code. These patterns are essential tools in crafting efficient and maintainable software systems.

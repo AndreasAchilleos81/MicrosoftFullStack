@@ -1,0 +1,80 @@
+Structuring the Web Page
+
+Creating a Well-Structured Web Page for GroovEco
+
+Have you ever wondered why some web pages look so clean and easy to use while others feel disorganized? The secret lies in how the HTML is structured. Today, we're going to learn how to create a clean, well-structured web page for GroovEco, a company that focuses on eco-friendly products and sustainable living.
+Setting Up the Basic HTML Structure
+
+In this video, we will explain how to set up the basic structure of an HTML document for a web page. GroovEco has asked us to create a web page that reflects their mission, so let's get started!
+
+Think of this process like laying the foundation for a house before adding the walls and furniture.
+Step 1: Declaring the Doctype
+
+The first step is to declare:
+
+<!DOCTYPE HTML>
+
+This tells the browser that we're using HTML5, the most current version of HTML, ensuring everything runs smoothly.
+Step 2: Adding the <html> Tag
+
+Next, we start with the <html> tag, which is the root element that contains all the code for our web page.
+
+<html>
+
+Step 3: Setting Up the <head> Section
+
+Inside the <html> tag, we begin with the <head> section. This part doesn’t contain visible content but holds important information about the page.
+
+    Title Tag: The <title> tag sets the title for the page, which appears in the browser tab.
+
+<title>GroovEco</title>
+
+Meta Charset: We include a meta charset tag to ensure correct text display.
+
+<meta charset="UTF-8">
+
+Meta Description: This helps search engines understand what GroovEco is about.
+
+<meta name="description" content="GroovEco - Eco-friendly products and sustainable living.">
+
+Linking a Stylesheet: We add a <link> tag to connect an external CSS stylesheet that will control the visual design (colors, fonts, etc.).
+
+    <link rel="stylesheet" href="styles.css">
+
+Once we've added these elements, we close the <head> section.
+Step 4: Creating the <body> Section
+
+Now we move on to the <body> section, where all the visible content of the web page will go.
+
+    Adding a Heading: We use the <h1> tag for the main heading:
+
+<h1>Welcome to GroovEco</h1>
+
+Adding a Paragraph: Below the heading, we introduce GroovEco with a <p> tag.
+
+<p>GroovEco is committed to sustainability and eco-friendly products.</p>
+
+Adding an Image: We include the GroovEco logo using the <img> tag with an alt attribute for accessibility.
+
+<img src="grooveco-logo.png" alt="GroovEco Logo">
+
+Adding a Video: To showcase GroovEco’s mission, we embed a video using the <video> tag.
+
+    <video controls>
+        <source src="grooveco-intro.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+Finally, we close the <body> and <html> tags to complete our basic HTML structure.
+
+</body>
+</html>
+
+Conclusion
+
+We've now built a solid and well-organized foundation for GroovEco’s web page. Today, we covered how to:
+✅ Set up the basic structure of an HTML document
+✅ Use essential tags for a clean, organized web page
+✅ Structure content effectively for better readability and accessibility
+
+By following these steps, you'll ensure your web pages have a solid foundation for further development! 🚀

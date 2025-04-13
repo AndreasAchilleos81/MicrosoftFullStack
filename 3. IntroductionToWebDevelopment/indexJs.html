@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+<body>
+    <header>
+    </header>
+    <main>
+        <h1>Hello Javascript!</h1>
+        <div id="output"></div>
+        <script>
+            let divOutput = document.getElementById("output");
+            console.log("Hello World!");
+            let name = "Alice";
+            const age = 30;
+            var city = "New York";
+            let intruducingText = `${name} is ${age} year old, and is from: ${city}`;
+            console.log(intruducingText);
+            divOutput.innerHTML = intruducingText + "<br>";
+
+            if (age > 18) {
+                divOutput.innerHTML += `you are an adult ${name}` + "<br>";
+                console.log(`you are an adult ${name}`);
+            }
+
+            function squareNumber(number) {
+                return number * number;
+            }
+
+            let squareOF4 = squareNumber(4);
+            console.log(`The square of 4 is: ${squareOF4}`);
+
+            divOutput.innerHTML += `The square of 4 is: ${squareOF4}` + "<br>"
+
+        </script>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+</head>
+
+</html>

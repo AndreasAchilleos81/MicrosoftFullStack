@@ -1,0 +1,176 @@
+Interaction Between HTML and JavaScript:
+
+Inline Javascript:
+
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>JavaScript Integration</title>
+		</head>
+		<body>
+			<h1>Hello, World!</h1>
+			<script>
+				document.write('JavaScript is working!');
+			</script>
+		</body>
+	</html>
+
+Extneral JavaScript kept in a separate file we use the script tab and the src attribute to point to the javascript file:
+
+Script in the <head> section: 
+
+When a script is included here, it executes before the content in the <body> is rendered. This is ideal for things like defining functions, configuring global variables, or loading third-party libraries that your page depends on.
+
+Script at the end of the <body> section: 
+
+This is often preferred for performance reasons. By placing scripts at the end, the browser can load and display the HTML content first before running JavaScript. This avoids the "blocking" effect, where the browser waits for the script to load before rendering the rest of the page.
+
+To summarize, if your JavaScript is essential for the initial rendering, place it in <head>. Otherwise, placing it at the end of <body> is a smarter move for better page performance.
+
+
+
+	<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>JavaScript Integration</title>
+		</head>
+		<body>
+			<h1>Hello, World!</h1>
+			<script src="script.js"></script>
+		</body>
+	</html>
+
+DOM: Document object model
+
+	<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>DOM Manipulation</title>
+		</head>
+		<body>
+			<h1 id="greeting">Hello, World!</h1>
+			<script>  // modify content of an element
+				document.getElementById('greeting').innerText = 'Hello, JavaScript!';
+			</script>
+		</body>
+	</html>
+
+MOdifying elements example:
+
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>Modify Elements</title>
+		</head>
+		<body>
+			<p id="myParagraph">Original text</p>
+			<script>
+				document.getElementById('myParagraph').innerText = 'Modified text';
+			</script>
+		</body>
+	</html>
+
+User actions, clicks and keypressess or even mouse movements:
+
+Adding Event Listeners:
+
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>Event Handling</title>
+		</head>
+		<body>
+			<button id="clickButton">Click me</button>
+			<script>
+				document.getElementById('clickButton').addEventListener('click', function() {
+					alert('Button was clicked!');
+				});
+			</script>
+		</body>
+	</html>
+
+
+More practical example of event handlers:
+
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>Keypress Event</title>
+		</head>
+		<body>
+			<p id="message"></p>
+			<script>
+				document.addEventListener('keypress', function(event) {
+					if (event.key === 'a') {
+						document.getElementById('message').innerText = 'You pressed the "a" key!';
+					}
+				});
+			</script>
+		</body>
+	</html>
+
+Have you ever visited a website that just felt alive, responding to your every click and action? That's the magic of JavaScript. Imagine a static display window in a store. It looks good, but doesn't do anything when you interact with it. This is similar to how an HTML page feels without JavaScript. Just as adding movement and sound can transform that display window into something engaging, JavaScript brings static HTML pages to life, making the web come alive with functionality and interactivity.
+
+In this video, we will explain how HTML interacts with JavaScript to add functionality and interactivity to web pages. JavaScript can be integrated with HTML in two main ways. First, by embedding it directly within the HTML file, and second, by linking to an external JavaScript file. Each method has its benefits and serves different needs.
+
+First, let's explore how embedding JavaScript directly within HTML works, followed by the advantages of using external JavaScript files. To embed the JavaScript directly within HTML, use the script tag. Here, the JavaScript code inside the script tag writes "JavaScript is working" directly onto the web page.
+
+In this example, external JavaScript is written in a separate .js file and linked to the HTML document using the script tag. We include the script tag, which is used to load external JavaScript files. The src attribute points to script.js, allowing us to link a JavaScript file that will execute when the page loads. By including the script at the bottom of the body section, we ensure the HTML content is fully loaded before the JavaScript runs, which helps improve performance and prevents errors. This is a basic but essential technique for integrating JavaScript into a web page.
+
+Using external JavaScript is great when you want to reuse scripts across pages. Plus, keeping your JavaScript in a separate file helps keep your HTML clean and organized. Think of the DOM, or Document Object Model, as a blueprint for your web page. It lets JavaScript change things on the page whenever a user does something, like clicking a button. This structure allows JavaScript to interact with and modify HTML elements whenever a user interacts with the page.
+
+Now, let's see how JavaScript can use the DOM to change the content of these elements in real time. JavaScript allows you to modify various aspects of HTML elements, including content, styles, and attributes.
+
+First, let's look at how you can change the text of an HTML element by using the getElementById method. Then, we'll explore how to modify other attributes and styles to customize the element further. To change the text in an HTML element, you can use a method called getElementById. In this example, JavaScript selects the h1 element by its ID and changes its text content from "Hello World" to "Hello JavaScript." JavaScript can also be used to modify existing HTML elements, including content, attributes, and styles.
+
+To change the style of an HTML element, you can use the innerText or innerHTML properties. In this example, JavaScript changes the visible text of the paragraph from "original text" to "modified text."
+
+Now, let's explore how JavaScript can respond to user actions, such as clicks and key presses, to make your web pages interactive and engaging through event handling. In web development, events are actions like clicks, key presses, or mouse movements that happen within the browser. Event handling in JavaScript means you can run specific code when something happens on your web page, like when a user clicks a button or presses a key. This makes your website more interactive.
+
+Next, let's explore how to set up event listeners to handle these actions effectively. JavaScript provides a way to listen for these events and then perform actions using event listeners. An event listener is a function that waits for a specific event to occur on an element and then executes a block of code when the event happens.
+
+Now, let's go step-by-step through the process of adding event listeners to HTML elements. First, we'll use the addEventListener method to set up the listener. Then, we'll create a function that runs when the event occurs. Here's a basic example showing how to add a click event listener to a button. When the button with id="clickButton" is clicked, an alert box with the message "Button was clicked!" appears.
+
+Now, let's look at some practical examples of event handling in JavaScript. Event handlers define what happens when an event occurs. Here's an example of an event handler that results in displaying a message when a specific key is pressed. When the "A" key is pressed, a message is displayed in the paragraph with id="message". Users will see "You pressed the 'A' key."
+
+Let's examine how InteractPro, a smart home services company, can improve its website by using JavaScript with HTML. JavaScript adds both functionality and interactivity to web pages. Inline scripts manage simple tasks like displaying alert messages. Internal scripts handle more complex tasks, such as updating content dynamically. External scripts are ideal for reusable functions across multiple pages. The DOM is used to modify events in response to user actions, while event handling triggers these changes when users interact with the page. This combination creates a dynamic and engaging user experience.
+
+Understanding how HTML interacts with JavaScript is essential for adding functionality and interactivity to web pages. In this video, we explored basic JavaScript integration, DOM manipulation, and event handling. By mastering these concepts, you can create dynamic and responsive pages that effectively engage users.
+
+Happy coding!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,163 @@
+Writing Cleaner Code with Functions in JavaScript
+
+If you've ever wondered how to write cleaner, more efficient code, the answer is functions. They help you organize your code into reusable blocks, making your programs more powerful and flexible.
+
+In this video, we’ll cover the concepts of functions in JavaScript—what they are, why they matter, and how to use them.
+🧠 What is a Function?
+
+A function is a reusable block of code designed to perform a specific task.
+
+By encapsulating logic into self-contained units, functions:
+
+    Improve readability
+
+    Promote code reuse
+
+    Make debugging easier
+
+They also help break down complex problems into smaller, manageable pieces—resulting in well-organized and maintainable code.
+✍️ Declaring a Function
+
+The first way to create a function is through a function declaration.
+🔹 Syntax:
+
+function greet() {
+  console.log("Hello, world!");
+}
+
+In this example:
+
+    greet is the function's name.
+
+    console.log("Hello, world!") is the function's body.
+
+🔹 Calling the Function:
+
+greet(); // Output: Hello, world!
+
+🔹 Hoisting:
+
+Function declarations are hoisted. This means you can call the function before it's defined in the code.
+
+sayHi(); // Output: Hi there!
+
+function sayHi() {
+  console.log("Hi there!");
+}
+
+Hoisting allows more flexible code organization.
+⚙️ Function Expression
+
+A function expression assigns a function to a variable. Unlike declarations, function expressions are not hoisted.
+🔹 Syntax:
+
+const greet = function() {
+  console.log("Hello, world!");
+};
+
+greet(); // Output: Hello, world!
+
+This type of function gives you more control, especially when passing functions around or using them as arguments.
+🏹 Arrow Functions
+
+Arrow functions are a shorter syntax for writing function expressions. They're especially useful for small, simple functions.
+🔹 Syntax:
+
+const greet = () => {
+  console.log("Hello, world!");
+};
+
+greet(); // Output: Hello, world!
+
+Arrow functions are clean and concise, making your code easier to read and maintain.
+📚 Real-World Example: Code Crafters Bootcamp
+
+Let’s see how a fictional coding bootcamp, Code Crafters, could use these different types of functions.
+✅ Function Declarations for Reusable Tasks
+
+For example, fetching course data:
+
+function fetchCourseData(courseID) {
+  console.log(`Fetching data for course ID: ${courseID}`);
+  // logic to fetch data
+}
+
+fetchCourseData(101); 
+// Output: Fetching data for course ID: 101
+
+🧩 Function Expressions for Complex Logic
+
+Used when you need to handle more involved operations:
+
+const processCourseData = function(data) {
+  console.log("Processing course data...");
+  // logic to process data
+};
+
+processCourseData(courseData);
+// Output: Processing course data...
+
+⚡ Arrow Functions for Quick Operations
+
+Perfect for mapping or filtering data:
+
+const courseNames = courses.map(course => course.name);
+
+Arrow functions help keep code concise and readable.
+🎯 Recap
+
+In this video, we've explored the three main ways to define functions in JavaScript:
+
+    Function Declarations
+
+    Function Expressions
+
+    Arrow Functions
+
+Understanding these core concepts is essential for writing organized, maintainable, and reusable code in modern JavaScript development.
+
+Let me know if you’d like this turned into a slide deck or script format too!
+
+In JavaScript, hoisting is a mechanism where variable and function declarations are moved, or "hoisted," to the top of their containing scope during the code's compilation phase. This means that you can use variables and functions before they are actually declared in your code.
+
+For example:
+
+javascript
+console.log(myVariable); // undefined
+var myVariable = "Hello!";
+Here, the var myVariable declaration is hoisted to the top, but its initialization ("Hello!") is not. As a result, console.log(myVariable) logs undefined.
+
+Function declarations are fully hoisted, allowing them to be called even before they appear in the code:
+
+javascript
+sayHello();
+function sayHello() {
+  console.log("Hello!");
+}
+However, let and const declarations and function expressions are not hoisted in the same way and will produce errors if accessed before they are declared.
+
+Let me know if you'd like a deeper dive into this topic! 😊
+
+yes, hoisting also means that some functions will be executed before the whole application starts executing if the () operator is used after their declaration?
+Great observation, Andreas! When it comes to hoisting, it's important to note that function declarations are hoisted to the top of their scope, which allows them to be called before they appear in the code. However, whether a function executes before the application starts depends on how and when it is invoked.
+
+If the () operator is used right after a function declaration or assignment, it creates an immediately invoked function expression (IIFE). This means the function will execute as soon as the JavaScript engine reaches it during execution. Here's an example:
+
+javascript
+(function greet() {
+  console.log("Hello, Andreas!");
+})();
+In this case, greet is an IIFE and is executed immediately. However, regular function declarations, even though they are hoisted, won't execute until they are explicitly called elsewhere in the code:
+
+javascript
+function sayHello() {
+  console.log("Hi there!");
+}
+// The function must be called, like this:
+sayHello(); // Outputs: Hi there!
+So, hoisting ensures the function is available for use, but it doesn't mean the function executes on its own unless it's part of an IIFE or explicitly invoked.
+
+
+
+
+

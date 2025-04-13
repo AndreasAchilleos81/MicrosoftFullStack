@@ -1,0 +1,14 @@
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\bin\Debug\net9.0\LibraryManagementTwo.exe
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\bin\Debug\net9.0\LibraryManagementTwo.deps.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\bin\Debug\net9.0\LibraryManagementTwo.runtimeconfig.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\bin\Debug\net9.0\LibraryManagementTwo.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\bin\Debug\net9.0\LibraryManagementTwo.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.GeneratedMSBuildEditorConfig.editorconfig
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.AssemblyInfoInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.AssemblyInfo.cs
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.csproj.CoreCompileInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\refint\LibraryManagementTwo.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\LibraryManagementTwo.genruntimeconfig.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementTwo\obj\Debug\net9.0\ref\LibraryManagementTwo.dll

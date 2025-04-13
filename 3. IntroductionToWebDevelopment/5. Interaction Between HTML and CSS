@@ -1,0 +1,114 @@
+Interaction Between HTML and CSS
+
+External CSS: 
+
+you add all your CSS in different .css files or just one depending how you want to handle your architecture or how big your project is.
+
+You can link to each page under the <head> section using the <link> attribute:
+
+you can also use in the head section:
+<link rel="stylesheet" href="styles.css">
+
+
+Internal CSS styles: 
+
+These are placed again in the <head> section of the DOM using the style attribute.
+These will replace the external style sheets:
+
+<head>
+<style> 
+	h1{
+		color:blue;
+		}
+</style>
+</head>
+
+
+Inline css styles:
+these override the external and internal style sheets as they are on the element itself using the style attribute:
+
+<h1 style="color: red;">Hello World!</h1>
+
+
+CSS Box Model:
+
+Consist of content, padding, border and margin: 
+
+.box {
+	width: 200px;
+	padding: 10px;
+	border: 2px solid #333;
+	margin: 20px;
+}
+
+
+
+
+Have you ever wondered how to make your webpages not only functional, but also visually engaging? 
+
+When building a website, the challenge often lies in transforming a simple, bare-bones structure into something that truly stands out. 
+
+Imagine you're building a house. The foundation and walls provide an essential structure, much like HTML does for a webpage. 
+But it's the paint, the interior design, and the furniture—the elements that bring life and personality to the house—that are akin to CSS. 
+
+Just as these decorative choices transform a basic structure into a welcoming home, CSS enhances HTML, turning a simple webpage into an engaging and visually appealing experience. Just as accessories and style make an outfit stand out, CSS adds the visual appeal to the structure provided by HTML. 
+In web development, HTML provides the structure, while CSS—cascading style sheets—adds the style, defining how webpages look and feel. 
+Whether you're new to web development or just brushing up on your skills, this lesson will guide you through the essentials of styling HTML elements. 
+In this video, we will explain how HTML interacts with CSS to define the presentation and layout of webpages. 
+CSS stands for cascading style sheets and is used to style HTML elements. It allows developers to change colors, fonts, layouts, and more. 
+By applying CSS, you can transform a plain HTML document into a visually appealing webpage. Let's examine some of the things that CSS can do for a website. 
+Now let's review a simple CSS example that styles a webpage. First, we have the body selector. This selector targets the entire body of the webpage. 
+Within the curly braces, we define a rule, background-color, colon hashmark, number fofofo. 
+This huts the background color of the page to a light gray using the hexadecimal color code hashmark fofofo. 
+Next, we move on to the h1 selector. This targets any heading level 1 on the page. The rule inside the braces is color, colon, hashmark, number 333, which sets the text color of the heading to a dark gray using the color code hashmark 333. 
+In this example, the body of the webpage is styled with a light background and the heading has a contrasting dark text color, which helps to create a clean and readable design. 
+Let's examine another CSS example, this time with styling paragraph text. Here we're using the p selector to target all paragraph elements, p on the page. Inside the curly braces, we define a few properties to style the text. First, we set the font family to Arial, sans serif. 
+This means that the paragraph text will use the Arial font if it's available. 
+If Arial is not available, the browser will fall back to any generic sans serif font. 
+Next, we set the font size to 16 pixels, ensuring that the text will appear at a reasonable size of 16 pixels. 
+Finally, we apply font-weight-bold, which makes the paragraph text appear bold, giving it more emphasis. 
+This simple CSS rule helps to control the appearance of the text, ensuring it's easy to read and stands out with bold styling. 
+Here's another example of using Flexbox to layout elements on the page. We will start with .container class selector, which targets any HTML element with a class name of container. Inside the curly braces, we first use display colon flex. 
+This activates Flexbox, a powerful layout model that allows items within the container to align and distribute space efficiently. 
+Next, we apply justify-content colon space-between. This property ensures that the items in the container are spaced evenly, with the first item aligned to the left, the last item aligned to the right, and any remaining space distributed between them. 
+This simple Flexbox rule helps to create responsive, flexible layouts where items are neatly spaced apart. 
+
+To apply CSS to an HTML document, we have several methods, external, internal, and inline styles. 
+Let's compare them. External stylesheets are the most common method of applying CSS to an HTML document. 
+You create a separate CSS file, link it to your HTML document, and define all your styles in one place. 
+This is like having a universal wardrobe you can use for multiple webpages. 
+You should write the styles in the styles.css file, then link the CSS file in the head section of the HTML document. 
+We use the link tag, which is placed inside the head section of the HTML. 
+The rel="stylesheet attribute tells the browser that this is a stylesheet, meaning that it contains CSS that will style the webpage. 
+The href="styles.css attribute specifies the location of the CSS file. 
+This technique allows us to keep the styling separate from the HTML structure, making it easier to manage and maintain the design of the webpage. These CSS styles are added directly within the style tag in the head section of your HTML file. 
+This method is useful when you want to apply specific styles to a single page. 
+Internal CSS files are useful for single-page websites or for overwriting external styles. 
+Let's review this example. The style tag is placed within the head section of the HTML file and allows us to write CSS rules directly on the page. 
+In this example, we're targeting the h1 element, which means that any h1 heading on the page will be affected. 
+Inside the curly braces, we define a rule, colon color colon blue semicolon. This changes the text colon of the h1 heading to blue. 
+Using the style tag is useful for adding quick styles directly into the HTML file, but for larger projects, it's best to keep the CSS file in a separate style sheet. 
+This method involves adding CSS styles directly to an HTML element using the style attribute. Now, let's explore how to add inline CSS directly to an HTML element. 
+In this example, we have an h1 tag that displays the text, hello world. We're using the style attribute within the opening, h1 tag, to apply CSS directly to this element. 
+The rule, color colon red semicolon, changes the text color to red. Inline CSS is useful for applying quick, specific styles to individual elements. 
+However, it's generally better to use an external or internal style sheet for larger, more maintainable projects. 
+As you've discovered, each method of applying CSS to HTML has its pros and cons, but for larger projects, external style sheets offer the most flexibility and ease of maintenance. Now, let's examine the CSS box model, which is crucial for mastering web layout design. 
+It describes how HTML elements are structured in terms of space. The CSS box model is a fundamental concept that describes how elements are structured and spaced on a web page. It consists of four parts, content, padding, border, and margin. The content area is where the text and images appear. 
+Padding is the space between the content and the border. It creates an internal buffer around the content. 
+The border surrounds the padding, if any, and content. It can be styled with different colors, widths, and styles. 
+Margin is the space outside the border, separating the element from the other elements. 
+Let's apply a simple CSS rule that styles a box element on the page. 
+We'll start with the .box class selector, which targets any element that has a class name of box. 
+Inside the curly braces, we first set the width to 200 pixels, which defines the fixed width of the box as 200 pixels. 
+Next, we use the padding property to add 10 pixels of space inside the box, creating space between the content and the border. 
+The border property is set to 2 pixel solid, hashtag 333, which means that the box will have a solid border that's 2 pixels thick and a dark gray color defined by the hexadecimal code, hashtag 333. Lastly, we apply margin colon 20 pixels, semicolon. 
+This creates 20 pixels of space outside the box, separating it from other elements on the page. 
+This combination of properties helps define the size, spacing, and border style of the box. 
+Let's examine how StyleWave, a digital marketing company, can use CSS to improve their homepage. 
+The HTML structure includes headings, paragraphs, and images. CSS is used to style these elements, changing colors, fonts, and layouts. An external style sheet ensures consistency across the site, while internal and inline styles make specific adjustments. 
+The box model helps organize content, padding, borders, and margins to create a clean, well-spaced layout. 
+This combination of HTML and CSS creates a visually appealing and user-friendly website. 
+Understanding how HTML interacts with CSS is essential for defining the presentation and layout of webpages. 
+In this video, we explored the basics of CSS styling, the methods of linking CSS to HTML, and the importance of the CSS box model. 
+Now that you understand how HTML and CSS interact to create visually appealing webpages, try styling a simple HTML document using the techniques we've covered. 
+Experiment with different colors, fonts, and layouts to discover how CSS can transform your design.

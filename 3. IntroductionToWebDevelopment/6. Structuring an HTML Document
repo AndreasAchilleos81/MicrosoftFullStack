@@ -1,0 +1,76 @@
+Structuring an HTML Document
+
+
+Have you ever wondered how some websites look so professional and well-organized? It all starts with a solid HTML structure. In this guide, we will walk you through creating a well-structured HTML document from scratch.
+
+EcoEssence, a company that creates eco-friendly skincare products, has asked us to create the foundation for their webpage. This includes featuring their logo and an introductory video. We'll guide you through the process step by step.
+
+Building the HTML Structure
+Think of building your HTML document as laying the foundation for a house. Each tag, from <!DOCTYPE html> to <body>, plays a crucial role in ensuring your structure is solid and functional. Let's break down these essential elements one by one.
+
+Essential HTML Elements
+The Doctype Declaration (<!DOCTYPE html>): This tells the browser the document is written in HTML5, ensuring correct page display.
+
+The <html> Tag: This wraps around all the content on your page, indicating everything inside is part of the HTML document.
+
+Inside the <head> Section
+The <head> section contains information about the page that isn't visible to users but is essential for browsers and search engines. Here's what we include:
+
+<title> Tag: Sets the page title, which appears in the browser tab. For this page, we set it to "EcoEssence."
+
+<meta charset="UTF-8"> Tag: Ensures text displays correctly across different languages and regions.
+
+Meta Description Tag: Describes the webpage to search engines. For EcoEssence, we describe the company as offering natural, eco-friendly skincare products.
+
+Link Tag for External Stylesheet: Links the page to an external stylesheet to control appearance, such as fonts and colors, matching the EcoEssence brand.
+
+Inside the <body> Section
+The <body> section contains all the visible content on the webpage. Here's what we include for EcoEssence:
+
+Paragraph (<p>): Introduces EcoEssence and emphasizes their eco-friendly mission.
+
+Logo (<img> Tag): Displays the EcoEssence logo. The alt attribute provides a description of the image, ensuring accessibility.
+
+Video (<video> Tag): Showcases EcoEssence's story. The controls attribute allows users to play or pause the video. A fallback message is added for browsers that don’t support the video.
+
+Finally, we close the <body> and <html> tags to finish the basic structure. This provides a clean and organized foundation for EcoEssence's webpage.
+
+By following these steps, you’ll have laid the groundwork for a professional and well-structured webpage for EcoEssence. This HTML foundation ensures accessibility and functionality, ready for further enhancements to create a polished, user-friendly website that reflects EcoEssence's eco-friendly mission.
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoEssence offers natural, eco-friendly skincare products.">
+    <title>EcoEssence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Welcome to EcoEssence</h1>
+    <p>At EcoEssence, we’re committed to offering natural skincare products that are good for you and the planet.</p>
+    <img src="ecoessence-logo.png" alt="EcoEssence Logo">
+    <video controls>
+        <source src="ecoessence-story.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

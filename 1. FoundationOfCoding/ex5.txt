@@ -1,0 +1,65 @@
+Create variable to store the total spending of customer that you will populate from the user's input
+
+If the spending > $100
+	print ("10% Discount applied")
+Else
+	print (No Discout)
+	
+-----------------------------------------------------------------------
+
+
+Create variable to store user's input for the genre of a book
+
+switch on variable
+
+case: Fiction
+	print("Category: Fiction.")
+case: Non-Fiction
+	print("Category: Non-Fiction.")
+case: Science Fiction,
+	print("Category: Science Fiction.")
+default: 
+	print("Category: Unknown.")
+-------------------------------------------------------
+
+If Fiction
+	print("Category: Fiction.")
+Else if Non-Fiction
+	print("Category: Non-Fiction.")
+Else if Science Fiction,
+	print("Category: Science Fiction.")
+Else	
+	print("Category: Unknown.")
+--------------------------------------------------------------
+
+Create variable to store numeric input 
+
+If (input % 2 == 0)
+	Print ("Event number")
+Else 
+	Print ("Odd number")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

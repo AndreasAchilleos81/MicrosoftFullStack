@@ -1,0 +1,14 @@
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\bin\Debug\net9.0\Async.exe
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\bin\Debug\net9.0\Async.deps.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\bin\Debug\net9.0\Async.runtimeconfig.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\bin\Debug\net9.0\Async.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\bin\Debug\net9.0\Async.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.GeneratedMSBuildEditorConfig.editorconfig
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.AssemblyInfoInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.AssemblyInfo.cs
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.csproj.CoreCompileInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\refint\Async.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\Async.genruntimeconfig.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\Async\obj\Debug\net9.0\ref\Async.dll

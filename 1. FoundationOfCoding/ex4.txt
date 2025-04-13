@@ -1,0 +1,23 @@
+. Categorical statements:
+use a system of affirmative or negative statements to determine if something is true or how it relates to something else. 
+These statements are classified based on the relationship between the subject and the predicate (or the presumption). 
+They group and categorize data based on certain criteria and are useful for organizing and managing data efficiently. 
+Let's explore the different types of categorical statements. 
+
+The first one is the Universal Affirmative statement. If "S" is the subject or category and "P" is the predicate or category to which the subject is being related, a Universal Affirmative statement might be "All S are P". 
+In pseudocode, you might type "All dogs are mammals". 
+
+Another type is the Universal Negative statement, which might be "no S are P". 
+In pseudocode, you might write "No cats are reptiles". A third type of categorical statement is a Particular Affirmative statement. 
+Such a statement might be "Some S are P". In pseudocode, that might be "Some birds can fly". 
+
+Lastly, a particular negative statement is "Some S are not P". 
+In this case, the pseudocode might be "Some fish are not carnivores". 
+By using these logical structures, we can effectively analyze and categorize different statements and understand their relationships. 
+
+After understanding how to categorize data, let's examine binary structures:
+where decisions are distilled down to just two possible outcomes. 
+This approach is fundamental in making quick, efficient choices in your code. 
+Binary structures are data structures that are based on the concept of a binary system, where decisions and data organization are made based on two possible outcomes, (often represented as true/false or yes/no). 
+Binary structures involve making decisions based on two possible outcomes. 
+This can be represented through binary decision diagrams, where each decision point or node leads to one of two subsequent paths.

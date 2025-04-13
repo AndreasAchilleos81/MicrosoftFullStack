@@ -1,0 +1,17 @@
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\bin\Debug\net9.0\MyFirstDotNetApp.exe
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\bin\Debug\net9.0\MyFirstDotNetApp.deps.json
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\bin\Debug\net9.0\MyFirstDotNetApp.runtimeconfig.json
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\bin\Debug\net9.0\MyFirstDotNetApp.dll
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\bin\Debug\net9.0\MyFirstDotNetApp.pdb
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.GeneratedMSBuildEditorConfig.editorconfig
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.AssemblyInfoInputs.cache
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.AssemblyInfo.cs
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.csproj.CoreCompileInputs.cache
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.dll
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\refint\MyFirstDotNetApp.dll
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.pdb
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.genruntimeconfig.cache
+d:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\ref\MyFirstDotNetApp.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\bin\Debug\net9.0\Pastel.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstDotNetApp.csproj.AssemblyReference.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\MyFirstDotNetApp\obj\Debug\net9.0\MyFirstD.65EA6D64.Up2Date

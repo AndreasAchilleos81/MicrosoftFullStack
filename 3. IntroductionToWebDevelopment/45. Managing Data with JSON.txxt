@@ -1,0 +1,138 @@
+Managing Data with JSON
+
+Lab: Working with JSON in JavaScript
+1. HTML Setup for Fetching JSON Data
+
+To build a dynamic web application that retrieves and displays JSON data, start by creating a basic HTML structure:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Working with JSON</title>
+</head>
+<body>
+  <h1>Users List</h1>
+  <div id="users-container"></div>
+  <script src="app.js"></script>
+</body>
+</html>
+
+    Sets the document type to HTML5.
+
+    Language set to English.
+
+    Responsive meta tag added.
+
+    Script tag links to your app.js file.
+
+2. Fetching Data from a Public API
+
+In your app.js file, fetch data from a public API and parse the response:
+
+fetch('https://jsonplaceholder.typicode.com/users')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data); // Logs the fetched users
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+
+    fetch() retrieves the data.
+
+    .json() parses the response body into a JavaScript object.
+
+    Errors are caught and logged using .catch().
+
+Run the file and open the browser console to view the list of users.
+3. Parsing JSON Strings into JavaScript Objects
+
+JSON data often arrives as a string. You can use JSON.parse() to convert it into an object:
+
+let jsonString = '[{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]';
+let users = JSON.parse(jsonString);
+
+console.log(users[0].name); // Alice
+console.log(users[1].age);  // 30
+
+    JSON.parse() turns the string into a usable JavaScript array of objects.
+
+    You can then access properties like users[0].name and users[1].age.
+
+4. Converting JavaScript Objects to JSON Strings
+
+To send data to a server or store it locally, convert objects using JSON.stringify():
+
+let user = {
+  name: "Charlie",
+  age: 28,
+  isActive: true
+};
+
+let jsonString = JSON.stringify(user);
+console.log(jsonString);
+
+Output:
+
+{"name":"Charlie","age":28,"isActive":true}
+
+5. Dynamically Updating the Web Page with API Data
+
+You can use the fetched JSON data to dynamically populate your page:
+
+fetch('https://jsonplaceholder.typicode.com/users')
+  .then(response => response.json())
+  .then(data => {
+    const container = document.getElementById('users-container');
+    
+    data.forEach(user => {
+      const p = document.createElement('p');
+      p.textContent = `${user.name} - ${user.email}`;
+      container.appendChild(p);
+    });
+  })
+  .catch(error => {
+    console.error('Fetch failed:', error);
+  });
+
+    Grabs the container with getElementById().
+
+    Creates a <p> tag for each user.
+
+    Sets the text content with name and email.
+
+    Appends it to the container.
+
+6. Storing JSON Data in Local Storage
+
+To persist data across page reloads, use localStorage with JSON:
+✅ Store Settings
+
+let userSettings = {
+  theme: "dark",
+  language: "English"
+};
+
+localStorage.setItem("userSettings", JSON.stringify(userSettings));
+
+✅ Retrieve Settings
+
+let storedSettings = JSON.parse(localStorage.getItem("userSettings"));
+console.log(storedSettings.theme);    // dark
+console.log(storedSettings.language); // English
+
+    JSON.stringify() converts the object to a string for storage.
+
+    JSON.parse() retrieves and converts it back to an object.
+
+Summary
+
+In this lab, you’ve learned how to:
+
+✅ Fetch JSON data from an API
+✅ Parse JSON strings into JavaScript objects
+✅ Convert JavaScript objects to JSON strings
+✅ Dynamically update the DOM using fetched data
+✅ Store and retrieve JSON data using localStorage

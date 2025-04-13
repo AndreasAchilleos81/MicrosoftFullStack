@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A brief description of the page for SEO purposes.">
+    <meta name="author" content="Your Name">
+    <title>Document Title</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <button class="header__menu-button">
+                <i class="fas fa-bars"><a href="#home" tabindex="0">Home</a></i>
+                <i class="fas fa-envelope"><a href="#contact" tabindex="0">Contact</a></i>
+                <i class="fas fa-envelope"><a href="#about-me" tabindex="0">About Me</a></i>
+                <i class="fas fa-envelope"><a href="#projects" tabindex="0">Projects</a></i>
+                <i class="fas fa-envelope"><a href="#skills" tabindex="0">Skills</a></i>
+            </button>
+        </nav>
+        <script src="script.js"></script>
+    </header>
+    <main>
+        <section id="home">
+            <h1>Welcome to the Website</h1>
+            <p>This is the home section.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <form action="#" method="post" aria-labelledby="contact-heading">
+                <div>
+                    <label for="contact-name">Name:</label>
+                    <input type="text" id="contact-name" name="name" required tabindex="0" aria-required="true">
+                </div>
+                <div>
+                    <label for="contact-email">Email:</label>
+                    <input type="email" id="contact-email" name="email" required tabindex="0" aria-required="true">
+                </div>
+                <div>
+                    <label for="contact-message">Message:</label>
+                    <textarea id="contact-message" name="message" rows="4" required tabindex="0"
+                        aria-required="true"></textarea>
+                </div>
+                <button type="submit" tabindex="0">Submit</button>
+            </form>
+        </section>
+
+        <section id="about-me" style="text-align: center; font-size: 1.2rem; line-height: 1.6; margin: 20px 0;">
+            <h2>About Me</h2>
+            <p>Hello! I'm Andreas, a passionate web developer with a love for creating engaging and user-friendly
+                websites. I enjoy learning new technologies and applying them to solve real-world problems.</p>
+            <p>Feel free to explore this website to learn more about my work and interests!</p>
+        </section>
+        <section id="projects">
+            <h2 style="width: 100%;">Projects</h2>
+            <article>
+                <h3>Web Project About Me</h3>
+                <p>This project showcases my first steps into MS fullstack with a small website in regards to me</p>
+                <figure></figure>
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F247478%2Fpexels-photo-247478.jpeg%3Fcs%3Dsrgb%26dl%3Ddawn-landscape-mountains-247478.jpg%26fm%3Djpg&f=1&ipt=d90bec928a36a6a8926d906bf1fc25c0cec8ad6834643ad543a0f165c6a74169"
+                    alt="Mountain Landscape" width="100%" tabindex="0" style="border-radius: 8px 8px 0 0;">
+                <figcaption tabindex="0" style="text-align: center; font-size: 0.9rem; margin-top: 10px;">Just a free
+                    picture I found online</figcaption>
+                </figure>
+            </article>
+        </section>
+        <section id="skills">
+            <h2>Skills</h2>
+            <ul>
+                <li tabindex="0"><i class="fas fa-code"></i> HTML & CSS</li>
+                <li tabindex="0"><i class="fab fa-js"></i> JavaScript</li>
+                <li tabindex="0"><i class="fab fa-react"></i> React</li>
+                <li tabindex="0"><i class="fab fa-node-js"></i> Node.js</li>
+                <li tabindex="0"><i class="fas fa-python"></i> Python</li>
+                <li tabindex="0"><i class="fab fa-git-alt"></i> Git & GitHub</li>
+                <li tabindex="0"><i class="fas fa-lightbulb"></i> Problem Solving</li>
+                <li tabindex="0"><i class="fas fa-users"></i> Team Collaboration</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Your Name. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

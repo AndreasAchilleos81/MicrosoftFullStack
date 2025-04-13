@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "mV0r8WU13vY=",
+  "success": true,
+  "projectFilePath": "D:\\CodeProjectsAndLearning\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\MyFirstDotNetApp\\MyFirstDotNetApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\andre\\.nuget\\packages\\pastel\\6.0.1\\pastel.6.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,94 @@
+Student grade management system
+
+Step 2: 
+
+Define the project requirements:
+
+	Functional requirements: 
+
+		A system that will manage student grades. The system needs to be able to add students, add grades to different students, and calculate average grades for students.  
+
+	Non-Functional requirements (Usability and performance):
+
+		The app should have an interface that's intuitive and provide clear screens per action. These actions should allows users to add students, add courses per student, give grades per student and course and calculate the studen'ts average with minimal selections and options in doing so. 
+		The app should be quick and responsive loading students and their courses and editing them within a few seconds, with an upper bound of 5 seconds.
+		The user should be able to keep adding students and their grades per course as long as the computer's memory can hold without major loss in performance.
+
+Project Objectives:
+
+	Build code base within a 2-3 of hours
+	Test and refine code base with 2-3 hours
+
+Step 3:
+
+Design outline:
+	Modules required: 
+		AddStudent module
+		AddSubject module
+		ViewStudentsRecords module
+		Main module where menu and options will guide user to use above modules
+		
+	Coding components:
+	
+		A Class for subject
+			Variables:
+				Name - name of subject
+				Grade - the grade the student has received this subject
+			Methods:
+				ToString() - string representation of a Subject
+				
+				
+		A Class for Student:
+			Variables: 
+				AverageGrade
+				Name
+				ID
+				List of Subjects a student has attended and received a grade for
+			Methods:
+				CalculateAverageGrade() - calculate average grade from all subject grades
+				ShowAverageGrade() - calculate and show average grade
+				AddSubject(string subjectName, decimal grade) - add a subject the student has studied and has a grade for
+				ToString() to print out the student and their courses with their grades and average grade.
+			
+		
+		A Class for StudentGradeManager - that will handle subjects and students
+			Variables:
+				List of Students
+					List of subjects per student variable
+			Methods:
+				AddStudent()
+				AddSubject()
+				ViewStudentsRecords()
+			
+			switch statements:
+				To handle the user's input in regards to the menu options they are presented
+			
+			if/else statements:
+				Check on add Subject module if students exist and provide message if so
+				Check on View students module if students exist and provide message if so
+			Loops:
+				The main menu should be in a while true loop to keep repeating the user their menu options
+				The ViewStudentsRecords module should loop through all students and through all the courses per student
+
+
+
+
+
+Overall goal: Create a student grade management system
+
+Approach: We will go with the Top to bottom approach as grading systems for students have been around since ever no need to experiment or develop new concepts.
+
+Featues:
+
+ - Add new students by their name and give them an ID
+ 
+ - Assign per student a grade per subject
+ 
+ - Average Grade of student should be calculated when ever requested
+ 
+ - Display the entire roster of students with the subjects they are taking, the grade per subject and the average grade of each student 
+ 
+ 
+	
+	
+	

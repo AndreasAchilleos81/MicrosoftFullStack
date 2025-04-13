@@ -1,0 +1,132 @@
+Core Git Commands
+
+🔧 Why Git Matters
+
+Git is an essential tool for managing changes in code. It enables developers to:
+
+    Track their work
+
+    Collaborate seamlessly on projects
+
+    Maintain consistent version control
+
+With Git, you can stage, commit, push, and pull changes—creating a smooth and reliable workflow. These commands form the backbone of Git and help teams maintain an organized, stable codebase while working together efficiently.
+🎬 What You’ll Learn
+
+(Play video starting at 4:34)
+
+In this video, we’ll explain the basic Git commands used for version control. You'll learn how to:
+
+    Stage changes
+
+    Commit updates
+
+    Push to and pull from remote repositories
+
+    Check the status of your working directory
+
+🧠 What is Git?
+
+Git is a distributed version control system that helps developers manage changes to source code over time.
+It’s like a time machine for your code:
+
+    Records snapshots of your project (called commits)
+
+    Allows multiple developers to work on the same project without overwriting each other’s work
+
+    Supports efficient collaboration and project management
+
+⚙️ Core Git Commands
+
+Let’s walk through the most important Git commands and what they do:
+1. git add – Stage your changes
+
+Staging means preparing your changes for the next commit. Think of it as selecting the files you want to include in your next snapshot.
+
+For example, if you modified index.html and style.css, you would stage them like this:
+
+git add index.html
+git add style.css
+
+2. git commit – Save a snapshot
+
+This records the staged changes in your repository’s history. You also include a message describing what was changed.
+
+git commit -m "Add changes to index and style files"
+
+3. git push – Upload your work
+
+This command sends your commits to a remote repository like GitHub, allowing others to see or work with your changes:
+
+git push origin main
+
+    origin refers to the remote repository
+
+    main is the branch you're pushing to
+
+4. git pull – Download the latest updates
+
+Use this to fetch and merge changes from the remote repository into your local copy:
+
+git pull origin main
+
+Perfect when working in teams to keep your project up to date.
+5. git status – Check your progress
+
+This command shows the state of your working directory and staging area:
+
+git status
+
+It tells you:
+
+    Which files are staged
+
+    Which are unstaged
+
+    Which are untracked
+
+🔁 Typical Git Workflow Example
+
+Let’s see how these commands come together in a real-world scenario:
+
+    Edit a file – e.g., index.html
+
+    Stage the change:
+
+git add index.html
+
+Commit the change:
+
+git commit -m "Updated homepage layout"
+
+Push the change to the remote repository:
+
+git push origin main
+
+Before starting new work, pull the latest changes:
+
+git pull origin main
+
+Check your project’s status regularly:
+
+    git status
+
+🧩 Final Thoughts
+
+Understanding and using basic Git commands is crucial for effective version control. By mastering:
+
+    git add
+
+    git commit
+
+    git push
+
+    git pull
+
+    git status
+
+you can confidently manage your code, track progress, and collaborate smoothly with your team. 🚀
+
+
+git command to link the remote repository to your local repository:
+git remote add origin [link to repository]

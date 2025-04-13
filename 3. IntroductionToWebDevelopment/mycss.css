@@ -1,0 +1,10 @@
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.control {
+    display: inline-block;
+    margin: 10px;
+}

@@ -1,0 +1,122 @@
+Applying CSS to HTML Documents
+
+
+Applying CSS to HTML: Understanding Different Methods
+
+Effective web design starts with learning how to style your content, from adding unique styles to individual elements to creating consistent designs across entire websites. Understanding how to apply CSS will give you the flexibility and control to craft professional, well-organized web pages.
+
+In this tutorial, we will describe the various methods of applying CSS to HTML documents: inline, internal, and external styles.
+Inline CSS
+
+Inline CSS is a method where styles are directly embedded into an HTML document using the style attribute. This is handy when you want to give a unique appearance to a specific element without changing others. You can add the style inside the element’s opening tag.
+Example 1: Using Inline CSS
+
+Here’s how you can change the color of a paragraph to red using inline CSS:
+
+<p style="color: red;">This paragraph text will be red.</p>
+
+In this example, the style attribute is used to add CSS directly to the paragraph element, turning the text red.
+Internal CSS
+
+Internal CSS is used when you want to apply styles to an entire HTML document but keep the styles within the document itself. You define the styles inside a <style> tag, which is placed within the <head> section of the HTML file. This method ensures that all elements on the page can share the same styles.
+Example 2: Using Internal CSS
+
+<head>
+  <style>
+    p {
+      color: blue;
+    }
+  </style>
+</head>
+
+This CSS rule targets all <p> elements in the document and makes their text color blue.
+External CSS
+
+External CSS is the most scalable option, especially for larger websites. By using external CSS, you can define styles in a separate CSS file and link that file to multiple HTML documents. This centralizes your styles, making it easier to manage and maintain the design of your site.
+Example 3: Linking an External CSS File
+
+To use external CSS, you link an external .css file to your HTML using the <link> tag:
+
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+In this example:
+
+    rel="stylesheet" tells the browser that the linked file is a CSS style sheet.
+
+    href="styles.css" specifies the path to the CSS file.
+
+This approach allows you to reuse the same styles across multiple HTML files.
+Benefits of External CSS
+
+Using external CSS has significant advantages, particularly for larger projects. It enables you to reuse styles across multiple HTML documents, ensuring consistency and making it easier to maintain and update your website's appearance. Any changes made to the external CSS file will automatically apply to all linked pages, streamlining the process of managing your site’s design.
+CodeCrafters Example: Applying CSS Methods
+
+Now, let's explore how CodeCrafters can put these CSS methods to work on their website. They need:
+
+    Unique styles for certain elements,
+
+    Consistent styling across entire documents,
+
+    A shared style sheet for uniform design across multiple pages.
+
+Example 4: Using Inline CSS for Unique Styles
+
+CodeCrafters could use inline CSS to style their welcome message. For example:
+
+<p style="color: blue;">Welcome to CodeCrafters!</p>
+
+This will make the welcome message text blue.
+Example 5: Using Internal CSS for Document-Specific Styles
+
+They could use internal CSS to define a font size for the class .intro:
+
+<head>
+  <style>
+    .intro {
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+This rule ensures that any HTML element with the class intro will have a font size of 20px. For instance, applying the class to a paragraph:
+
+<p class="intro">This text will have a 20px font size.</p>
+
+Example 6: Using External CSS for Global Styles
+
+CodeCrafters can use an external CSS file to manage styles that apply across multiple pages. Here’s how they would link an external CSS file:
+
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+The styles.css file could contain rules for the overall design of the site, such as setting fonts, colors, layout, and more.
+Advantages of External CSS
+
+By linking to an external CSS file, CodeCrafters keeps their HTML files clean and separate from the presentation layer, which is managed by the CSS file. This allows for consistent styling across the entire site. For example, in styles.css, they could define global styles:
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  color: darkblue;
+}
+
+With this approach, any change made to styles.css will instantly reflect across all linked HTML pages.
+Summary
+
+Today, we explored three key methods of applying CSS to HTML documents:
+
+    Inline CSS for unique styles applied to individual elements.
+
+    Internal CSS for document-specific styles.
+
+    External CSS for reusable styles across multiple pages.
+
+Understanding each method allows you to choose the best approach for your projects and ensures that your styles are well-organized and maintainable.
+
+By mastering these techniques, you can create flexible, well-designed, and easily manageable websites.

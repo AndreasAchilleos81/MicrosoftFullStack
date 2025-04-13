@@ -1,0 +1,14 @@
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\bin\Debug\net9.0\LibraryManagement.exe
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\bin\Debug\net9.0\LibraryManagement.deps.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\bin\Debug\net9.0\LibraryManagement.runtimeconfig.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\bin\Debug\net9.0\LibraryManagement.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\bin\Debug\net9.0\LibraryManagement.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.GeneratedMSBuildEditorConfig.editorconfig
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.AssemblyInfoInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.AssemblyInfo.cs
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.csproj.CoreCompileInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\refint\LibraryManagement.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\LibraryManagement.genruntimeconfig.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagement\obj\Debug\net9.0\ref\LibraryManagement.dll

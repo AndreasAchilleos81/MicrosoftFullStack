@@ -1,0 +1,14 @@
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\bin\Debug\net9.0\LibraryManagementOne.exe
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\bin\Debug\net9.0\LibraryManagementOne.deps.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\bin\Debug\net9.0\LibraryManagementOne.runtimeconfig.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\bin\Debug\net9.0\LibraryManagementOne.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\bin\Debug\net9.0\LibraryManagementOne.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.GeneratedMSBuildEditorConfig.editorconfig
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.AssemblyInfoInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.AssemblyInfo.cs
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.csproj.CoreCompileInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\refint\LibraryManagementOne.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\LibraryManagementOne.genruntimeconfig.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementOne\obj\Debug\net9.0\ref\LibraryManagementOne.dll

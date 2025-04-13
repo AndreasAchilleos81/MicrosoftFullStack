@@ -1,0 +1,113 @@
+Introduction to GitHub
+
+🌐 What is GitHub?
+
+GitHub is an essential platform for developers working together on projects. It provides powerful tools that streamline:
+
+    Code collaboration
+
+    Version control
+
+    Project management
+
+By centralizing code, tracking issues, and organizing workflows, GitHub helps teams stay productive and organized, especially in distributed environments.
+🎯 Why Use GitHub?
+
+GitHub is built on Git, the version control system, but adds a web-based layer for:
+
+    Code hosting
+
+    Project collaboration
+
+    Team coordination
+
+It's become a central hub for teams managing software projects—whether they’re in the same room or across the world.
+🎬 Key Features of GitHub for Collaborative Development
+
+(Play video starting at 4:34)
+
+Let's explore GitHub's core collaboration tools and how they support smooth team workflows.
+📁 Repositories (repo)
+
+A repository is the home base for your project’s code and files. It’s where everything lives and where team members access or contribute to the codebase.
+
+Common actions:
+
+    Create a new repository when starting a project
+
+    Clone a repo locally for development:
+
+    git clone https://github.com/username/repository-name.git
+
+Repositories support version control and collaboration, making it easier to track every change.
+🔄 Pull Requests
+
+A pull request (PR) is a way to propose changes to a repository’s code.
+
+After making changes in a branch, you create a pull request to submit your updates for review:
+
+    Team members review the code
+
+    Feedback and suggestions are provided
+
+    Once approved, the PR is merged into the main branch
+
+This ensures code quality and team consensus before updates go live.
+🐞 Issues
+
+Issues are like your project's to-do list. They’re used to:
+
+    Track bugs
+
+    Request new features
+
+    Manage development tasks
+
+Example workflow:
+
+    A user reports a bug by creating an issue
+
+    It’s assigned to a developer
+
+    The issue is tracked through to resolution
+
+# Example Issue Template
+- Bug: Unexpected layout shift on mobile
+- Steps to reproduce: ...
+- Assigned to: @devname
+
+Issues help prioritize work and keep projects on track.
+🗂️ Projects (Project Boards)
+
+Project boards are visual tools for managing and organizing work.
+
+    Organize tasks into columns like: To Do, In Progress, Done
+
+    Track progress during sprints
+
+    Assign cards (tasks/issues) to team members
+
+This Kanban-style approach gives a clear overview of the current status and workload.
+🔄 How GitHub Facilitates Collaboration
+
+GitHub unifies all its features into a cohesive workflow:
+Feature	Purpose
+Repositories	Centralize code and make it accessible to the team
+Pull Requests	Enable thorough code reviews and collaborative edits
+Issues	Track bugs, features, and tasks
+Projects	Visualize workflow and track progress
+🧩 Final Thoughts
+
+Understanding GitHub’s core features can transform how your team collaborates.
+
+By using:
+
+    Repositories
+
+    Pull Requests
+
+    Issues
+
+    Projects
+
+your team can work seamlessly, maintain code quality, and boost productivity—all from one powerful platform. 🚀

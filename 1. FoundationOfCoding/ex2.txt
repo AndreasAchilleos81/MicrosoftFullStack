@@ -1,0 +1,70 @@
+Problem 1: Project Management
+
+Overall goal: Project management tool with the main and basic functionalities of such a tool.  
+
+Approach will be Top Down: as such tools are abundant and everywhere we can define a clear scope of what we want and not waste time left and right:
+
+
+ Task tracking
+
+  - Create Tasks that can be of different types bug, task , improvement, research
+  - Create, edit, archive, Remove/delete(never really deleted) Tasks
+ 
+ Team collaboration 
+  - Create Team projects objects
+  - Team projects should be able to support Kanban or Scrum type sprints
+  - User should be able to subscribe and get notified when tasks change for their team projects
+ 
+ Reporting features
+	- Provide quering tools for the tasks
+	- Enable queries to be shown in graphs on dashboards that will execute at set times intervals or as events happen
+	
+---------------------------------------------------------------------------------------
+
+Problem 2: Online Health Monitoring System:
+
+Overall goal: Create a Health monitoring system for individuals:
+
+Approach: We will go with bottom up approach as these technologies are still new and evolving and we dont know exactly what they can offer and how they offer us data
+
+
+- tracks physical activity
+	- Measure steps
+	- heart beat
+	- oxygen in blood
+	
+
+- sleep 
+	- measure quality of sleep
+	- time of sleeping
+	- Volume of sleeping
+	- provide statistics over such data
+
+heart rate
+	- Keep track of hear rate throught the day and throughout tasks
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

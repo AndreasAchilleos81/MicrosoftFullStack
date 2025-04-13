@@ -1,0 +1,109 @@
+HTML ATTRIBUTES: 
+
+Document notes: 
+
+attributes are extra instructions you add to your html tags to affect how they 
+look and behave.
+
+class: used to define a group of elements for styling
+
+Id: unique identifier per element unique per page
+
+Href: used in <a> tags - used to specify the URL of a link
+
+alt: used as an alternative message if an image does not load
+
+<img src="logo.png" alt="Company logo"> // img is self closing
+
+src: definte file for image or script used in <img> and <script> tags
+<img src="image.jpg" alt="A descriptive image"> /<img>
+ 
+style: style elements in line of themselves - better practice keep css files
+as in styling in separate files like this in the Head section:
+you can also use in the head section:
+<link rel="stylesheet" href="styles.css">
+
+or on a proxy
+
+
+
+
+target: specify where a link is to be opened ie in a new tab so it would look like this:
+
+<a href="www.example.com" target="_blank">Open in a new tab</a>
+
+width, height: 
+<img src="photo.jpg" width="600" height="300" alt="Landscape photo">
+
+
+
+
+Imagine having the ability to control every detail of your website's elements, everything from how they look to how they behave. 
+By understanding HTML attributes, you'll gain this control, making your web pages more dynamic and interactive. 
+In this video, we will describe how attributes provide additional information about HTML elements. 
+HTML attributes let you fine-tune how elements behave and look, adding functionality and interactivity to your website. 
+Now that we understand what attributes are, let's explore how to properly structure them in your HTML code. 
+HTML attributes are like extra instructions you add to an element's tag to change how it looks or behaves. 
+It is always written as a name-value pair, such as name equals value, and placed inside the opening tag like this, tagNameAttribute equals value. 
+In this example, attribute is the name of the attribute you want to define. 
+The value of the attribute provides specific information or behavior. 
+With the basic syntax covered, let's explore some of the most common attributes you'll use to enhance your HTML elements. 
+First up is the class attribute, which you'll use to group multiple HTML elements together by assigning them the same class name. 
+This lets you apply the same CSS styles to all elements within that class, making it easier to manage and style your website. 
+For example, in ByteCrafters, multiple elements can share the same class name to apply the same styles. 
+After understanding how to group elements with the class attribute, let's dive into the id attribute. 
+This attribute is crucial for giving each element a unique identity on your page, allowing for specific styling or functionality. 
+This identifier must be unique on a page, allowing you to apply specific styles or JavaScript functions to that one element only. 
+ByteCrafters uses id attributes to apply specific styles to individual elements. 
+Next, let's explore the href attribute, used in the a tags. 
+This attribute sets the destination URL for a hyperlink, guiding users to the right location with just a click. 
+This attribute tells the browser where to go when the link is clicked, whether it's another page on your site or an external website. 
+Lastly, the source, or src attribute, defines the file path for an image or script you want to include on your web page. 
+It's used in tags like imgImage for images and script for JavaScript files, telling the browser where to find the file. 
+For example, ByteCrafters uses src attributes to display product images and include JavaScript files. 
+Now that we've discussed some of the common attributes, let's explore how you can include them in your HTML tags. 
+The syntax for including attributes in HTML tags is straightforward. 
+An attribute is added within the opening tag and consists of a name and value pair, separated by an equal sign and enclosed in quotes. 
+Here's the general format, element attribute equals value. Let's examine some examples of some commonly used attributes. 
+The attribute ID is used to target and style that specific element in CSS or interact with it using JavaScript. 
+In this example, we create a div element with an id attribute set to header. 
+Within this div, the text, this is the header, is placed. 
+Finally, the div tag is closed. 
+The attribute class assigns one or more class names to an element which can be used for styling or scripting. 
+For example, in the HTML code, we have a paragraph element with a class attribute set to intro highlight. 
+The text within this paragraph is welcome to the website. The paragraph is then closed with a closing p tag. 
+The style attribute allows you to apply CSS directly within an HTML tag, often used for quick specific styling. 
+While it's powerful for adding individual styles, it's generally better to keep your CSS in separate files to maintain cleaner code. 
+In this example, you begin with a span tag which is used for inline elements. 
+Add a style attribute to it with the CSS properties color, red and font weight bold. 
+Inside this span, include the text important text. Finally, there's the span tag. 
+The attribute href specifies the URL of the page the link goes to. 
+In the HTML code, we create a hyperlink using the a tag. 
+The href attribute is set to https://www.example.com and the clickable text within the link is visit example. 
+The tag is then closed. The title provides additional information about an element often displayed as a tooltip. 
+In this HTML code, we have an a tag for a hyperlink. 
+The href attribute points to https://example.com and then there's a title attribute with the text go to example, which will appear as a tooltip when hovered over. 
+The visible link text is visit example and then we close the a tag. The attribute target specifies where to open the linked document. 
+For example, here you would start with an a tag which represents a hyperlink. 
+Set the href attribute to https://www.example.com and then add a target attribute with the value slash blank which makes the link open in a new tab. 
+Inside this a tag, include the text open in a new tab. Finally, close the a tag. The attribute source src specifies the path to the image. 
+In this HTML code, we have an image tag, img, to display an image. 
+The source attribute points to image.jpg and the alt attribute is set to a descriptive image, which serves as the alternative text for screen readers or if the image fails to load. 
+This tag is self-closing. The attribute alt provides alternative text for the image. Here you could begin with an img tag which is used to display an image. 
+Set the src source attribute to logo.png which specifies the image file. 
+Then add an alt attribute with the text company logo which provides alternative text describing the image. 
+Since the img tag is self-closing, there is no need for a closing tag. 
+The width and height attributes specify dimensions of an image in pixels controlling how large the image appears on the page. 
+These attributes help you ensure that images fit well within your layout. In this HTML code, we use an img tag to embed an image. 
+The src attribute is set to photo.jpg and the width and height attributes are set to 300 and 200 pixels respectively to control the image size. 
+The alt attribute is set to landscape photo to describe the image. 
+This tag is self-closing. 
+We've talked about attributes individually, but how do they work together in a real-world scenario? 
+Let's consider ByteCrafter's homepage as an example to see how these attributes can be combined to enhance different elements on the page. 
+The intro section is uniquely identified by a class to apply specific styles. 
+Hyperlinks in the navigation bar use href attributes to link to different pages of the site and images use src attributes to display product images. 
+The combination of attributes ensures a functional, well-structured, and visually appealing website. 
+HTML attributes are like little extras that make your elements more powerful. 
+They help you add more functionality and interactivity to your webpages. 
+In this video, we've walked through what attributes are, some of the most common ones, and how to use them in your tags. 
+Now that you know how they work, you're ready to create some really dynamic and engaging web content. Happy coding!

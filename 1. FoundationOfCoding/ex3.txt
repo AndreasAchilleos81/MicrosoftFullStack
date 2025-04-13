@@ -1,0 +1,30 @@
+Problem 1
+Problem Statement: 
+
+Write pseudocode to create a program that calculates the total marks for a student based on marks in three subjects: Math, Science, and English. The program should take input for the marks in each subject, calculate the total, and then print the total marks.
+
+Define the problem clearly.
+We take the total of three courses's marks by asking for them adding them and returning their sum as output
+
+Identify the key processes involved in solving the problem.
+ - Ask for the students name
+ - Greet student with their name
+ - Prompt for the grade for each of of the courses	
+	- Math, Science, English
+ - Add the three grades 
+ - Return the sum with the students name 
+
+Write pseudocode based on the identified processes.
+
+Start
+Get name
+Prompt using name for the grade of Math
+Prompt using name for the grade of Science
+Prompt using name for the grade of English
+
+Add the three grades
+
+Print student name your total mark is: Sum here
+
+End
+

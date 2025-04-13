@@ -1,0 +1,116 @@
+Create a Web Page with HTML
+
+Creating a Web Page: Step-by-Step Guide
+1️⃣ Setting Up the Basic Structure
+
+Before adding content, we need to set up the foundation of our web page—just like building a house before furnishing it.
+🔹 Add the DOCTYPE Declaration
+
+At the top of the document, we declare HTML5:
+
+<!DOCTYPE html>
+
+🔹 Define the Character Set
+
+To ensure proper text encoding, we include the meta charset attribute:
+
+<meta charset="UTF-8">
+
+🔹 Add a Page Title
+
+We define the title of the web page inside the <title> tag:
+
+<title>My Web Page</title>
+
+🔹 Create the Body Section
+
+Everything visible on the page goes inside the <body> tag:
+
+<body>
+    <!-- Page content goes here -->
+</body>
+
+✅ Now, click the Run Code button to see how it renders!
+2️⃣ Adding Text & Lists
+🔹 Insert a Subheading
+
+We add a level 2 heading (<h2>) to introduce content:
+
+<h2>Welcome to My Web Page</h2>
+
+🔹 Add a Paragraph
+
+A paragraph (<p>) is used for text content:
+
+<p>This is a sample paragraph explaining the purpose of the web page.</p>
+
+🔹 Create an Unordered List (Bulleted List)
+
+We use <ul> for an unordered list and <li> for list items:
+
+<ul>
+    <li>First item</li>
+    <li>Second item</li>
+    <li>Third item</li>
+</ul>
+
+🔹 Create an Ordered List (Numbered List)
+
+For step-by-step instructions, we use <ol>:
+
+<ol>
+    <li>Step one</li>
+    <li>Step two</li>
+    <li>Step three</li>
+</ol>
+
+🔹 Add a Call-to-Action Link
+
+We use an <a> tag to create a hyperlink:
+
+<p>Click <a href="https://example.com">here</a> to learn more!</p>
+
+✅ Click the Run Code button again to check our progress. We should now see:
+✔ A title
+✔ A subheading
+✔ A paragraph
+✔ Two lists (unordered and ordered)
+✔ A hyperlink
+3️⃣ Embedding Media (Images, Videos, and Audio)
+🔹 Insert an Image
+
+We use the <img> tag with a source (src) and alternative text (alt):
+
+<img src="image.jpg" alt="A descriptive image">
+
+🔹 Embed a Video
+
+We add a <video> tag with a source (src) and controls:
+
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+🔹 Add an Audio File
+
+We include an <audio> tag with controls:
+
+<audio controls>
+    <source src="audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+✅ Click the Run Code button once more, and you should now see:
+✔ An image
+✔ A video
+✔ An audio file
+🎉 Congratulations!
+
+You've successfully:
+✅ Set up an HTML document structure
+✅ Added headings, paragraphs, lists, and links
+✅ Embedded images, videos, and audio
+
+Great job completing this lab! 🎉🚀
+Thank you. Bye! 👋👋👋👋👋

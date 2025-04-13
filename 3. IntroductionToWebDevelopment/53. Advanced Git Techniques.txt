@@ -1,0 +1,156 @@
+Advanced Git Techniques
+
+🧪 Advanced Git Lab: Branch & Repository Management
+
+In this lab, you'll learn advanced Git techniques for managing branches and repositories. Let’s walk through key steps for effective Git workflows using real-world commands.
+🌿 Branching Basics
+
+Branching allows developers to work on features, fixes, or experiments without affecting the main branch. This supports parallel development and reduces the chance of conflicts.
+✅ Step 1: Create and Switch to a New Branch
+
+    Open your terminal.
+
+    Navigate to your Git project directory (e.g., my-project).
+
+    Create and switch to a new branch:
+
+git checkout -b feature/new-feature
+
+✍️ Modify, Stage, and Commit Changes
+
+Make changes to any file in your project.
+✅ Stage the Changes
+
+git add .
+
+✅ Commit the Changes
+
+git commit -m "Add new feature"
+
+🧹 Clear the Console (Optional)
+
+cls
+
+🔁 Merging and Resolving Conflicts
+
+Merging integrates changes from one branch into another. If both branches modify the same line, a conflict will occur.
+✅ Step 1: Switch to the main Branch
+
+git checkout main
+
+✅ Step 2: Modify and Commit in main
+
+Edit a file, then:
+
+git add .
+git commit -m "Edit file in main branch"
+cls
+
+✅ Step 3: Switch Back to the Feature Branch
+
+git checkout feature/new-feature
+
+Make different edits to the same file, then:
+
+git add .
+git commit -m "Edit file in feature branch"
+cls
+
+🔀 Merge Feature Branch into Main
+
+git checkout main
+git merge feature/new-feature
+cls
+
+    ⚠️ If a conflict occurs, Git will notify you.
+
+🛠️ Resolve the Conflict
+
+    Open the conflicted file.
+
+    Manually resolve the differences.
+
+    Stage and commit:
+
+git add .
+git commit -m "Resolve merge conflict"
+cls
+
+🔖 Using Tags for Milestones
+
+Tags mark significant points in a repository’s history, such as releases.
+✅ Create an Annotated Tag
+
+git tag -a v1.0 -m "Initial release"
+
+✅ Push the Tag to Remote
+
+git push origin v1.0
+cls
+
+📥 Using Git Stash
+
+Stashing allows you to temporarily save uncommitted changes so you can switch tasks or update your codebase without losing work.
+✅ Step 1: Make Changes Without Committing
+
+Switch to your feature branch and modify a file.
+✅ Step 2: Stash the Changes
+
+git stash
+
+✅ Step 3: Switch to Main Branch
+
+git checkout main
+
+✅ Step 4: View the Stash List
+
+git stash list
+
+✅ Step 5: Reapply the Stashed Changes
+
+git stash apply
+cls
+
+🎛️ Interactive Rebase
+
+Interactive rebase is used to clean up commit history before merging.
+✅ Start Rebase for Last 4 Commits
+
+git rebase -i HEAD~4
+
+You’ll see options like:
+
+    pick — Keep the commit
+
+    squash — Combine it with the previous commit
+
+    edit — Modify the commit
+
+    Scroll through and apply the desired changes.
+
+cls
+
+⚠️ If Conflicts Arise
+
+    Resolve them manually in the editor.
+
+    Then run:
+
+git add .
+git rebase --continue
+
+🎉 Lab Complete
+
+You've now practiced:
+
+    ✅ Creating and merging branches
+
+    ✅ Handling conflicts
+
+    ✅ Using tags
+
+    ✅ Stashing changes
+
+    ✅ Performing an interactive rebase
+
+Great job completing this guided lab! Keep practicing these techniques to master Git workflows in real-world development.

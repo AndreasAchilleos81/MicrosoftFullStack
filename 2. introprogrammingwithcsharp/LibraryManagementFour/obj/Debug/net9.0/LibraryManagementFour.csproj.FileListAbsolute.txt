@@ -1,0 +1,14 @@
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\bin\Debug\net9.0\LibraryManagementFour.exe
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\bin\Debug\net9.0\LibraryManagementFour.deps.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\bin\Debug\net9.0\LibraryManagementFour.runtimeconfig.json
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\bin\Debug\net9.0\LibraryManagementFour.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\bin\Debug\net9.0\LibraryManagementFour.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.GeneratedMSBuildEditorConfig.editorconfig
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.AssemblyInfoInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.AssemblyInfo.cs
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.csproj.CoreCompileInputs.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\refint\LibraryManagementFour.dll
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.pdb
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\LibraryManagementFour.genruntimeconfig.cache
+D:\CodeProjectsAndLearning\MicrosoftFullStack\2. introprogrammingwithcsharp\LibraryManagementFour\obj\Debug\net9.0\ref\LibraryManagementFour.dll

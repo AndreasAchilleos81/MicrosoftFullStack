@@ -1,0 +1,27 @@
+Understanding Semantic HTML
+
+Building a website, every decision you make affects how easily users can navigate and understand your content. But it's not just about what users see. It's about how your code communicates with search engines and accessibility tools. Semantic HTML helps bridge that gap by giving meaning to your content, improving both usability and structure.
+
+In this video, we will define semantic HTML and its role in web development. Semantic HTML refers to the use of HTML tags that give meaning to the content they enclose. These tags make it easier for users and technologies to understand the structure and purpose of the web page.
+
+Unlike non-semantic HTML tags, which are used mainly for formatting, semantic tags provide information about the type of content they contain. This helps both developers and browsers understand the structure and purpose of the content, improving accessibility and SEO.
+
+Semantic tags like <header>, <article>, and <footer> give specific meaning to different parts of a web page:
+
+The <header> tag defines the introductory section of a web page or a specific section within a page. What makes this tag semantic is that it describes the purpose of the content inside it, telling both users and technologies that this is the header section.
+
+The <article> tag is used to define a self-contained piece of content that could stand alone, such as a blog post, news article, or forum entry. This tag is semantic because it explicitly tells browsers and search engines that the content is a complete, independent piece of information.
+
+The <footer> tag represents the footer section of a web page or section, which typically contains copyright information, links, or author details. It is a semantic tag because it communicates the role of the content as a footer section, allowing technologies to recognize that it is supplemental information.
+
+Now let's talk about why semantic HTML is important for web development.
+
+Semantic HTML plays a crucial role in enhancing readability, maintainability, and the overall structure of web pages. Semantic HTML makes your code more readable for anyone who reviews it, whether it's another developer, a search engine, or assistive technologies like screen readers. The clear structure provided by semantic tags helps everyone understand the content more easily.
+
+In addition, with semantic HTML, your code becomes more organized and easier to maintain. Instead of trying to remember what a <div> or <span> does, you can rely on meaningful tags that describe their content. This makes updating your site easier over time.
+
+Semantic HTML also has a significant impact on search engine optimization (SEO). By using meaningful tags, you help search engines better understand and index your content, improving your website's visibility and ranking.
+
+Finally, by using semantic HTML, you help search engines understand the structure of your web page, making it easier for them to index your content and rank it higher in the search results. This improves your website's SEO, making it more likely that users will find your page.
+
+In summary, semantic HTML improves both the usability and the visibility of your website. By using semantic tags, you enhance readability, SEO, and accessibility, ensuring your content is well understood by both users and browser technology.

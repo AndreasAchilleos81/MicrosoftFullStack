@@ -1,0 +1,63 @@
+HTML Document Structure and Hierarchy
+
+<!DOCTYPE html>:
+The !DOCTYPE html tag defines the document type and version of HTML being used, much like a sign at the library entrance tells visitors what kind of library it is. 
+It tells the browser to expect HTML5, the latest version.
+
+<html> tag signals the beginnning and end of the HTML document, and wraps all the HTML
+
+<head> - holds important metadata about the document like the browser tab <title>
+script locations, and css locations
+
+you can also use in the head section:
+<link rel="stylesheet" href="styles.css">
+
+
+<body> - Contains the actual content of the webpage, what will be rendered on the web page
+such as text, images, and videos.
+
+SEMANTIC HTML: special tags that describe what their content is about, making it easier for people and computers to understand the structure and purpose of the webpage.
+examples:
+
+<nav> - represents a section of navigation links: such as:
+menu
+tables
+to help navigate through the web site and for better organization
+
+<main> -> Show where the main content of the webpage is at
+
+<article> - used for a self-contained piece of content
+
+<section> - Groups related content together so controls that work and relate together
+
+<footer> - used for the bottom part of the webpage for contact information, copyright details
+
+Nesting - is when we place elements under other elements as child elements
+
+
+
+Picture walking into a library where every book is sorted into sections, like fiction, non-fiction, and reference. 
+These sections are organized on shelves, making it easy for you to find the book you need. 
+Similarly, an HTML document uses tags like &lt;html&gt;, &lt;head&gt;, and &lt;body&gt; to structure its content, much like how a library's organization helps you find books. 
+In this video, we will describe the hierarchical structure of HTML documents and its importance in web development. 
+HTML document structure is the basic layout of an HTML document, including doc type, head, and body sections. 
+The five main tags that form this structure are &lt;!DOCTYPE html&gt;, &lt;html&gt;, &lt;head&gt;, &lt;title&gt;, and &lt;body&gt;. 
+Let's examine each of these types of tags. 
+The &lt;!DOCTYPE html&gt; tag defines the document type and version of HTML being used, much like a sign at the library entrance tells visitors what kind of library it is. 
+It tells the browser to expect HTML5, the latest version. 
+The &lt;html&gt; tag is the root element that wraps all other HTML content and signifies the beginning and end of an HTML document. 
+It's like the walls of a library that contain everything inside. For instance, every webpage, like WebWave's homepage, starts with the &lt;html&gt; tag. 
+The &lt;head&gt; section holds important information about the webpage that isn't shown directly on the screen, like the page's title. 
+Think of it like the information desk at a library helping organize everything behind the scenes. 
+The &lt;head&gt; section helps browsers and search engines understand the page better. 
+The &lt;title&gt; tag, which is inside the &lt;head&gt; section, sets the title of the page that appears in the browser tab. 
+It's like the name of a library displayed on a sign outside. 
+The &lt;body&gt; section contains all the visible content of the webpage, like text, images, and videos. 
+This is like the main area of a library where the books and resources are kept. 
+For example, everything you see on a website is placed inside the &lt;body&gt; tag. 
+Another way to make an HTML page more meaningful is by using semantic HTML. 
+Semantic HTML uses special tags that describe what their content is about, making it easier for people and computers to understand the structure and purpose of the webpage. 
+This is like using clear labels on library shelves to help people find the books they want quickly. 
+There are several common types of semantic HTML tags, each with a specific purpose. 
+Let's look at some of them. The &lt;nav&gt; tag represents a section of navigation links similar to a directory or map in a library that shows you where different sections are located. The &lt;main&gt; tag indicates the main content of the document, like the central area of the library where the main collection of books is found. It should contain the unique content of the page. The &lt;article&gt; tag is used for a self-contained piece of content, such as a news story or a blog post. It's like an individual book or magazine in a library. The &lt;section&gt; tag groups related content together, similar to a specific shelf or section in a library dedicated to a particular subject. The &lt;footer&gt; tag is used for the bottom part of the webpage, which often contains information like copyright details or contact information. It's like the reference or help desk area of a library, providing additional resources. Now let's look at how to build a more complex HTML structure. One common method is called nesting. Nesting places elements within other elements, creating a clear and organized structure in the HTML document. It's like putting books on specific shelves in a library, so everything is easy to find. Nesting is important for several reasons. First, it creates clear and organized documents or webpages by defining how different parts of the content are related. Secondly, nesting makes it easier to style specific parts of a webpage. Third, proper nesting helps with accessibility for tools like screen readers. It helps the screen reader understand the content, making sure the site is easier for everyone to use. Just like organized shelves in a library, well-nested HTML elements keep everything in the right place. Understanding HTML structure, nesting, and semantic elements help you create organized and user-friendly websites. Mastering these basics makes your content clear and accessible. 
+Happy coding!

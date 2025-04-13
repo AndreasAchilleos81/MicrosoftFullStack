@@ -1,0 +1,111 @@
+Problem 1: Fitness Tracking App
+
+The main overall goal:
+
+The main goal of hte application is to help users with their fitness goals
+
+
+Major features:
+
+1 - Monitor workouts
+	- Record different types of workouts (cardio or strength training)
+	- Keep workout schedule - that takes workouts from the above point
+	- Keep workout notes per exercies
+	- Monitor blood oxygen and heart rates during workouts
+
+2 - Monitor Diet
+	- Add a daily diet schedule
+	- each day should be broken into multiple meals
+	- Each meal should have the number of calories and nutritional information
+	- Calories goal per day should be set based on nutritional information
+
+3 - Provide Health insights
+	- daily tips from a webservice - based on diet and workout shedule
+	- user should be able to allow or disallow health insights
+	- rate of health insights and time of health insights should be configurable
+	
+	
+Opportunities for modularization
+
+Workout monitor component
+
+Diet component
+
+Health insights component 
+
+
+Problem 2: Create Online Learning Platform
+
+1 Overall goal: An online platform that will facilitate with Course creation, User enrollment, Content delivery and progress tracking
+
+
+2-3 Major features Top Down design- decompose each feature into smaller, manageable tasks.
+
+- Course creation
+	- Registered tutor gets to upload their video and their script 
+	- Registered tutor can use the platform to record their video
+		- Edit video on platform
+		- Transcript automatically created from platform
+
+- User enrollment
+	- user can enrol either via email, or google 
+	- Payment processees and cart
+
+- Content delivery	
+	- Content needs to reach user based on topography with CDNs from azure or AWS
+
+- Progress Tracking
+	- as video watches content their progress is tracked so they can proceed from where they left
+	- View content is clearly marked as viewed or completed with Green
+	- Not view content has the color white
+	
+
+Modularization:
+
+- A cource creation module
+
+- User enrollment module
+
+- Content delivery module/configuration on upload - Azure devops
+
+- Progress tracking module/configuration
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

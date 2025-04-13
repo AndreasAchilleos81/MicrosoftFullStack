@@ -1,0 +1,197 @@
+ JavaScript Design Patterns Explained
+
+JavaScript design patterns provide proven solutions to common coding problems. They help developers write code that’s clean, organized, and scalable.
+
+In this guide, we’ll explore three popular design patterns:
+
+    🧱 Module Pattern
+
+    📣 Observer Pattern
+
+    🔁 Singleton Pattern
+
+Understanding these patterns will help you build efficient, maintainable, and well-structured JavaScript applications.
+
+
+🔷 What Are Design Patterns?
+
+A design pattern is a reusable solution to a commonly occurring problem in software development.
+✅ Why Use Them?
+
+    Offer proven solutions
+
+    Improve readability and collaboration
+
+    Help organize code and manage complexity
+
+    Ensure maintainability and scalability as your project grows
+
+📦 1. The Module Pattern
+
+The Module Pattern helps you:
+
+    Encapsulate private data and functionality
+
+    Avoid polluting the global scope
+
+    Create reusable, organized code
+
+🔹 Example:
+// # is what defines private fields in JS -- but you dont need the # in this
+case to keep functions and fields private.
+
+Also since this private functions and variables are not part of the 
+return statement then they are not shared publicly
+
+const myModule = (function () {
+  // Private
+  const #privateVariable = "I am private";
+  function #privateFunction() {
+    console.log(#privateVariable);
+  }
+
+  // Public
+  return {
+    publicFunction: function () {
+      privateFunction();
+    }
+  };
+})();
+
+myModule.publicFunction(); // Output: I am private
+
+💡 Key Takeaways:
+
+    Uses an Immediately Invoked Function Expression (IIFE).
+
+    Keeps internal variables/functions private.
+
+    Only exposes what’s needed via the return object.
+
+    Calling myModule.privateFunction() will throw an error — it’s private!
+
+👀 2. The Observer Pattern
+
+The Observer Pattern is ideal when you need different parts of your app to react to changes in state.
+
+Think of it as event broadcasting: one subject notifies all its observers when something happens.
+🔹 Structure:
+
+    Subject: Holds a list of observers and notifies them of changes.
+
+    Observer: Subscribes to updates and responds when notified.
+
+🔸 Example:
+
+class Horn {
+  constructor() {
+    this.workers = [];
+  }
+
+  subscribe(worker) {
+    this.workers.push(worker);
+  }
+
+  unsubscribe(worker) {
+    this.workers = this.workers.filter(w => w !== worker);
+  }
+
+  blowHorn() {
+    console.log("Horn: Time for lunch!");
+    this.workers.forEach(worker => worker.lunchtime());
+  }
+}
+
+class Worker {
+  constructor(name) {
+    this.name = name;
+  }
+
+  lunchtime() {
+    console.log(`${this.name}: Time for lunch!`);
+  }
+}
+
+const factoryHorn = new Horn();
+const worker1 = new Worker("Worker 1");
+const worker2 = new Worker("Worker 2");
+const worker3 = new Worker("Worker 3");
+
+factoryHorn.subscribe(worker1);
+factoryHorn.subscribe(worker2);
+factoryHorn.subscribe(worker3);
+
+factoryHorn.blowHorn();
+// Output:
+// Horn: Time for lunch!
+// Worker 1: Time for lunch!
+// Worker 2: Time for lunch!
+// Worker 3: Time for lunch!
+
+factoryHorn.unsubscribe(worker2);
+factoryHorn.blowHorn();
+// Output:
+// Horn: Time for lunch!
+// Worker 1: Time for lunch!
+// Worker 3: Time for lunch!
+
+💡 Key Takeaways:
+
+    Observers can be dynamically added or removed.
+
+    Useful for event systems, live updates, and UI reactivity.
+
+🧍‍♂️ 3. The Singleton Pattern
+
+The Singleton Pattern ensures that only one instance of a class exists throughout your app.
+
+Perfect for:
+
+    Shared resources (e.g., a game timer, app config)
+
+    Global coordination (e.g., single event dispatcher)
+
+🔸 Example:
+
+class Horn {
+  constructor() {
+    if (Horn.instance) {
+      return Horn.instance;
+    }
+    Horn.instance = this;
+  }
+
+  blowHorn() {
+    console.log("Horn: Time for lunch!");
+  }
+}
+
+const factoryHorn1 = new Horn();
+const factoryHorn2 = new Horn();
+
+console.log(factoryHorn1 === factoryHorn2); // true
+
+💡 Key Takeaways:
+
+    Horn.instance stores the single instance.
+
+    All calls to new Horn() return the same object.
+
+    Useful for ensuring consistency across your app.
+
+🧠 Recap: Key JavaScript Design Patterns
+Pattern	Purpose
+Module	Encapsulate private data, expose public APIs
+Observer	Notify multiple objects of state changes
+Singleton	Ensure only one instance of a class exists
+🚀 Try It Yourself!
+
+In this video, we explored:
+
+    🧱 Module Pattern – organize code into reusable blocks
+
+    📣 Observer Pattern – manage communication between parts
+
+    🔁 Singleton Pattern – control instance creation for consistency
+
+💡 Practice these in your own projects to build clean, scalable JavaScript apps.

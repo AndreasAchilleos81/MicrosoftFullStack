@@ -1,0 +1,115 @@
+Building an HTML Document
+
+Before we start adding content to an HTML document, we need to set up the basic structure. HTML documents have a very specific format that helps browsers understand how to display the content. Let's go through the HTML document structure in six parts, step by step.
+Step 1: Set Up the Basic Structure
+
+    Line 1: Add the declaration that specifies the HTML document type.
+
+    Line 4: Add the attribute to set the character encoding for the document.
+
+    Line 5: Add the title tag to define the title that will appear in the browser tab.
+
+    Line 7: Add the tag that wraps the visible content of the web page.
+
+Now that we have our basic skeleton, let's add some content to the body of the document.
+Step 2: Add Text Content
+
+One of the most common tasks in HTML is adding text. Let's add headings, paragraphs, and basic elements to the body of our HTML document:
+
+    Line 1: Add the opening tag for the main heading.
+
+    Line 2: Add the opening tag for the subheading.
+
+    Line 3: Add the closing tag for the first paragraph.
+
+    Line 5: Add the opening tag for the first paragraph.
+
+    Line 7: Add the closing tag for the third heading.
+
+Step 3: Add Lists
+
+Lists are a great way to organize information in HTML. There are two types of lists:
+
+    Unordered Lists (bullet points)
+
+    Ordered Lists (numbered)
+
+Each item in a list is defined using the <li> tag.
+
+    Unordered List:
+
+        Add the opening tag for the first list item.
+
+        Add the closing tag for the second list item.
+
+        Add the opening tag for the third list item.
+
+    Ordered List:
+
+        Add the opening tag for the first list item.
+
+        Add the opening tag for the second list item.
+
+        Add the opening tag for the third list item.
+
+Step 4: Add Tables
+
+Tables in HTML are used to present data in a structured format.
+
+    Define the table using the <table> tag.
+
+    Rows are created with the <tr> tag.
+
+    Table headers use the <th> tag, and regular data cells use the <td> tag.
+
+    To make your tables more organized, use the <thead>, <tbody>, and <tfoot> tags.
+
+    Always use the scope attribute on headers for accessibility.
+
+Steps for creating a table:
+
+    Add the table caption.
+
+    Add the table headers with scope to improve accessibility.
+
+    Add table data cells for the first and second rows.
+
+    Add the footer cell with colspan="3" to span all columns.
+
+Step 5: Add a Form
+
+Forms are the primary way websites collect information from users. To create a basic form:
+
+    Use the <form> tag.
+
+    Include input fields like text boxes, radio buttons, checkboxes, and submit buttons.
+
+    Use the <label> tag for accessibility, helping screen readers interpret the form.
+
+Steps for creating the form:
+
+    Define the for attribute for the name label.
+
+    Set the input type for the name field.
+
+    Define the id and name attributes for the name input field.
+
+    Repeat for the email field, subscription radio button, newsletter checkbox, and submit button.
+
+Step 6: Embed Media
+
+In modern web design, multimedia elements like images, videos, and audio files are common. HTML provides special tags to embed these media types:
+
+    Images: Use the <img> tag, including the alt attribute for accessibility.
+
+    Videos: Use the <video> tag, including the controls attribute for playback controls.
+
+    Audio: Use the <audio> tag, also with controls for user interaction.
+
+Steps for embedding media:
+
+    Add the <img> tag and define the src (source) and alt (alternative text) attributes.
+
+    Add the <video> tag with the controls attribute, and define the src and type attributes for the video.
+
+    Add the <audio> tag, specifying the src and type for the audio file.

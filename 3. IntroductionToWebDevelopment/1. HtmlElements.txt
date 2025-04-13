@@ -1,0 +1,85 @@
+HTML Elements:
+
+Document notes:
+
+HTML tag: have opening tags and closing tags
+
+Some tags do not use closing tags such as <br> OR <br/> to be compatible with XHTML tag - line break tag
+they are know as self closing tags as well
+
+<h1> <h1> Heading 1
+
+<p> paragraph content </p>
+
+<div> content in here  </div> - used to create divisions or sections helps organize content
+
+Basic HTML document structure:
+Start with the doctype tag no closing needed its just to tell the browser HTML follows:
+
+<!DOCTYPE html>
+
+<head>
+// in here we include metadata like the title that appears on the browser tab
+// links to scripts 
+// links to css style sheets
+// nothing here gets rendered in the broswer page
+</head>
+
+<body>
+// all the other objects that will be rendered in the browser
+</body>
+
+A simple template would look like this:
+
+<!DOCTYPE html>
+<html> 
+	<head>
+		<title>My Webpage</title>
+	</head>
+	<body>
+		<h1>Welcome to My Webpage</h1>
+		<p>This is a paragraph on my webpage.</p>
+	</body>
+</html>
+
+
+
+
+
+Every webpage you visit, from news sites to online stores, is built using HTML. 
+This fundamental language shapes the structure of content, making it readable and organized on the web. 
+HTML is the first step in creating a successful online presence. 
+In this video, we will explain the fundamental components of HTML, focusing on elements and tags. HTML, or Hypertext Markup Language, is the standard language used to create webpages. 
+Think of HTML as the skeleton of your webpage, giving it structure and organization. 
+Every webpage starts with a basic HTML document that includes tags to define its elements. 
+Now a tag is a special code enclosed in angle brackets used to mark the start and end of HTML elements and tell the browser how to display content. 
+Tags come in pairs, an opening tag, like &lt;h1&gt;, and a closing tag, like &lt;/h1&gt;. 
+Some elements use self-closing tags, like &lt;br /&gt; which don't need a separate closing tag. 
+An HTML element is made up of a start tag, content, and an end tag. 
+Elements define the structure and content of a webpage, such as headings, paragraphs, and sections. 
+Let's explore some common HTML elements. The &lt;h1&gt; element is used for headings. 
+It includes a start tag, &lt;h1&gt;, content (the heading text), and the end tag, which is &lt;/h1&gt;. 
+This makes the bold and large stand out. For example, GroovyCo's homepage uses &lt;h1&gt; for the main title to make it clear and prominent. 
+The &lt;p&gt; element is used for paragraphs. It includes a start tag of &lt;p&gt;, content, the paragraph text, and an end tag, which is &lt;/p&gt; 
+This groups sentences into readable blocks of text. The &lt;div&gt; element is used for creating divisions or sections on a webpage. 
+It includes a start tag, &lt;div&gt; , any content inside it, and an end tag, &lt;/div&gt;. 
+This helps organize different parts of the content. 
+An interesting fact is that some HTML elements don't require an end tag. 
+These are called self-closing tags. 
+Self-closing tags is a type of HTML tag that doesn't need an end tag. 
+It is used for elements that do not contain any content. 
+For example, the &lt;br /&gt; tag is used to insert a line break and doesn't need a separate closing tag. 
+Now that we understand the different types of tags, let's see how they fit together to form the structure of an HTML document. 
+The basic structure of an HTML document includes the &lt;!DOCTYPE html&gt; declaration and the main &lt;!DOCTYPE html&gt; &lt;head&gt; and &lt;body&gt; elements. 
+Inside these, various elements and tags work together to form the content of the webpage. 
+Let's take a look at the basic structure of an HTML document. 
+Understanding the basic structure of an HTML document is essential for creating webpages. 
+Here is a simple template. The &lt;!DOCTYPE html&gt; declaration defines the document type as a version of HTML. 
+It tells the browser that this is an HTML5 document. 
+The &lt;html&gt; element is the root element of the page, containing all other elements. 
+The &lt;head&gt; section contains the metadata, like the title, link to style sheets, or scripts. 
+It doesn't display content on the page. 
+The &lt;title&gt; element defines the title of the webpage, shown in the browser tab. 
+The &lt;body&gt; element contains all the content that's displayed on the webpage, such as text, images, and links. 
+Knowing how to use HTML elements and tags is essential for building webpages. 
+These basics are the foundation for all web content. Happy coding!
