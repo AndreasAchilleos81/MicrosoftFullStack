@@ -137,3 +137,49 @@ body {
     height: auto;
     object-fit: cover;
 }
+
+.skills-list {
+  list-style: none;
+  padding: 0;
+}
+
+.skills-list .skill {
+  position: relative;
+  padding-left: 2em;
+  margin-bottom: 0.5em;
+}
+
+.skills-list .skill::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 1.5em;
+  height: 1.5em;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.skills-list .skill.html::before {
+  background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg');
+}
+
+.skills-list .skill.css::before {
+  background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg');
+}
+
+.skills-list .skill.javascript::before {
+  background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg');
+}
+
+.skills-list .skill.python::before {
+  background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg');
+}
+
+.skills-list .skill.csharp::before {
+  background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg');
+}
+
+.skills-list .skill.sql::before {
+  background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg');
+}
