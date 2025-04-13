@@ -3,6 +3,30 @@ body {
     font-family: Arial, sans-serif;
   }
 
+  #about-me {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  #about-me h2 {
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif; 
+    color: #333; 
+    text-align: center;
+  }
+
+  #about-me p {
+    font-size: 16px;
+    color: #555; 
+    font-family: Georgia, serif; 
+    line-height: 1.6; 
+    text-align: justify;
+  }
+
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -57,3 +81,59 @@ body {
       display: flex;
     }
   }
+
+  .card-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* light gradient background */
+  }
+  
+  .projects-section{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* light gradient background */
+  }
+
+  .card {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: #343a40;
+  }
+  
+  .card figure {
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+  
+  .card figure img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+  }
+  
+  .card p {
+    color: #555;
+    line-height: 1.6;
+  }
+
+  img {
+    width: 300px;
+    height: auto;
+    object-fit: cover;
+}
