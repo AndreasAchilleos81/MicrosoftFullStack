@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My About Me Website</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-    <header>
-        <nav class="navbar">
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div>MySite</div>
             <button class="menu-toggle" id="toggleBtn" aria-label="Toggle navigation menu">
                 <span></span>
@@ -25,62 +27,75 @@
         </nav>
     </header>
     <script src="script.js"></script>
-    <article></article>
-    <section id="about-me">
-        <h2>A few words about me</h2>
-        <p>I am a quality assurance engineer from a small island keeping up with tech at my own free time hence why I am doing this course</p>
-    </section>
-    <section id="projects">
-        <h2>My Projects</h2>
-        <article>
-            <figure>
-                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.5F2b1aGD1m732_rfasj81QHaEK%26pid%3DApi&f=1&ipt=dda4a9b735acabaca2f17a4d827c8b0150224255078043f73d88e93193cce862&ipo=images" alt="Project 1 Screenshot" />
-                <figcaption>Project 1</figcaption>
-            </figure>
-            <p>This is a brief description of Project 1. It showcases my skills in HTML, CSS, and JavaScript.</p>
-        </article>
-        <article>
-            <figure>
-                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.hBrk4hL76iwEArg7jw_iNAHaEK%26pid%3DApi&f=1&ipt=7090c214490c90986d6f4f96c696cbd4e12be74b95bf72c253fd044d73df8eef&ipo=images" alt="Project 2 Screenshot" />
-                <figcaption>Project 2</figcaption>
-            </figure>
-            <p>This is a brief description of Project 2. It highlights my experience with Python and backend development.</p>
-        </article>
-        <article>
-            <figure>
-                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.AqBLhkOVOt6g-Ek337zOXgHaEc%26pid%3DApi&f=1&ipt=df8528aa14e7cce8a54b2f4c089242480f42950a931c51823fc5a9840083a815&ipo=images" alt="Project 3 Screenshot" />
-                <figcaption>Project 3</figcaption>
-            </figure>
-            <p>This is a brief description of Project 3. It demonstrates my ability to work with databases and C#.</p>
-        </article>
-    </section>
-    <section id="skills">
-        <h2>My Skills</h2>
-        <ul>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-            <li>Python</li>
-            <li>C#</li>
-            <li>MS SQL SERVER</li>
-        </ul>
-    </section>
-    <section id="contact">
-        <h2>Contact Me</h2>
-        <form action="#" method="post" id="contact-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required />
+    <main>
+        <section id="about-me">
+            <h2>A few words about me</h2>
+            <p>I am a quality assurance engineer from a small island keeping up with tech at my own free time hence why
+                I am doing this course</p>
+        </section>
+        <section id="projects">
+            <h2>My Projects</h2>
+            <article role="region" aria-labelledby="project1">
+                <h3 id="project1">Project 1</h3>
+                <figure>
+                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.5F2b1aGD1m732_rfasj81QHaEK%26pid%3DApi&f=1&ipt=dda4a9b735acabaca2f17a4d827c8b0150224255078043f73d88e93193cce862&ipo=images"
+                        alt="Project 1 Screenshot" />
+                    <figcaption>Project 1</figcaption>
+                </figure>
+                <p>This is a brief description of Project 1. It showcases my skills in HTML, CSS, and JavaScript.
+                </p>
+            </article>
+            <article role="region" aria-labelledby="project2">
+                <h3 id="project2">Project 2</h3>
+                <figure>
+                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.hBrk4hL76iwEArg7jw_iNAHaEK%26pid%3DApi&f=1&ipt=7090c214490c90986d6f4f96c696cbd4e12be74b95bf72c253fd044d73df8eef&ipo=images"
+                        alt="Project 2 Screenshot" />
+                    <figcaption>Project 2</figcaption>
+                </figure>
+                <p>This is a brief description of Project 2. It highlights my experience with Python and backend
+                    development.</p>
+            </article>
+            <article  role="region" aria-labelledby="project3">
+                <h3 id="project3">Project 3</h3>
+                <figure>
+                    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.AqBLhkOVOt6g-Ek337zOXgHaEc%26pid%3DApi&f=1&ipt=df8528aa14e7cce8a54b2f4c089242480f42950a931c51823fc5a9840083a815&ipo=images"
+                        alt="Project 3 Screenshot" />
+                    <figcaption>Project 3</figcaption>
+                </figure>
+                <p>This is a brief description of Project 3. It demonstrates my ability to work with databases and C#.
+                </p>
+            </article>
+        </section>
+        <section id="skills">
+            <h2>My Skills</h2>
+            <ul>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+                <li>Python</li>
+                <li>C#</li>
+                <li>MS SQL SERVER</li>
+            </ul>
+        </section>
+        <section id="contact">
+            <h2 id="contact-heading">Contact Me</h2>
+            <form action="#" method="post" id="contact-form" role="form" aria-labelledby="contact-heading">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required />
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required />
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required />
 
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
 
-            <button type="submit">Send</button>
-        </form>
-    </section>
-    <footer>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
     </footer>
 </body>
+
 </html>
