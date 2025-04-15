@@ -40,3 +40,22 @@ navLinks.forEach(link => {
     }
   });
 });
+
+
+const searchInput = document.getElementById('project-search');
+const projectCards = document.querySelectorAll('.projects-section .card');
+
+searchInput.addEventListener('input', () => {
+  const searchTerm = searchInput.value.toLowerCase();
+
+  projectCards.forEach(card => {
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    const description = card.querySelector('p').textContent.toLowerCase();
+
+    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+      card.style.display = ''; // Show the card
+    } else {
+      card.style.display = 'none'; // Hide the card
+    }
+  });
+});

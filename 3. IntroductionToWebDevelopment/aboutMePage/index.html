@@ -27,7 +27,6 @@
             </div>
         </nav>
     </header>
-    <script src="script.js"></script>
     <main>
         <section id="about-me">
             <h2>A few words about me</h2>
@@ -37,6 +36,10 @@
             </p>
         </section>
         <section id="projects" class="projects-section">
+            <div class="search-container">
+                <label for="project-search">Search Projects:</label>
+                <input type="text" id="project-search" placeholder="Type to filter projects..." />
+            </div>
             <article role="region" aria-labelledby="project1" class="card">
                 <h3 id="project1">Project 1</h3>
                 <figure>
@@ -124,6 +127,7 @@
 
     <footer role="contentinfo">
     </footer>
+    <script src="script.js"></script>
 </body>
 
 </html>
