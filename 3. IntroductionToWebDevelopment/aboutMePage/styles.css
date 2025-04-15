@@ -285,3 +285,16 @@ img {
 .contact-form button:hover {
   background-color: #0056b3;
 }
+
+.search-container {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+#project-search {
+  width: 80%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

@@ -6,7 +6,7 @@ toggleBtn.addEventListener('click', () => {
 function toggleMenu() {
   const menu = document.getElementById('menu');
   menu.classList.toggle('active');
-} 
+}
 
 const navLinks = document.querySelectorAll('.menu a');
 navLinks.forEach(link => {
@@ -41,21 +41,28 @@ navLinks.forEach(link => {
   });
 });
 
-
 const searchInput = document.getElementById('project-search');
 const projectCards = document.querySelectorAll('.projects-section .card');
+const categories = document.querySelectorAll('.projects-section .category');
 
-searchInput.addEventListener('input', () => {
-  const searchTerm = searchInput.value.toLowerCase();
-
+// Function to filter projects based on the search term
+function filterProjects(searchTerm) {
   projectCards.forEach(card => {
     const title = card.querySelector('h3').textContent.toLowerCase();
     const description = card.querySelector('p').textContent.toLowerCase();
+    const category = card.querySelector('.category').textContent.toLowerCase();
 
-    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+
+    if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
       card.style.display = ''; // Show the card
     } else {
       card.style.display = 'none'; // Hide the card
     }
   });
+}
+
+// Event listener for the search input
+searchInput.addEventListener('input', () => {
+  const searchTerm = searchInput.value.toLowerCase();
+  filterProjects(searchTerm);
 });
