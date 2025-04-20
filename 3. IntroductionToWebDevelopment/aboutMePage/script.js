@@ -124,3 +124,70 @@ lightbox.addEventListener('click', (event) => {
     closeLightbox();
   }
 });
+
+
+const form = document.getElementById('contact-form');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const messageInput = document.getElementById('message');
+
+const nameError = document.getElementById('name-error');
+const emailError = document.getElementById('email-error');
+const messageError = document.getElementById('message-error');
+
+// Function to validate name
+function validateName() {
+  if (nameInput.value.trim() === '' || nameInput.value.length < 3) {
+    nameError.textContent = 'Name is required and must be at least 3 characters long.';
+    nameError.style.display = 'block';
+    return false;
+  } else {
+    nameError.style.display = 'none';
+    return true;
+  }
+}
+
+// Function to validate email
+function validateEmail() {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (emailInput.value.trim() === '') {
+    emailError.textContent = 'Email is required.';
+    emailError.style.display = 'block';
+    return false;
+  } else if (!emailRegex.test(emailInput.value.trim())) {
+    emailError.textContent = 'Please enter a valid email address.';
+    emailError.style.display = 'block';
+    return false;
+  } else {
+    emailError.style.display = 'none';
+    return true;
+  }
+}
+
+// Function to validate message
+function validateMessage() {
+  if (messageInput.value.trim() === '') {
+    messageError.textContent = 'Message is required.';
+    messageError.style.display = 'block';
+    return false;
+  } else {
+    messageError.style.display = 'none';
+    return true;
+  }
+}
+
+// Real-time validation
+nameInput.addEventListener('input', validateName);
+emailInput.addEventListener('input', validateEmail);
+messageInput.addEventListener('input', validateMessage);
+
+// Form submission validation
+form.addEventListener('submit', (event) => {
+  const isNameValid = validateName();
+  const isEmailValid = validateEmail();
+  const isMessageValid = validateMessage();
+
+  if (!isNameValid || !isEmailValid || !isMessageValid) {
+    event.preventDefault(); // Prevent form submission if validation fails
+  }
+});
