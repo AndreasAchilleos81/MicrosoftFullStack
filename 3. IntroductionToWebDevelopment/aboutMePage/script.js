@@ -66,3 +66,61 @@ searchInput.addEventListener('input', () => {
   const searchTerm = searchInput.value.toLowerCase();
   filterProjects(searchTerm);
 });
+
+// light box effect for projects code
+const projectImages = document.querySelectorAll('.projects-section .card img');
+const lightbox = document.getElementById('lightbox');
+const lightboxImage = document.getElementById('lightbox-image');
+const closeBtn = document.getElementById('lightbox-close');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+
+let currentIndex = 0;
+
+// Function to open the lightbox
+function openLightbox(index) {
+  const visibleImages = Array.from(projectImages).filter(img => img.closest('.card').style.display !== 'none');
+  currentIndex = index;
+  lightboxImage.src = visibleImages[currentIndex].src;
+  lightbox.style.display = 'flex';
+}
+
+// Function to close the lightbox
+function closeLightbox() {
+  lightbox.style.display = 'none';
+}
+
+// Function to navigate to the previous image
+function showPrevious() {
+  const visibleImages = Array.from(projectImages).filter(img => img.closest('.card').style.display !== 'none');
+  currentIndex = (currentIndex - 1 + visibleImages.length) % visibleImages.length;
+  lightboxImage.src = visibleImages[currentIndex].src;
+}
+
+// Function to navigate to the next image
+function showNext() {
+  const visibleImages = Array.from(projectImages).filter(img => img.closest('.card').style.display !== 'none');
+  currentIndex = (currentIndex + 1) % visibleImages.length;
+  lightboxImage.src = visibleImages[currentIndex].src;
+}
+
+// Event listeners for project images
+projectImages.forEach((img, index) => {
+  img.addEventListener('click', () => {
+    const visibleImages = Array.from(projectImages).filter(img => img.closest('.card').style.display !== 'none');
+    const visibleIndex = visibleImages.indexOf(img);
+    openLightbox(visibleIndex);
+  });
+});
+
+// Event listeners for lightbox controls
+closeBtn.addEventListener('click', closeLightbox);
+prevBtn.addEventListener('click', showPrevious);
+nextBtn.addEventListener('click', showNext);
+
+// Close lightbox when clicking outside the image
+lightbox.addEventListener('click', (event) => {
+  if (event.target === lightbox) {
+    closeLightbox();
+  }
+});
