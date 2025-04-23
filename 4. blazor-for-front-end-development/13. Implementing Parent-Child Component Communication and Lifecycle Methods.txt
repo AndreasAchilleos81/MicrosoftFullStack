@@ -1,0 +1,129 @@
+✅ Lab: Building a Task Manager App in Blazor
+
+In this lab, we'll build a Task Manager App using Blazor WebAssembly (WASM). You'll learn how to:
+
+    Create parent and child components
+
+    Use event callbacks for communication
+
+    Implement lifecycle methods in both components
+
+🔧 Step 1: Set Up the Development Environment
+
+Start by creating a new Blazor WebAssembly app:
+
+dotnet new blazorwasm -o TaskManagerApp
+cd TaskManagerApp
+
+This sets up the base Blazor WASM project for your task manager.
+🧩 Step 2: Create Parent and Child Components
+🗂 Create the Child Component
+
+Create a new file: TaskDisplay.razor
+
+<div class="task-item">
+    <p>@TaskName</p>
+    <button @onclick="MarkAsComplete">Mark as Complete</button>
+</div>
+
+@code {
+    [Parameter]
+    public string TaskName { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnTaskCompleted { get; set; }
+
+    private async Task MarkAsComplete()
+    {
+        await OnTaskCompleted.InvokeAsync(TaskName);
+    }
+}
+
+This child component:
+
+    Accepts a TaskName
+
+    Raises an OnTaskCompleted event when the button is clicked
+
+🧩 Create the Parent Component
+
+Create a file: ParentTaskManager.razor
+
+<h3>Task Manager</h3>
+
+@foreach (var task in TaskList)
+{
+    <TaskDisplay TaskName="@task" OnTaskCompleted="HandleTaskCompleted" />
+}
+
+@code {
+    private List<string> TaskList = new() { "Task1", "Task2", "Task3" };
+
+    private void HandleTaskCompleted(string completedTask)
+    {
+        TaskList.Remove(completedTask);
+        Console.WriteLine($"Task completed: {completedTask}");
+    }
+}
+
+What this does:
+
+    Renders a list of child components
+
+    Uses HandleTaskCompleted to respond when a task is marked complete in the child
+
+🔄 Step 3: Use Lifecycle Methods
+🧠 In the Parent Component
+
+Add the OnInitialized lifecycle method to ParentTaskManager.razor:
+
+@code {
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Parent component initialized.");
+    }
+}
+
+This method runs when the component is first initialized.
+🧠 In the Child Component
+
+Add the OnParametersSet lifecycle method to TaskDisplay.razor:
+
+@code {
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine($"TaskDisplay received parameter: {TaskName}");
+    }
+}
+
+This runs every time a parameter is set or updated, logging the TaskName to the console.
+▶️ Step 4: Run the App
+
+    Run the application:
+
+    dotnet run
+
+    Navigate to the parent page.
+
+    Open Developer Tools > Console to see lifecycle messages.
+
+You’ll See:
+
+    "Parent component initialized." on app start
+
+    "TaskDisplay received parameter: Task1" (and others for each task)
+
+    "Task completed: Task1" when a task is marked complete
+
+🎯 Summary
+
+In this lab, you learned how to:
+Feature	Purpose
+@code + [Parameter]	Define properties and expose data to/from parent
+EventCallback<T>	Allow child to notify parent and send data
+OnInitialized()	Run logic when component is initialized
+OnParametersSet()	React when parent updates parameters
+
+This setup allows you to build interactive, modular, and maintainable Blazor apps.
+
+

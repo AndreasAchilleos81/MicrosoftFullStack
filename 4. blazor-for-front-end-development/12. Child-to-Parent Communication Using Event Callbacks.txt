@@ -1,0 +1,127 @@
+ Blazor: Child-to-Parent Communication Using Event Callbacks
+
+In web applications, seamless communication between components is crucial for building interactive and dynamic user experiences. In Blazor, child components often need to notify their parent components when something happens.
+
+This is where event callbacks come into play.
+📌 What is an Event Callback?
+
+An event callback is a mechanism that allows a child component to notify its parent when an event occurs—like a button click. This enables the parent to handle that event even though it originated from the child.
+🧩 Basic Example: Notify Parent on Button Click
+
+Let’s break down how this works step-by-step.
+✅ Child Component Code
+
+<button @onclick="HandleClick">Click Me</button>
+
+@code {
+    [Parameter]
+    public EventCallback OnButtonClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        await OnButtonClick.InvokeAsync();
+    }
+}
+
+✅ What This Code Does:
+
+    [Parameter] tells Blazor this property can receive an event handler from the parent.
+
+    public EventCallback OnButtonClick { get; set; } defines a callback the parent can subscribe to.
+
+    HandleClick() is a private method that’s triggered when the button is clicked.
+
+    OnButtonClick.InvokeAsync() notifies the parent that the event occurred.
+
+✅ Parent Component Usage
+
+<ChildComponent OnButtonClick="HandleChildClick" />
+
+@code {
+    private void HandleChildClick()
+    {
+        // Logic to execute when child button is clicked
+    }
+}
+
+📦 Passing Data with EventCallback<T>
+
+Sometimes you don’t just want to notify the parent—you also want to send data.
+
+Blazor’s EventCallback<T> lets you pass a value (like a string or number) to the parent when the event occurs.
+🔄 Example: Send Selected Item Back to Parent
+✅ Child Component Code
+
+<button @onclick="() => SelectItem("Item A")">Select Item A</button>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnItemSelected { get; set; }
+
+    private async Task SelectItem(string item)
+    {
+        await OnItemSelected.InvokeAsync(item);
+    }
+}
+
+✅ Parent Component Code
+
+<ChildComponent OnItemSelected="HandleItemSelected" />
+
+@code {
+    private void HandleItemSelected(string selectedItem)
+    {
+        Console.WriteLine($"Selected Item: {selectedItem}");
+    }
+}
+
+🧠 Recap & Why It Matters
+
+Using EventCallback and EventCallback<T>:
+
+    Keeps components independent and reusable.
+
+    Allows parent components to react to changes inside child components.
+
+    Enables you to pass data from child to parent in a structured and scalable way.
+
+✅ Summary
+Feature	Purpose
+EventCallback	Notifies parent when an event occurs in child
+EventCallback<T>	Notifies parent and passes data (e.g., string, int)
+
+By mastering event callbacks, you'll be able to build responsive, maintainable, and interactive Blazor applications where components communicate smoothly and efficiently.
+
+
+Communication Between Blazor Components: Parent-Child Interaction
+Introduction
+In Blazor applications, components communicate to build dynamic, responsive web interfaces. This interaction is especially important for parent-child components, where data often flows from the parent to the child and, occasionally, from the child back to the parent in response to user actions or other events.
+
+Parent-to-Child Communication Using Parameters
+Parent components use the [Parameter] attribute to send data to child components, a straightforward way to enable data flow without compromising each component's independence. This setup allows a child to receive data types directly from its parent, such as strings, integers, or objects.
+
+How It Works: The parent component assigns values to child parameters in HTML-like syntax. In the child component, properties marked with [Parameter] receive and utilize this data.
+
+Example: A parent component might pass a username to a child that displays "Hello, [username]"—a simple, effective way to personalize content without embedding data directly in the child component.
+
+Child-to-Parent Communication Using Event Callbacks: 
+Child components occasionally need to notify the parent component of actions, often through EventCallback and EventCallback<T>.
+
+EventCallback: This type allows the child to send basic event notifications to the parent. For example, when a button is clicked on the child, it can trigger an action in the parent.
+
+EventCallback<T>: With this generic version, the child can send specific data, like a selected item, back to the parent. This capability allows child components to remain interactive and responsive while the parent controls higher-level logic.
+
+Example: A child component displaying user details in a user management interface might have an "Update" button. When clicked, it triggers an EventCallback to notify the parent, updating its data list accordingly. This structure allows child components to trigger responses in the parent without direct dependencies, keeping the design modular and clean.
+
+Benefits of Blazor Component Communication
+These communication methods enhance flexibility and modularity:
+
+Maintainability: Parent and child components remain loosely coupled, meaning updates in one do not affect the other.
+
+Reusability: Components become versatile and capable of handling varied data and use cases. For instance, a child component that displays product details can be used across different product categories by passing specific data from the parent.
+
+Conclusion
+Blazor's approach to component communication—using parameters for parent-to-child data flow and event callbacks for child-to-parent notifications—supports scalable, maintainable applications. These techniques allow developers to build modular, reusable components that respond to user interactions while keeping code organized and efficient
+
+
+
