@@ -1,0 +1,117 @@
+How Do Components in a Web App Stay Independent While Sharing Data?
+
+In Blazor, parent-child communication is key to balancing flexibility and control when building scalable applications.
+🔹 What Is Parent-Child Communication?
+
+In Blazor, parent-child communication allows data or actions to be shared between components while keeping them independent. This is essential for building dynamic and responsive applications.
+
+Benefits include:
+
+    Simplified maintenance: Avoid code duplication and tight coupling.
+
+    Enhanced flexibility: Change one component without affecting others.
+
+🔹 Passing Data from Parent to Child
+
+A parent component can send data to a child component using parameters.
+✅ Example:
+
+    Child component defines a parameter:
+
+@code {
+    [Parameter]
+    public string Username { get; set; }
+}
+
+Parent passes data to the child:
+
+<ChildComponent Username="Alice" />
+
+Child displays it:
+
+    <p>Hello @Username</p>
+
+🔹 Sending Data from Child to Parent
+
+Sometimes, a child needs to notify the parent of an event. This is done using event callbacks.
+✅ Example:
+
+    Child declares an event callback:
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnUpdate { get; set; }
+
+    private void NotifyParent() {
+        OnUpdate.InvokeAsync("Bob");
+    }
+}
+
+Parent handles the event:
+
+    <ChildComponent OnUpdate="HandleUpdate" />
+
+    @code {
+        private void HandleUpdate(string updatedName) {
+            userList.Add(updatedName);
+        }
+    }
+
+🔹 Benefits of Parent-Child Communication
+
+    Maintainability: Components are isolated. Updating one doesn't break the other.
+
+    Reusability: Independent components can be reused throughout the app.
+
+🔹 Real-World Example: User Management App
+📌 Scenario:
+
+    The parent component manages a list of tasks.
+
+    Child components display individual task details and allow updates.
+
+✅ Parent-to-Child:
+
+Parent sends task data using parameters:
+
+<ChildTaskComponent TaskName="FinishReport" />
+
+Child receives and displays the task:
+
+<p>Task: @TaskName</p>
+
+This ensures the child focuses solely on displaying tasks, keeping the parent's logic untouched.
+✅ Child-to-Parent:
+
+Child notifies parent when a task is completed:
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnTaskCompleted { get; set; }
+
+    private void CompleteTask() {
+        OnTaskCompleted.InvokeAsync(true);
+    }
+}
+
+Parent handles the update:
+
+<ChildTaskComponent OnTaskCompleted="UpdateTaskStatus" />
+
+@code {
+    private void UpdateTaskStatus(bool isCompleted) {
+        // Update task list
+    }
+}
+
+🔹 Conclusion
+
+By leveraging parent-to-child and child-to-parent communication:
+
+    Components remain independent and reusable.
+
+    The parent handles overall data/state.
+
+    The child focuses on display and interaction.
+
+This approach ensures clean, scalable, and maintainable Blazor applications.
