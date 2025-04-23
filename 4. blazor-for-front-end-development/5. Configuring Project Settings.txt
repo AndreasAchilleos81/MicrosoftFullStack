@@ -1,0 +1,92 @@
+Ever wondered what it takes to unlock the full potential of your Blazor project? It all starts with the project configuration file—the hidden powerhouse behind how your application performs, scales, and integrates.
+
+In this video, we’ll walk you through how to access and modify project settings in a Blazor project. Whether you're tuning performance, managing dependencies, or prepping for deployment, this guide will give you the skills to make your Blazor app stand out.
+What is the .csproj File?
+
+The .csproj file (short for C# Project File) contains essential settings that define how your Blazor project is built and run. This includes:
+
+    Dependencies
+
+    Build configurations
+
+    Target frameworks
+
+    Output settings
+
+    And more
+
+Whenever you need to tweak how your Blazor app behaves, you’ll likely be editing this file.
+Accessing the .csproj File
+
+To locate and open the .csproj file in Visual Studio Code:
+
+    Open your Blazor project folder
+
+    Look for a file with the .csproj extension in the root directory
+
+    Click the file to open it
+
+You'll notice the file is written in XML. It may look complex at first, but we’ll break it down into simple sections.
+Key Sections of the .csproj File
+1. <Project>
+
+This is the root element of the file.
+2. <PropertyGroup>
+
+Contains build settings like:
+
+<TargetFramework>net7.0</TargetFramework>
+
+3. <ItemGroup>
+
+Defines dependencies, such as NuGet packages:
+
+<PackageReference Include="SomePackage" Version="1.0.0" />
+
+Modifying the Target Framework
+
+To change the target framework (e.g., from .NET 7.0 to .NET 6.0):
+
+    Locate the <TargetFramework> tag inside <PropertyGroup>
+
+    Change the line:
+
+<TargetFramework>net7.0</TargetFramework>
+
+to:
+
+<TargetFramework>net6.0</TargetFramework>
+
+If using GitHub Copilot, request the change and click Accept when the edit is suggested.
+
+Then go to File → Save.
+Customizing Project Properties
+
+Want to change the output type or root namespace?
+
+Ask Copilot (or add manually) the following lines inside <PropertyGroup>:
+
+<OutputType>Exe</OutputType>
+<RootNamespace>MyBlazorApp</RootNamespace>
+
+These define the type of output (executable) and the default namespace for your project.
+Adding Dependencies (NuGet Packages)
+
+To add a NuGet package (e.g., Newtonsoft.Json), insert this inside the <ItemGroup> tag:
+
+<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+
+After saving the file, Visual Studio Code will automatically download and include the package in your project.
+Summary
+
+✅ In this lesson, you've learned how to:
+
+    Access and edit the .csproj file
+
+    Change the target framework
+
+    Customize output type and namespace
+
+    Add NuGet dependencies
+
+These are foundational skills for configuring your Blazor project exactly how you need it. Keep experimenting, and you'll unlock even more of what Blazor can do!

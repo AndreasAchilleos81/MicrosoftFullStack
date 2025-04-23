@@ -1,0 +1,108 @@
+Setting Up and Debugging a Blazor Project
+
+Creating and Debugging a Blazor Application Using .NET
+Step 1: Setup
+To begin, ensure your environment is configured correctly by checking the .NET version:
+
+bash
+dotnet --version
+If the output shows .NET 8.0, that's suitable for this lab. The latest version at the time is .NET 9.0, but .NET 8.0 works perfectly for our purposes.
+
+Step 2: Create a Project Folder
+First, create a folder for your Blazor application:
+
+bash
+mkdir weather-app
+Navigate into the newly created folder:
+
+bash
+cd weather-app
+Step 3: Create a Blazor WASM Application
+Run the .NET new command using the Blazor WebAssembly template:
+
+bash
+dotnet new blazorwasm -o weather-app
+This will generate your application inside a subfolder named weather-app. If you want to skip manually creating the folder, you can execute this command from the root directory, and .NET will create the subfolder automatically.
+
+Step 4: Open in Visual Studio Code
+Navigate to the application folder:
+
+bash
+cd weather-app
+Open the folder in a new instance of Visual Studio Code:
+
+bash
+code .
+This ensures a clean workspace without other folders cluttering your view.
+
+Debugging Your Application
+Step 5: Modify Counter.razor
+Locate the Counter.razor file under the Pages folder. Modify the IncrementCount method to include a loop.
+
+Original Method:
+csharp
+private void IncrementCount()
+{
+    currentCount++;
+}
+Updated Method:
+Replace the original with the following loop:
+
+csharp
+private void IncrementCount()
+{
+    for (int i = 0; i < 5; i++)
+    {
+        currentCount++;
+    }
+}
+This modification increments the currentCount variable five times whenever the method is called.
+
+Adding Nested Functions
+Step 6: Create a MainFunction and Call a Nested Function
+Define a new MainFunction to call a nested function:
+
+csharp
+private void MainFunction()
+{
+    NestedFunction();
+}
+
+private void NestedFunction()
+{
+    currentCount++;
+}
+When MainFunction is triggered, it calls NestedFunction, which increments currentCount.
+
+Debugging Workflow
+Step 7: Set Breakpoints
+To debug the MainFunction, set a breakpoint at the line inside NestedFunction:
+
+csharp
+currentCount++;
+Run the debugger:
+
+Open the Run and Debug tab in Visual Studio Code.
+
+Choose the C# language and use the default configuration.
+
+Step 8: Fix Errors
+If the application fails to build, ensure that the OnClick event in Counter.razor points to the correct method (MainFunction):
+
+html
+<button @onclick="MainFunction">Click me</button>
+Step 9: Debug Using Breakpoints
+Click the button on the counter page to trigger MainFunction.
+
+Visual Studio Code will pause at the breakpoint.
+
+Hover over currentCount to inspect its value.
+
+Initially, it will be 0.
+
+Use Step Into to increment the value.
+
+Observing Changes in Real-Time
+As you debug, monitor currentCount in the Variables List or by hovering over it. Each click updates the count, allowing you to verify functionality and troubleshoot issues.
+
+This process provides a hands-on way to understand debugging in Blazor while identifying and fixing problems efficiently. Let me know if you need further clarification!

@@ -1,0 +1,129 @@
+Managing Dependencies in a Blazor Application
+
+Effectively managing dependencies is crucial for keeping your Blazor application secure, performant, and maintainable. Blazor supports a wide range of libraries—both from Microsoft and third-party sources—that can accelerate development and promote best practices within the community.
+
+In this guide, we’ll walk through how to manage dependencies in a Blazor project using Visual Studio Code and the .NET CLI (Command-Line Interface).
+🔍 Viewing Installed Dependencies
+
+With your Blazor project open in VS Code, you can check installed dependencies by opening the .csproj file (located in your project’s root directory). Inside, you'll find the following section:
+
+<ItemGroup>
+  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
+  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" />
+  <PackageReference Include="System.Net.Http.Json" Version="7.0.0" />
+</ItemGroup>
+
+Each <PackageReference> entry specifies a NuGet package and the version installed.
+📦 Adding a Package via Terminal
+
+The most common way to install a new package is by using the terminal. For example, to install Newtonsoft.Json version 13.0.1, run:
+
+dotnet add package Newtonsoft.Json --version 13.0.1
+
+This command:
+
+    Contacts the NuGet catalog
+
+    Downloads the package
+
+    Adds a reference to your .csproj file automatically
+
+After running the command, you’ll see the reference added:
+
+<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+
+✍️ Adding a Package Manually
+
+Alternatively, you can manually edit the .csproj file:
+
+<ItemGroup>
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+</ItemGroup>
+
+While IntelliSense helps suggest valid packages and versions, using the terminal or NuGet package manager is more efficient and less error-prone.
+📄 Listing Installed Packages
+
+To view all installed packages:
+
+dotnet list package
+
+To find outdated packages:
+
+dotnet list package --outdated
+
+You’ll see output like:
+
+> Newtonsoft.Json
+  Requested: 13.0.1
+  Resolved: 13.0.1
+  Latest:    13.0.2
+
+This helps you compare installed versions with the latest available.
+⚠️ Handling Package Conflicts
+
+A package conflict happens when one package requires a specific version of another package that conflicts with what's already installed.
+Example:
+
+You install:
+
+dotnet add package System.Text.Json --version 6.0.0
+
+Then add:
+
+dotnet add package Microsoft.AspNetCore.SignalR.Protocols.Json --version 7.0.0
+
+If SignalR.Protocols.Json needs System.Text.Json >= 8.0.0, you’ll get a build error:
+
+Microsoft.Extensions.Configuration.Json 8.0.0 depends on System.Text.Json >= 8.0.0
+
+In this case, you can either:
+
+    Update the conflicting package to the required version
+
+    Remove the incompatible dependency
+
+❌ Removing a Package
+
+To remove a package:
+
+dotnet remove package System.Text.Json
+
+This command updates the .csproj file and deletes the reference.
+🔄 Restoring Dependencies
+
+To restore missing packages (e.g., after cloning a repo):
+
+dotnet restore
+
+This checks your .csproj file and installs any missing dependencies.
+🛡️ Checking for Vulnerabilities
+
+To scan for packages with known security issues:
+
+dotnet list package --vulnerable
+
+Example output:
+
+System.Text.RegularExpressions 3.0.0 has known vulnerabilities.
+
+Click the provided advisory link to read more. Then, update to the latest secure version:
+
+dotnet add package System.Text.RegularExpressions --version 4.3.1
+
+✅ Summary
+
+In this walkthrough, you learned how to manage dependencies in a Blazor project using VS Code and the .NET CLI:
+
+    View installed packages
+
+    Add packages via terminal or manually
+
+    Identify and resolve version conflicts
+
+    Remove and restore packages
+
+    Check for security vulnerabilities
+
+Effective dependency management is a key part of maintaining a stable, secure Blazor app.
+
+Let me know if you'd like a visual cheat sheet or .csproj best practices reference!

@@ -1,0 +1,247 @@
+🔧 Managing Environment Configurations with appsettings.json in Blazor
+
+Managing different configurations for environments like Development, Staging, and Production is essential in modern application development. In this guide, you’ll learn how to use the appsettings.json file in a Blazor application to centralize and manage these settings.
+📄 What Is appsettings.json?
+
+The appsettings.json file is a JSON configuration file in .NET used to store key-value pairs for application settings.
+
+For example:
+
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+
+    Logging is a key that contains nested settings.
+
+    AllowedHosts: "*" allows requests from any domain.
+
+This setup enables different configurations per environment without changing your codebase.
+🌐 Adding Custom Settings (Example: API URL)
+
+Suppose you're building a delivery app and need to store the API URL. Add a new section to your appsettings.json:
+
+{
+  "APISettings": {
+    "BaseUrl": "https://api.myapp.com"
+  }
+}
+
+This lets you change the API endpoint without modifying your code.
+🧩 Accessing Settings in Blazor Using IConfiguration
+
+To use settings from appsettings.json in your code, leverage the built-in IConfiguration interface.
+Step 1: Create a Service
+
+Create a folder named Services in your project, and inside it, create a file named ApiService.cs.
+
+using Microsoft.Extensions.Configuration;
+
+public class ApiService
+{
+    private readonly IConfiguration _configuration;
+
+    public ApiService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    public string GetBaseUrl()
+    {
+        return _configuration["APISettings:BaseUrl"];
+    }
+}
+
+    The IConfiguration object gives access to both appsettings.json and environment-specific files like appsettings.Development.json.
+
+🧷 Registering the Service
+
+To use the service across your application, register it in Program.cs.
+Step 2: Open Program.cs
+
+Find the section where services are registered, and add:
+
+builder.Services.AddSingleton<ApiService>();
+
+This makes the ApiService available via dependency injection in your Blazor components.
+💡 Using the Service in a Component
+
+Now you can inject and use your service:
+
+@inject ApiService ApiService
+
+<p>Base URL: @ApiService.GetBaseUrl()</p>
+
+This retrieves the base API URL stored in appsettings.json.
+🏗 Environment-Specific Configuration
+
+.NET automatically loads:
+
+    appsettings.json (common settings)
+
+    appsettings.Development.json (overrides for development)
+
+    appsettings.Production.json (overrides for production)
+
+You can store different API URLs per environment:
+
+appsettings.Development.json
+
+{
+  "APISettings": {
+    "BaseUrl": "https://dev.api.myapp.com"
+  }
+}
+
+appsettings.Production.json
+
+{
+  "APISettings": {
+    "BaseUrl": "https://api.myapp.com"
+  }
+}
+
+✅ Why Use appsettings.json?
+
+    Centralizes settings
+
+    Simplifies environment management
+
+    Keeps sensitive URLs and config values out of code
+
+    Supports automatic loading and overrides
+
+📺 Final Thoughts
+
+In this walkthrough, you learned how to:
+
+    Define configuration values in appsettings.json
+
+    Access them using IConfiguration
+
+    Register and use a service in Blazor to retrieve settings
+
+    Manage settings per environment
+
+Now it’s your turn to apply this pattern in your own Blazor or .NET applications.
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+Creating a Blazor Project
+Introduction
+This guide will help you set up a Blazor WebAssembly project in Visual Studio Code. You’ll learn how to create the project, configure essential settings, manage dependencies, and use appsettings.json for flexible configuration. These steps provide a solid foundation for building Blazor applications with custom settings and external dependencies.
+
+Steps
+Step 1: Create a New Blazor Project
+Open Visual Studio Code and launch the terminal.
+
+Type the following command to create a new Blazor WebAssembly project:
+
+dotnet new blazorwasm -o MyFirstBlazorApp
+
+     3.    Press Enter. This command creates a new Blazor app in a folder named "MyFirstBlazorApp."
+
+Step 2: Open and Edit the .csproj File
+Locate the .csproj file in the project’s root directory (inside the "MyFirstBlazorApp" folder).
+
+Open the file in Visual Studio Code. This file controls build settings and dependencies for your Blazor project.
+
+To change the target framework:
+
+Find the <TargetFramework> element within <PropertyGroup> and update its value, for example:
+
+<TargetFramework>net6.0</TargetFramework>
+
+     4.    To set the output type and root namespace:
+
+Add the following lines in the <PropertyGroup> section:
+
+<OutputType>Exe</OutputType>
+
+<RootNamespace>MyBlazorApp</RootNamespace>
+
+Step 3: Add Dependencies
+Inside the .csproj file, locate or add an <ItemGroup> section.
+
+To add a NuGet package:
+
+Add a <PackageReference> entry for each package you need. For example, to add Newtonsoft.Json, use:
+
+<ItemGroup>
+
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+
+</ItemGroup>
+
+     3.    Save the file to allow Visual Studio Code to download and include the new package in your project.
+
+Step 4: Use appsettings.json for Application Settings
+Check if an appsettings.json file exists in your project root. If not, create one.
+
+Open appsettings.json and add key-value pairs for your configuration. For example, to add an API base URL:
+
+{
+
+  "ApiSettings": {
+
+    "BaseUrl": "https://api.myapp.com"
+
+  }
+
+}
+
+     3.    Save the file. This file stores settings outside of the code, making updates easier.
+
+Step 5: Access Settings in Code
+Create a Service Class:
+
+In your project, create a folder named Services.
+
+Inside Services, create a new file named ApiService.cs.
+
+Add the following code to ApiService.cs to retrieve settings from appsettings.json:
+
+using Microsoft.Extensions.Configuration;
+
+public class ApiService
+
+{
+
+    private readonly IConfiguration _configuration;
+
+ 		   public ApiService(IConfiguration configuration)
+
+    {
+
+        _configuration = configuration;
+
+    }
+
+    public string GetApiUrl()
+
+    {
+
+        return _configuration["ApiSettings:BaseUrl"];
+
+    }
+
+}
+
+     2.    Register the Service:
+
+Open Program.cs and add your new service to the service container:
+
+builder.Services.AddSingleton<ApiService>();
+
+Conclusion
+Following these steps, you have created a Blazor WebAssembly project, configured project settings, managed dependencies, and set up appsettings.json for centralized configuration. This setup is ready for further development and customizations, providing a solid base for your Blazor application’s needs.
+
+
+

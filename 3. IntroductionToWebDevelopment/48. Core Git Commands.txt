@@ -124,6 +124,10 @@ Understanding and using basic Git commands is crucial for effective version cont
     git pull
 
     git status
+	
+	Force dummy commits with not changes to your code:
+		git commit --amend --no-edit
+		git push --force-with-lease
 
 you can confidently manage your code, track progress, and collaborate smoothly with your team. 🚀
 

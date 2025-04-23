@@ -1,0 +1,175 @@
+Debugging Tools and Techniques:
+
+
+dotnet watch run --configuration Debug --launch-profile https
+
+
+Debugging Blazor Applications in Visual Studio Code
+Every developer faces bugs, but how quickly you solve them can make all the difference. What if you could determine exactly where your code is going wrong and fix issues before they become bigger problems? In this guide, we will identify the tools and techniques for debugging Blazor applications.
+
+1. Breakpoints: The Most Basic Debugging Tool
+Breakpoints are markers that pause the application at specific lines of code, letting us inspect what's happening at each stage.
+
+How to Set a Breakpoint:
+Navigate to the left side of the code line you want to inspect.
+
+Click to add a red dot, which indicates a breakpoint.
+
+Example Scenario:
+If a for loop is supposed to run 5 times but isn't behaving correctly, you can set a breakpoint at the start of the loop:
+
+csharp
+for (int i = 0; i < 5; i++)
+{
+    Console.WriteLine(i);
+}
+When the program pauses, inspect the value of the loop counter to identify the issue.
+
+2. Running the Debugger
+With breakpoints set, you can run the debugger:
+
+Go to the Run and Debug tab on the sidebar.
+
+Click on Start Debugging.
+
+Visual Studio Code will build and launch your Blazor application in debug mode.
+
+When the code execution reaches a breakpoint, it will pause, allowing you to examine the current state.
+
+3. The Watch Window
+The Watch Window is a powerful tool to track specific variables or expressions while debugging.
+
+How to Use the Watch Window:
+Right-click on a variable in your code and select Add to Watch.
+
+In the Watch panel, observe the variable's value at each breakpoint.
+
+Example:
+Track the value of a variable, such as loopCounter, as the program runs to understand its behavior.
+
+4. Stepping Through Code
+Visual Studio Code provides several options for stepping through code:
+
+Step Over: Move to the next line in the current function.
+
+Step Into: Inspect the inner workings of nested functions.
+
+Step Out: Return to the previous function.
+
+Example:
+csharp
+void MainFunction()
+{
+    SubFunction();
+}
+
+void SubFunction()
+{
+    Console.WriteLine("Inside SubFunction");
+}
+Use Step Into to explore SubFunction's inner workings.
+
+Use Step Out to return to MainFunction.
+
+Summary
+Debugging is a crucial skill in Blazor development, and Visual Studio Code provides powerful tools to help you identify and fix issues. In this guide, we explored how to:
+
+Set breakpoints.
+
+Use the Watch Window.
+
+Step through code.
+
+Debugging is more than just fixing errors—it's about understanding how your code works. Mastering these techniques will help you solve problems faster and write better Blazor applications.
+
+
+Debugging Tools and Techniques
+Introduction
+Debugging is essential in Blazor development to identify and resolve issues that impact your application's performance. This guide will walk you through using Visual Studio Code's debugging tools—like breakpoints, the Watch window, and step functions—to find and fix errors effectively in your Blazor projects.
+
+Steps to Debug
+1) Set a Breakpoint
+
+Identify the line of code where you want to pause execution.
+
+Click to the left of the line number to add a red dot (breakpoint) that will halt code execution at this point.
+
+2) Start the Debugger
+
+Open the Run and Debug tab in the Visual Studio Code sidebar.
+
+Click Start Debugging to compile and run your Blazor app in debug mode.
+
+Code execution will stop at breakpoints, allowing you to inspect the application’s state.
+
+3) Add Variables to the Watch Window
+
+Right-click on any variable and select Add to Watch to track its value.
+
+This enables you to monitor specific variables and expressions as you debug.
+
+4) Step Through Code
+
+Use Step Over to advance line by line within the current function.
+
+Select Step Into to go deeper into functions and inspect their internals.
+
+Use Step Out to leave a function and return to the previous execution level.
+
+Conclusion
+Mastering these debugging tools in Visual Studio Code will allow you to pinpoint and fix issues efficiently in your Blazor applications. By using breakpoints, monitoring variable values, and stepping through code, you’ll gain valuable insights into how your application operates and can quickly resolve errors for a smoother, more reliable app experience.
+
+
+
+Common Debugging Scenarios
+Introduction 
+Debugging is essential for building stable Blazor applications. By learning to address common issues like null references, data binding failures, and unhandled exceptions, you can quickly improve your application's reliability and user experience. This guide walks you through the most effective techniques for identifying and fixing these issues.
+
+Steps
+Step 1: Resolve Null Reference Exceptions
+Identify: Null reference exceptions happen when code tries to access an uninitialized object.
+
+How to Fix:
+
+Confirm that all variables are initialized before use.
+
+Add null checks (if (variable != null)) to prevent attempts to access objects that haven't been initialized.
+
+Step 2: Troubleshoot Data Binding Failures
+Identify: These failures occur when backend data doesn’t display or update correctly in the UI.
+
+How to Fix:
+
+Check Data Retrieval: Use breakpoints to confirm data is properly fetched from the backend.
+
+Verify Data Structure: Ensure the data format from the backend matches the UI’s requirements. For instance, if the UI expects a list, confirm that the backend sends a list.
+
+Step 3: Handle Unhandled Exceptions
+Identify: Unhandled exceptions are caused by unexpected inputs or logical errors.
+
+How to Fix:
+
+Wrap potentially risky code in try-catch blocks to manage errors gracefully.
+
+Add validation (e.g., type checks) to ensure data meets expected criteria before use.
+
+Step 4: Trace Application Flow
+Identify: Tracing helps resolve issues with event-driven actions or user interactions.
+
+How to Trace:
+
+Set breakpoints in your code to pause execution and inspect each stage.
+
+Use the Call Stack in Visual Studio Code to confirm the correct sequence of method calls.
+
+Step 5: Inspect Variables at Runtime
+Identify: Inspecting variables verifies that they hold the correct data values.
+
+How to Inspect:
+
+Place a breakpoint where the variable is set or accessed, then view its value in Visual Studio Code’s Debug panel.
+
+Use Console.WriteLine statements to print variable values directly to the Debug Console.
+
+Conclusion
+Mastering these debugging techniques will save you time and make your Blazor applications more reliable. By following these steps to address common issues, you’ll become more efficient at identifying and fixing problems, ultimately improving both the development process and the end-user experience.
