@@ -106,3 +106,34 @@ Observing Changes in Real-Time
 As you debug, monitor currentCount in the Variables List or by hovering over it. Each click updates the count, allowing you to verify functionality and troubleshoot issues.
 
 This process provides a hands-on way to understand debugging in Blazor while identifying and fixing problems efficiently. Let me know if you need further clarification!
+
+
+dotnet build --configuration Debug 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
