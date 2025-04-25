@@ -1,8 +1,8 @@
-public class ApiService
+public class AppSettings
 {
-    private readonly IConfiguration _configuration;
+    private IConfiguration _configuration { get; set; }
 
-    public ApiService(IConfiguration configuration)
+    public AppSettings(IConfiguration configuration)
     {
         _configuration = configuration;
     }
@@ -11,5 +11,4 @@ public class ApiService
     {
         return _configuration["ApiSettings:BaseUrl"]!;
     }
-
 }

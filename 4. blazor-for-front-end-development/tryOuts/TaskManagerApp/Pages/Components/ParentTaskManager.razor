@@ -1,0 +1,43 @@
+@using TaskManagerApp.Pages.Components; // Add the namespace containing ChildTaskDisplay
+
+<h3>Task Manager</h3>
+@code {
+    private List<string> tasks = new() { "Task1", "Task2", "Task3" };
+    private string message = "No tasks remaining"; // Placeholder message
+
+    private void HandleTaskCompleted(string taskName)
+    {
+        tasks.Remove(taskName);
+        if (tasks.Count == 0)
+        {
+            Console.WriteLine("All tasks completed.");
+            tasks.Add("No tasks remaining"); // Add a placeholder task to show the message
+            Console.WriteLine("All tasks completed.");
+        }
+        else
+        {
+            Console.WriteLine($"Remaining tasks: {string.Join(", ", tasks)}");
+        }
+        Console.WriteLine($"Task completed: {taskName}");
+        StateHasChanged(); // Notify the component to re-render
+    }
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("ParentTaskManager initialized.");
+    }
+}
+
+@foreach (var task in tasks)
+{
+    if (task == "No tasks remaining")
+    {
+          <ChildTaskDisplay TaskName="@task" JustMessage="true" />
+    }
+    else
+    {
+        <ChildTaskDisplay TaskName="@task" OnTaskComplete="HandleTaskCompleted" JustMessage="false" />
+    }
+}

@@ -14,5 +14,7 @@ builder.Services.AddSingleton<ApiService>();
 
 Console.WriteLine(builder.HostEnvironment.Environment);
 Console.WriteLine(builder.HostEnvironment.BaseAddress);
-
+Console.WriteLine(builder.HostEnvironment.IsDevelopment() ? "Development" : "Production");
 await builder.Build().RunAsync();
+
+
