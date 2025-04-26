@@ -1,0 +1,42 @@
+@inject DataService DataService
+
+<ChildComponent @ref=childRef />
+
+<div>
+    <button @onclick="ToggleRenderCondition">Toggle Product List</button>
+    <button @onclick="UpdateChildComponent">Update</button>
+    @if (ShouldRenderCondicion)
+    {
+        <ul>
+            @foreach (var product in products)
+            {
+                <li>@product.Name - @product.Price - @product.Stock - @product.Description</li>
+            }
+        </ul>
+    }
+</div>
+
+@code{
+    private ChildComponent childRef;
+    private bool ShouldRenderCondicion = true;
+    private List<Product> products = null;
+    
+    public void UpdateChildComponent()
+    {
+        childRef.UpdateState();
+    }
+
+    protected bool ShouldRender()
+    {
+       return ShouldRenderCondicion;
+    }
+
+    public void ToggleRenderCondition(){
+        ShouldRenderCondicion = !ShouldRenderCondicion;
+    }
+
+    protected override void OnInitialized()
+    {
+        products = DataService.GetProductsAsync();
+    }
+}
