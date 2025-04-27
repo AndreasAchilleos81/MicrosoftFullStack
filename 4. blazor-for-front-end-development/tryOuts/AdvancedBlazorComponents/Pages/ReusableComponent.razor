@@ -1,8 +1,9 @@
 @inject DataService DataService
 
-<ChildComponent @ref=childRef />
+<ChildComponent @ref=childRef OnNotifyParent="HandleNotification"/>
 
-<div>
+<div style="background-color:@ThemeColor; padding: 10px; border-radius: 5px;">
+    <h3>Product List</h3>
     <button @onclick="ToggleRenderCondition">Toggle Product List</button>
     <button @onclick="UpdateChildComponent">Update</button>
     @if (ShouldRenderCondicion)
@@ -17,22 +18,38 @@
 </div>
 
 @code{
+
+    [CascadingParameter]
+    private string ThemeColor { get; set; } = "blue"; // Default value
+
     private ChildComponent childRef;
     private bool ShouldRenderCondicion = true;
     private List<Product> products = null;
     
+    private void HandleNotification()
+    {
+        // Handle notification from child component
+        Console.WriteLine("Notification received from child component.");
+    }
+
     public void UpdateChildComponent()
     {
         childRef.UpdateState();
     }
-
+@* 
     protected bool ShouldRender()
     {
        return ShouldRenderCondicion;
-    }
+    } *@
+
+    @* protected override bool ShouldRender()
+    {
+        return ShouldRenderCondicion; // Only re-render if the condition is true
+    } *@
 
     public void ToggleRenderCondition(){
         ShouldRenderCondicion = !ShouldRenderCondicion;
+        StateHasChanged(); 
     }
 
     protected override void OnInitialized()

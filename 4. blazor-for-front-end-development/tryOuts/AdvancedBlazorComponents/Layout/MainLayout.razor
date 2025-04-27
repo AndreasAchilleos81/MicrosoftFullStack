@@ -7,18 +7,20 @@
     <CascadingValue Value="ThemeColor">
         @Body
     </CascadingValue>
-
-    <select onselect="ChangeThemeColor" >
+<div style="background-color: @ThemeColor;">
+    <select @onchange="ChangeThemeColor" >
         <option value="blue">Blue</option>
         <option value="green">Green</option>
         <option value="red">Red</option>
     </select>
+</div>
     @code{
         private string ThemeColor = "blue"; // Default value
 
         private void ChangeThemeColor(ChangeEventArgs e)
         {
             ThemeColor = e.Value.ToString();
+            StateHasChanged(); 
         }
     }
 </div>

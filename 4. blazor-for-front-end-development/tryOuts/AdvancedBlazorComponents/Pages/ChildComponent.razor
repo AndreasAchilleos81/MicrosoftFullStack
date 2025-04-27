@@ -1,13 +1,26 @@
 <div>
     <p> Child Component State: @ChildState</p>
+    <button @onclick="NotifyParent">Notify Parent</button>
 </div>
 
-@code{
+@code {
+
+    [Parameter]
+    public EventCallback<string> OnNotifyParent { get; set; } // Callback to notify parent component
+
     private string ChildState = "Initial State";
 
     public void UpdateState()
     {
         ChildState = "Updated State";
         StateHasChanged(); // Notify the component to re-render with the new state
+    }
+
+    private async Task NotifyParent()
+    {
+        if (OnNotifyParent.HasDelegate)
+        {
+            await OnNotifyParent.InvokeAsync(); // Notify the parent component
+        }
     }
 }
