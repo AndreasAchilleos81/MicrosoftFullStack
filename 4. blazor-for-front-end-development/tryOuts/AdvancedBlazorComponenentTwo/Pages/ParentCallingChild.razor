@@ -1,0 +1,29 @@
+﻿@page "/childCall"
+<div style="direction=flex, background-color:@ThemeColor">
+	<h3>ParentCallingChild</h3>
+	<ChildCalledByParent @ref="childCalledByParent"></ChildCalledByParent>
+	<button @onclick="ToggelState">Togle State of child element</button>
+</div>
+
+
+@code {
+	[CascadingParameter]
+	private string ThemeColor { get; set; } = "blue";
+	private ChildCalledByParent childCalledByParent;
+	private void ToggelState()
+	{
+		Random radndom = new();
+		int randomNumber = radndom.Next(1, 5);
+		// Call the method in the child component
+		var state = randomNumber switch
+		{
+			1 => "State set from Parent ONE",
+			2 => "State set from Parent TWO",
+			3 => "State set from Parent Three",
+			_ => "State set from Parent DEFAULT"
+		};
+
+		childCalledByParent.SetState(state);
+
+	}
+}

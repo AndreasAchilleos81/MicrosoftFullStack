@@ -1,0 +1,64 @@
+﻿@page "/people"
+@using AdvancedBlazorComponenentTwo.DataTypes
+@using AdvancedBlazorComponenentTwo.Services;
+@inject IDataService DataService;
+
+<div style="background:@ThemeColor">
+
+
+	<h2>People</h2>
+	<div style="direction=flex">
+		<h3>People List</h3>
+		<button @ref="toggleButton" @onclick="ToggleRender">@buttonText</button>
+	</div>
+
+	@if (people == null)
+	{
+		<p>Loading...</p>
+	}
+	else if (people.Count == 0)
+	{
+		<p>No people found.</p>
+	}
+	else if (shouldRender)
+	{
+		<ul>
+			@foreach (var person in people)
+			{
+				<li>@person.Id - @person.FirstName - @person.LastName - @person.Email </li>
+			}
+		</ul>
+	}
+	else
+	{
+		<p>People list loading disabled</p>
+	}
+</div>
+@code {
+	[CascadingParameter]
+	private string ThemeColor { get; set; } = "blue";
+	private List<Person> people = new();
+	private bool shouldRender = true;
+	private ElementReference toggleButton;
+	private string buttonText = "";
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		buttonText = "Hide People List";
+		people = await DataService.GetData();
+	}
+
+
+	// protected override bool ShouldRender()
+	// {
+	// 	return shouldRender;
+	// }
+
+	private void ToggleRender()
+	{
+		shouldRender = !shouldRender;
+		buttonText = shouldRender ? "Hide People List" : "Show People List";
+		StateHasChanged();
+	}
+}

@@ -1,0 +1,11 @@
+﻿<h3>ChildCalledByParent</h3>
+<p>@state</p>
+
+@code {
+	private string state = "Initial State";
+	public void SetState(string newState)
+	{
+		state = newState;
+		StateHasChanged();
+	}
+}
