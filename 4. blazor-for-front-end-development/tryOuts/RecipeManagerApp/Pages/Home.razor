@@ -1,0 +1,49 @@
+﻿@page "/"
+@using RecipeManagerApp.Data;
+@inject IRecipeRepo RecipeService;
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new Recipe Manager App.
+
+<button @onclick="ReloadRecipes">Reload recipes</button>
+
+<ul>
+	@if (Recipes == null)
+	{
+		<li>Loading Recipes in progress...</li>
+	}
+	else if (Recipes.Count == 0)
+	{
+		<li>No Recipes where returned, please refresh if issue still continues then please call support</li>
+	}
+	else
+	{
+		@foreach(var recipe in Recipes)
+		{
+			var hrefString = $"/recipe/{recipe.Id}";
+			<li>For :@recipe.Description <NavLink target="_blank" href=@hrefString>@recipe.Name</NavLink> </li>
+		}
+	}
+</ul>
+<br />
+<NavLink target="_blank" href="/addrecipe">Add your own recipe to our catalog </NavLink>
+
+@code{
+	private List<Recipe> Recipes = null;
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		// This is where you can initialize your data or services
+		// For example, you can load recipes from the RecipeService
+		Recipes = await RecipeService.GetAllRecipesAsync();
+	}
+	private async Task ReloadRecipes(MouseEventArgs args)
+	{
+		Recipes = await RecipeService.GetAllRecipesAsync();
+		StateHasChanged();
+	}
+}

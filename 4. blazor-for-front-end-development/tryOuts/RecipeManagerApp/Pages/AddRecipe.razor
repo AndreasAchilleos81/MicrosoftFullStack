@@ -1,0 +1,26 @@
+﻿@page "/addrecipe"
+@using RecipeManagerApp.Data;
+@inject IRecipeRepo RecipeService;
+
+
+<h2>AddRecipe</h2>
+
+<div>
+	<label for="">Recipe Name</label>
+	<input id="name" @bind="recipe.Name" type="text" placeholder="Enter recipe name" />
+	<br />
+	<label for="">Recipe Description</label>
+	<input id="name" @bind="recipe.Description" type="text" placeholder="Enter recipe description" />
+</div>
+
+
+<button @onclick="AddRecipeHandler">Add Recipe</button>
+@code {
+	private Recipe recipe = new();
+
+	private async Task AddRecipeHandler(MouseEventArgs args)
+	{
+		recipe.Id = Guid.NewGuid();
+		await RecipeService.AddRecipe(recipe);
+	}
+}
