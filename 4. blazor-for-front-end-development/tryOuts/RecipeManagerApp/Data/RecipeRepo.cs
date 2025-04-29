@@ -1,11 +1,23 @@
-﻿using RecipeManagerApp.Data;
+﻿using Blazored.LocalStorage;
+using RecipeManagerApp.Data;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace RecipeManagerApp.Data
 {
 	public class RecipeRepo : IRecipeRepo
 	{
-		private List<Recipe> _recipes = new List<Recipe>
+		private readonly ILocalStorageService _localStorageService;
+		private const string StorageKey = "recipes";
+
+		public RecipeRepo(ILocalStorageService localStorageService)
+		{
+			_localStorageService = localStorageService;
+		}
+
+		public async Task PopulateRecipesStorage()
+		{
+			List<Recipe> _recipes = new List<Recipe>
 			{
 				new Recipe
 				{
@@ -44,60 +56,55 @@ namespace RecipeManagerApp.Data
 					Description = "A classic salad with romaine lettuce, croutons, and Caesar dressing."
 				}
 			};
-		public RecipeRepo()
-		{
-
+			// check if there are already any recipes
+			var currentStorage = await GetAllRecipesAsync();
+			if (currentStorage == null || currentStorage.Count == 0)
+			{
+				await _localStorageService.SetItemAsync(StorageKey, _recipes);
+			}
 		}
+
 		public async Task<List<Recipe>> GetAllRecipesAsync()
 		{
-			await Task.Delay(500); // Simulate a delay for async operation
-			return _recipes;
+			var recipes = await _localStorageService.GetItemAsync<List<Recipe>>(StorageKey);
+			return recipes ?? new List<Recipe>();
 		}
 
 		public async Task AddRecipe(string name, string description)
 		{
-			await Task.Delay(500); // Simulate a delay for async operation
-			_recipes.Add(new Recipe
+			var newRecipe = new Recipe
 			{
 				Id = Guid.NewGuid(),
 				Name = name,
 				Description = description
-			});
+			};
+
+			var recipes = await GetAllRecipesAsync();
+			recipes.Add(newRecipe);
+			await _localStorageService.SetItemAsync(StorageKey, recipes);
+
 		}
 
 		public async Task AddRecipe(Recipe recipe)
 		{
-			await Task.Delay(500); // Simulate a delay for async operation
-			_recipes.Add(recipe);
+			recipe.Id = Guid.NewGuid();
+			var recipes = await GetAllRecipesAsync();
+			recipes.Add(recipe);
+			await _localStorageService.SetItemAsync(StorageKey, recipes);
+		}
+
+		public async Task<Recipe> GetRecipeById(Guid id)
+		{
+			var recipies = await GetAllRecipesAsync();
+			var recipe = recipies.FirstOrDefault(r => r.Id == id);
+			return recipe;
+		}
+
+		public async Task DeleteRecipe(Guid id)
+		{
+			var recipes = await GetAllRecipesAsync();
+			recipes.RemoveAll(r => r.Id == id);
+			await _localStorageService.SetItemAsync(StorageKey, recipes);
 		}
 	}
 }
-
-
-
-/*
-    public class RecipeRepo
-   {
-       private readonly ILocalStorageService _localStorage;
-       private const string StorageKey = "recipes";
-
-       public RecipeRepo(ILocalStorageService localStorage)
-       {
-           _localStorage = localStorage;
-       }
-
-       public async Task<List<Recipe>> GetAllRecipesAsync()
-       {
-           var recipes = await _localStorage.GetItemAsync<List<Recipe>>(StorageKey);
-           return recipes ?? new List<Recipe>();
-       }
-
-       public async Task AddRecipe(Recipe recipe)
-       {
-           var recipes = await GetAllRecipesAsync();
-           recipes.Add(recipe);
-           await _localStorage.SetItemAsync(StorageKey, recipes);
-       }
-   }
- 
- */

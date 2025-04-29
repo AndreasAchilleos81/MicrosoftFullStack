@@ -1,5 +1,6 @@
 ﻿@page "/addrecipe"
 @using RecipeManagerApp.Data;
+@inject NavigationManager NavigationManager;
 @inject IRecipeRepo RecipeService;
 
 
@@ -20,7 +21,7 @@
 
 	private async Task AddRecipeHandler(MouseEventArgs args)
 	{
-		recipe.Id = Guid.NewGuid();
 		await RecipeService.AddRecipe(recipe);
+		NavigationManager.NavigateTo("/");
 	}
 }

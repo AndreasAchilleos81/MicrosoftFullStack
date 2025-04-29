@@ -1,0 +1,30 @@
+﻿@page "/recipe/{id:guid}"
+@using RecipeManagerApp.Data;
+@inject NavigationManager NavigationManager;
+@inject IRecipeRepo RecipeService;
+<h3>RecipeDetails</h3>
+
+<div>
+	<h4>@recipe.Name</h4>
+	<p>@recipe.Description</p>
+	<button @onclick="DeleteRecipeHandler">Delete Recipe</button>
+	<NavLink href="/">Back to Home</NavLink>
+</div>
+
+@code {
+
+	[Parameter]
+	public Guid id { get; set; }
+	private Recipe recipe = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		recipe = await RecipeService.GetRecipeById(id);
+	}
+
+	private async Task DeleteRecipeHandler(MouseEventArgs args)
+	{
+		await RecipeService.DeleteRecipe(recipe.Id);
+		NavigationManager.NavigateTo("/");
+	}
+}

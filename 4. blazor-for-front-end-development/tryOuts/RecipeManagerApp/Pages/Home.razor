@@ -24,22 +24,27 @@ Welcome to your new Recipe Manager App.
 		@foreach(var recipe in Recipes)
 		{
 			var hrefString = $"/recipe/{recipe.Id}";
-			<li>For :@recipe.Description <NavLink target="_blank" href=@hrefString>@recipe.Name</NavLink> </li>
+			<li>For :@recipe.Description <NavLink href=@hrefString>@recipe.Name</NavLink> </li>
 		}
 	}
 </ul>
 <br />
-<NavLink target="_blank" href="/addrecipe">Add your own recipe to our catalog </NavLink>
+<NavLink href="/addrecipe" Match="NavLinkMatch.Prefix">Add your own recipe to our catalog </NavLink>
+
 
 @code{
 	private List<Recipe> Recipes = null;
 
+	protected override async Task OnParametersSetAsync()
+	{
+		Recipes = await RecipeService.GetAllRecipesAsync();
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
 		// This is where you can initialize your data or services
 		// For example, you can load recipes from the RecipeService
-		Recipes = await RecipeService.GetAllRecipesAsync();
+		await RecipeService.PopulateRecipesStorage();
 	}
 	private async Task ReloadRecipes(MouseEventArgs args)
 	{
