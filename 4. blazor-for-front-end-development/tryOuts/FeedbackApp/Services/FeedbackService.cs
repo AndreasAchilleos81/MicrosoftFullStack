@@ -36,11 +36,12 @@ public class FeedbackService
         string feedbacksJson = null;
         try
         {
-          feedbacksJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", FeedbackKey);
+          feedbacksJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "feedbacks");
         }
-        catch
+        catch(Exception ex)
         {
             Console.WriteLine($"No Feedbacks found in local storage."); 
+            Console.WriteLine(ex.ToString());
             return new List<Feedback>();
         }
         
