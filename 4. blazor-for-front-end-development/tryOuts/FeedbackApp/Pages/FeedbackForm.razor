@@ -1,0 +1,39 @@
+@page "/feedbackform";
+@using FeedbackApp.Models;
+@inject FeedbackApp.Services.FeedbackService feedbackService;
+
+<EditForm Model="@feedback" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="@feedback.Name"/>
+        <ValidationMessage For="@(() =>feedback.Name)" />
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="@feedback.Email"/>
+        <ValidationMessage For="@(() =>feedback.Email)" />
+    </div>
+
+    <div>
+        <label for="message">Comment:</label>
+        <InputTextArea id="message" @bind-Value="@feedback.Comment"/>
+        <ValidationMessage For="@(() => feedback.Comment)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code{
+    private Feedback feedback = new Feedback();
+
+    private async Task HandleSubmit()
+    {
+        Console.WriteLine("Submitting Feedback");
+        await feedbackService.AddFeedback(feedback);
+        Console.WriteLine($"Feedback submitted: {feedback.Name}, {feedback.Email}, {feedback.Comment}");
+        feedback = new();
+    }
+}
