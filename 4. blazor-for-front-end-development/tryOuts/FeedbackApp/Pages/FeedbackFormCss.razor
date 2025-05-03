@@ -22,10 +22,15 @@
         <label for="message">Comment:</label>
         <InputTextArea @ref="messageInput" id="message" @bind-Value="@feedback.Comment" />
     </div>
-    <button type="submit" class="btn btn-primary disabled-button" disabled="@CanSubmit">Submit</button>
+    <button id="submitButton" type="submit" class="@submitButtonClass" disabled="@disabled">Submit</button>
 </EditForm>
 
 @code {
+
+    private string submitButtonClass = "btn btn-primary";
+    private string submitButtonDisabledClass = "btn btn-primary disabled-button";
+    
+    private string submitButtonEnabledClass = "btn btn-primary";
 
     private InputText nameInput;
 
@@ -49,7 +54,22 @@
         showEditForm = "none";
     }
 
-    private bool CanSubmit => string.IsNullOrEmpty(nameInput?.Value) &&
-           string.IsNullOrEmpty(emailInput?.Value) &&
-           string.IsNullOrEmpty(messageInput?.Value);
+    private bool disabled
+    {
+        get
+        {
+            var disabled = string.IsNullOrEmpty(nameInput?.Value) ||
+                            string.IsNullOrEmpty(emailInput?.Value) ||
+                            string.IsNullOrEmpty(messageInput?.Value);
+
+            if (!disabled){
+                submitButtonClass = submitButtonEnabledClass;
+            }
+            else
+            {
+                submitButtonClass = submitButtonDisabledClass;
+            }
+            return disabled;
+        }
+    }
 }

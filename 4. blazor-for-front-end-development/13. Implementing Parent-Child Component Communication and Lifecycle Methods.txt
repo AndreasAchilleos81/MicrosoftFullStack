@@ -13,7 +13,7 @@ In this lab, we'll build a Task Manager App using Blazor WebAssembly (WASM). You
 Start by creating a new Blazor WebAssembly app:
 
 dotnet new blazorwasm -o TaskManagerApp
-cd TaskManagerApp
+cd TaskManagerApp
 
 This sets up the base Blazor WASM project for your task manager.
 🧩 Step 2: Create Parent and Child Components
