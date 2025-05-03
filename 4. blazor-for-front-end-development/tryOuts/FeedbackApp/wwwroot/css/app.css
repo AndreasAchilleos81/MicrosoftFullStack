@@ -112,3 +112,9 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.disabled-button {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+

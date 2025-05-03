@@ -1,0 +1,55 @@
+@page "/feedbackformcss";
+@using FeedbackApp.Models;
+@inject FeedbackApp.Services.FeedbackService feedbackService;
+
+<h3 class="@showSuccess">Thank you for your feed back home slice</h3>
+
+<EditForm Model="@feedback" OnValidSubmit="@HandleSubmit" class="@showEditForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="name">Name:</label>
+        <InputText @ref="nameInput" id="name" @bind-Value="@feedback.Name" />
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <InputText @ref="emailInput" id="email" @bind-Value="@feedback.Email" />
+    </div>
+
+    <div>
+        <label for="message">Comment:</label>
+        <InputTextArea @ref="messageInput" id="message" @bind-Value="@feedback.Comment" />
+    </div>
+    <button type="submit" class="btn btn-primary disabled-button" disabled="@CanSubmit">Submit</button>
+</EditForm>
+
+@code {
+
+    private InputText nameInput;
+
+    private InputText emailInput;
+
+    private InputTextArea messageInput;
+
+    private string showSuccess { get; set; } = "none";
+
+    private string showEditForm { get; set; } = "";
+
+    private Feedback feedback = new Feedback();
+
+    private async Task HandleSubmit()
+    {
+        Console.WriteLine("Submitting Feedback");
+        await feedbackService.AddFeedback(feedback);
+        Console.WriteLine($"Feedback submitted: {feedback.Name}, {feedback.Email}, {feedback.Comment}");
+        feedback = new();
+        showSuccess = "";
+        showEditForm = "none";
+    }
+
+    private bool CanSubmit => string.IsNullOrEmpty(nameInput?.Value) &&
+           string.IsNullOrEmpty(emailInput?.Value) &&
+           string.IsNullOrEmpty(messageInput?.Value);
+}

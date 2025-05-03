@@ -126,6 +126,12 @@ Summary of Selectors
 
     ID Selectors: Style a single unique element with a specific ID (e.g., #header).
 
+The below CSS targets elements that both have the menu and the closed class as part of the class attribute ie class="menu closed"
+.menu.closed {
+  transform: translateX(-100%);
+}
+
+
 By combining these selectors, you can control the design and layout of your web page in a flexible and efficient way.
 Conclusion
 
