@@ -1,0 +1,60 @@
+﻿@page "/chatCentral"
+@rendermode InteractiveServer
+@using BlazorServerApp.Models;
+@using Microsoft.AspNetCore.SignalR.Client;
+@inject NavigationManager NavigationManager;
+
+<PageTitle>Chat Central</PageTitle>
+
+<h1>Chat central</h1>
+<p>@($"{user.UserName} Enter a chat message")</p>
+
+<div>
+	<input @bind="user.Message" type="text" placeholder="Type a message..." />
+	<button @onclick="IncrementCount">Send</button>
+</div>
+
+<div style="margin-top: 20px;">
+	<h4>Messages:</h4>
+	<ul>
+		@foreach (var message in Messages)
+		{
+			<li>@message</li>
+		}
+	</ul>
+</div>
+
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+	private int currentCount = 0;
+
+	private HubConnection hubConnection;
+	private List<string> Messages = new List<string>();
+	private User user;
+
+	protected override async Task OnInitializedAsync()
+	{
+		user = new User { UserName = "User1", Message = string.Empty };
+		hubConnection = new HubConnectionBuilder().WithUrl(NavigationManager.ToAbsoluteUri("/notificationHub")).Build();
+		hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+		{
+			Messages.Add($"{user}: {message}");
+			InvokeAsync(StateHasChanged);
+		});
+		await hubConnection.StartAsync();
+	}
+
+	private async Task IncrementCount()
+	{
+		if (!string.IsNullOrEmpty(user.Message) && hubConnection is not null)
+		{
+			await hubConnection.SendAsync("SendMessage", user.UserName, user.Message);
+		}
+		user.Message = string.Empty;
+		currentCount++;
+    }
+}
