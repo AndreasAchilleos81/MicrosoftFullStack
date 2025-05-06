@@ -1,0 +1,22 @@
+﻿@inject ILogger<HybridComponent> Logger;
+<h3>HybridComponent</h3>
+
+@code {
+
+	private List<string> data;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Logger.LogDebug("DEBUG HybridComponent initialized");
+		Logger.LogInformation("INFO HybridComponent initialized");
+		Logger.LogCritical("CRITICAL HybridComponent initialized");
+		Logger.LogError("ERROR HybridComponent initialized");
+		Logger.LogWarning("WARNING HybridComponent initialized");
+
+		Logger.LogInformation("Staring Data Fetch");
+		await Task.Delay(3000);
+		data = new() { "Test Data 1", "Test Data 2", "Test Data 3" };
+
+		Logger.LogInformation("Data Fetch Completed");
+	}
+}
