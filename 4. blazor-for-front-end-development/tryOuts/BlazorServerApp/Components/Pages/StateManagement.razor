@@ -1,0 +1,25 @@
+﻿@page "/stateManagement";
+@rendermode InteractiveServer
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage;
+@using Blazored.LocalStorage;
+
+<h3>StateManagement</h3>
+<h2>Counter: @($"{counter}")</h2>
+<button class="btn btn-primary" @onclick="IncrementCount">Increase + </button>
+<button class="btn btn-primary" @onclick="DecreaseCount">Decrease - </button>
+
+
+@code {
+	private int counter = 0;
+	private void IncrementCount()
+	{
+		counter++;
+		LocalStorage.SetItemAsync("counter", counter);
+	}
+
+	private void DecreaseCount(MouseEventArgs args)
+	{
+		counter--;
+		LocalStorage.SetItemAsync("counter", counter);
+	}
+}

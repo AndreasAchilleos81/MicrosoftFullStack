@@ -23,11 +23,7 @@
 		}
 	</ul>
 </div>
-
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<p role="status">Current Message count: @currentCount</p>
 
 @code {
 	private int currentCount = 0;
@@ -43,6 +39,7 @@
 		hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
 		{
 			Messages.Add($"{user}: {message}");
+			currentCount = Messages.Count;
 			InvokeAsync(StateHasChanged);
 		});
 		await hubConnection.StartAsync();
@@ -55,6 +52,5 @@
 			await hubConnection.SendAsync("SendMessage", user.UserName, user.Message);
 		}
 		user.Message = string.Empty;
-		currentCount++;
-    }
+	}
 }

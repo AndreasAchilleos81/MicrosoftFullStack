@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using BlazorServerApp.Components;
 using BlazorServerApp.Hubs;
 
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSignalR();
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 
