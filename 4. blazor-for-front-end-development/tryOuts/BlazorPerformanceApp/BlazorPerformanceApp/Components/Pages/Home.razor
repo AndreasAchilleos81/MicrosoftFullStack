@@ -1,7 +1,28 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
-<HybridComponent />
+<button class="btn btn-primary" @onclick="LoadComponent">Toggle Hybrid Component</button>
+
+@if (IsComponentLoaded)
+{
+	<HybridComponent />
+
+}
+else
+{
+	<p>No loaded hybrid component</p>
+}
 
 Welcome to your new app.
+
+@code {
+	private bool IsComponentLoaded = false;
+
+	private void LoadComponent()
+	{
+		IsComponentLoaded = !IsComponentLoaded;
+	}
+
+}

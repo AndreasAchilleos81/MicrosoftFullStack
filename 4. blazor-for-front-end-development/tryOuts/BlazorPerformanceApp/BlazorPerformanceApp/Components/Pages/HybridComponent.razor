@@ -1,9 +1,24 @@
 ﻿@inject ILogger<HybridComponent> Logger;
 <h3>HybridComponent</h3>
 
+@if (data == null || !data.Any())
+{
+	<p>Loading....</p>
+}
+else
+{
+	<p>Data loaded</p>
+	<ul>
+		@foreach (var item in data)
+		{
+			<li>@item</li>
+		}
+	</ul>
+}
+
 @code {
 
-	private List<string> data;
+	private List<string> data = new();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -15,7 +30,7 @@
 
 		Logger.LogInformation("Staring Data Fetch");
 		await Task.Delay(3000);
-		data = new() { "Test Data 1", "Test Data 2", "Test Data 3" };
+		data.AddRange(new[] { "Test Data 1", "Test Data 2", "Test Data 3" });
 
 		Logger.LogInformation("Data Fetch Completed");
 	}
