@@ -27,7 +27,17 @@ namespace Shared.Services
 		// Create
 		public async Task AddEventCardAsync(EventCard eventCard)
 		{
-			return;
+			var query = "INSERT INTO EventCard (Id, Name, Description, Location, IsPublic, MaxAttendees, CurrentAttendees) values (@Id, @Name, @Description, @Location, @IsPublic, @MaxAttendees, @CurrentAttendees)";
+			var result = await _connection.ExecuteAsync(query, new
+			{
+				Id = eventCard.Id,
+				Name = eventCard.Name,
+				Description = eventCard.Description,
+				Location = eventCard.Location,
+				IsPublic = eventCard.IsPublic,
+				MaxAttendees = eventCard.MaxAttendees,
+				CurrentAttendees = eventCard.CurrentAttendees
+			});
 		}
 
 		// Read

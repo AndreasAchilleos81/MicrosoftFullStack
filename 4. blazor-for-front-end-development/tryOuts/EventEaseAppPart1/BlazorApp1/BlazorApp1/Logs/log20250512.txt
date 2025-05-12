@@ -1,1 +1,5 @@
 [2025-05-12 10:19:01] Warning: EventCard: 42310753-88ed-458f-bea3-af1b25fb4e5f, Name: Event Card One, Description: Event Card One, Location: My place is the location, IsPublic: True, MaxAttendees: 10, CurrentAttendees: 0
+[2025-05-12 13:22:38] Error: An unhandled exception has occurred while executing the request.
+[2025-05-12 13:26:42] Error: An unhandled exception has occurred while executing the request.
+[2025-05-12 14:35:46] Error: An unhandled exception has occurred while executing the request.
+[2025-05-12 15:25:40] Warning: EventCard: 42310753-88ed-458f-bea3-af1b25fb4e5f, Name: Event Card One, Description: Event Card One, Location: My place is the location, IsPublic: True, MaxAttendees: 10, CurrentAttendees: 0

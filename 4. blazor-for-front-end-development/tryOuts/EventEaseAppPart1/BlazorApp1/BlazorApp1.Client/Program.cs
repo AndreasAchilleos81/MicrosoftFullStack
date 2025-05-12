@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Serilog;
+using Shared.Interfaces;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -10,5 +11,6 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
+builder.Services.AddSingleton<IEventCardDataService>();
 
 await builder.Build().RunAsync();

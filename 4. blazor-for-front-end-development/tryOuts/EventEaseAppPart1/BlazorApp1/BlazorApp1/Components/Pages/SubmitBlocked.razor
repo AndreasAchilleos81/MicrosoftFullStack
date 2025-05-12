@@ -1,0 +1,42 @@
+﻿@page "/submit-blocked"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@formData" FormName="MyUniqueForm">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label>Name:</label>
+        <InputText @bind-Value="formData.Name" />
+    </div>
+
+    <button type="submit" @onclick="HandleValidSubmit">Submit</button>
+</EditForm>
+
+
+@code {
+    private FormData formData = new FormData();
+
+    protected override void OnInitialized()
+    {
+        if (formData == null)
+        {
+            formData = new FormData();
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        // Server-side logic: Prevent form submission
+        await Task.Delay(500); // Simulate server processing
+        Console.WriteLine("Submission stopped by server-side logic.");
+
+    }
+
+    private class FormData
+    {
+        [Required]
+        public string Name { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,57 @@
+﻿@page "/addevent"
+@rendermode InteractiveServer
+@using Shared.Models;
+@using Shared.Interfaces;
+@inject ILogger<AddEvent> Logger;
+@inject IEventCardDataService EventCardDataService;
+
+<h3>AddEvent</h3>
+
+<EditForm FormName="AddEventForm" Model="@card" OnValidSubmit="@HandleSubmit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<div>
+		<label for="name">Enter Name of Event:</label>
+		<InputText id="name" @bind-Value=@card.Name />
+	</div>
+
+	<div>
+		<label for="description">Enter Description of Event:</label>
+		<InputText id="description" @bind-Value=@card.Description />
+	</div>
+
+	<div>
+		<label for="location">Enter Location of Event:</label>
+		<InputText id="location" @bind-Value=@card.Location />
+	</div>
+
+	<div>
+		<label for="isPublic">Is event public:</label>
+		<InputCheckbox id="isPublic" @bind-Value=@card.IsPublic />
+	</div>
+
+	<div>
+		<label for="maxAtendees">Max Attendees allowed:</label>
+		<label>@card.MaxAttendees</label>
+	</div>
+
+	<button type="submit">Submit</button>
+</EditForm>
+
+@code {
+	private EventCard card = new EventCard();
+
+	protected override async Task OnInitializedAsync()
+	{
+		Logger.LogInformation("AddEvent page initialized");
+	}
+
+	private async Task HandleSubmit()
+	{
+		Logger.LogInformation("Handle submit started");
+		card.Id = Guid.NewGuid().ToString();
+		await EventCardDataService.AddEventCardAsync(card);
+		Logger.LogInformation("Handle submit finished");
+	}
+}
