@@ -14,9 +14,9 @@ builder.Services.AddDataService(builder.Configuration);
 
 Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Debug()
-	.WriteTo.Debug(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Level}: {Message}{NewLine}", restrictedToMinimumLevel: LogEventLevel.Warning)
-	.WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Level}: {Message}{NewLine}", restrictedToMinimumLevel: LogEventLevel.Warning)
-	.WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Warning, outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Level}: {Message}{NewLine}")
+	.WriteTo.Debug(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Level}: {Message}{NewLine}", restrictedToMinimumLevel: LogEventLevel.Information)
+	.WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Level}: {Message}{NewLine}", restrictedToMinimumLevel: LogEventLevel.Information)
+	.WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information, outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Level}: {Message}{NewLine}")
 	.CreateLogger();
 
 builder.Host.UseSerilog();

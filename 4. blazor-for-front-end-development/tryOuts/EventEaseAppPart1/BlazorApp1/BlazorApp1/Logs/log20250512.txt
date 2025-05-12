@@ -3,3 +3,111 @@
 [2025-05-12 13:26:42] Error: An unhandled exception has occurred while executing the request.
 [2025-05-12 14:35:46] Error: An unhandled exception has occurred while executing the request.
 [2025-05-12 15:25:40] Warning: EventCard: 42310753-88ed-458f-bea3-af1b25fb4e5f, Name: Event Card One, Description: Event Card One, Location: My place is the location, IsPublic: True, MaxAttendees: 10, CurrentAttendees: 0
+[2025-05-12 17:34:15] Information: User profile is available. Using '"C:\Users\a.achilleos\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+[2025-05-12 17:34:16] Information: Now listening on: "http://localhost:5094"
+[2025-05-12 17:34:16] Information: No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+[2025-05-12 17:34:16] Information: Application started. Press Ctrl+C to shut down.
+[2025-05-12 17:34:16] Information: Hosting environment: "Development"
+[2025-05-12 17:34:16] Information: Content root path: "C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1"
+[2025-05-12 17:34:18] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost""""/_framework/debug/ws-proxy""?browser=ws%3A%2F%2F127.0.0.1%3A19719%2Fdevtools%2Fbrowser%2F93b33090-b538-44d7-9378-5506f2cb8e9f" - null null
+[2025-05-12 17:34:18] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost""""/_framework/debug/ws-proxy""?browser=ws%3A%2F%2F127.0.0.1%3A19719%2Fdevtools%2Fbrowser%2F93b33090-b538-44d7-9378-5506f2cb8e9f" - 302 0 null 374.0779ms
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/""" - null null
+[2025-05-12 17:34:19] Information: Executing endpoint '"/ (/)"'
+[2025-05-12 17:34:19] Information: Executed endpoint '"/ (/)"'
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/""" - 200 null "text/html; charset=utf-8" 215.2414ms
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/aspnetcore-browser-refresh.js""" - null null
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/app.khy4lop6wu.css""" - null null
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/lib/bootstrap/dist/css/bootstrap.min.46ein0sx1k.css""" - null null
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/BlazorApp1.uin0erjt0i.styles.css""" - null null
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/blazor.web.js""" - null null
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/aspnetcore-browser-refresh.js""" - 200 16505 "application/javascript; charset=utf-8" 19.5686ms
+[2025-05-12 17:34:19] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:34:19] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:34:19] Information: Executing endpoint '"Blazor web static files"'
+[2025-05-12 17:34:19] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:34:19] Information: The file "/_framework/blazor.web.js" was not modified
+[2025-05-12 17:34:19] Information: Executed endpoint '"Blazor web static files"'
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/blazor.web.js""" - 304 null "text/javascript" 61.5236ms
+[2025-05-12 17:34:19] Information: Sending file. Request path: '"BlazorApp1.uin0erjt0i.styles.css"'. Physical path: '"C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1\obj\Debug\net9.0\compressed\ysu4imbah3-uin0erjt0i.gz"'
+[2025-05-12 17:34:19] Information: Sending file. Request path: '"app.khy4lop6wu.css"'. Physical path: '"C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1\obj\Debug\net9.0\compressed\psnyflj9j1-khy4lop6wu.gz"'
+[2025-05-12 17:34:19] Information: Sending file. Request path: '"lib/bootstrap/dist/css/bootstrap.min.46ein0sx1k.css"'. Physical path: '"C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1\obj\Debug\net9.0\compressed\ouh3edm5j1-46ein0sx1k.gz"'
+[2025-05-12 17:34:19] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:34:19] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:34:19] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/BlazorApp1.uin0erjt0i.styles.css""" - 200 6000 "text/css" 121.9718ms
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/app.khy4lop6wu.css""" - 200 2933 "text/css" 164.8667ms
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/lib/bootstrap/dist/css/bootstrap.min.46ein0sx1k.css""" - 200 232871 "text/css" 106.6967ms
+[2025-05-12 17:34:19] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_vs/browserLink""" - null null
+[2025-05-12 17:34:19] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_vs/browserLink""" - 200 null "text/javascript; charset=UTF-8" 39.6585ms
+[2025-05-12 17:35:01] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/addevent""" - null null
+[2025-05-12 17:35:01] Information: Executing endpoint '"/addevent (/addevent)"'
+[2025-05-12 17:35:02] Information: AddEvent page initialized
+[2025-05-12 17:35:02] Information: Executed endpoint '"/addevent (/addevent)"'
+[2025-05-12 17:35:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/addevent""" - 200 null "text/html; charset=utf-8" 190.3202ms
+[2025-05-12 17:35:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_blazor/initializers""" - null null
+[2025-05-12 17:35:02] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:35:02] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:35:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_blazor/initializers""" - 200 null "application/json; charset=utf-8" 15.4173ms
+[2025-05-12 17:35:02] Information: Request starting "HTTP/1.1" "POST" "http"://"localhost:5094""""/_blazor/negotiate""?negotiateVersion=1" - null 0
+[2025-05-12 17:35:02] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:35:02] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:35:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_blazor""?id=CkaYib7EnheqV-sS35eWmA" - null null
+[2025-05-12 17:35:02] Information: Request finished "HTTP/1.1" "POST" "http"://"localhost:5094""""/_blazor/negotiate""?negotiateVersion=1" - 200 316 "application/json" 19.9538ms
+[2025-05-12 17:35:02] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:35:02] Information: AddEvent page initialized
+[2025-05-12 17:35:07] Information: Handle submit started
+[2025-05-12 17:35:07] Information: Handle submit finished
+[2025-05-12 17:40:58] Information: User profile is available. Using '"C:\Users\a.achilleos\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+[2025-05-12 17:40:59] Information: Now listening on: "http://localhost:5094"
+[2025-05-12 17:40:59] Information: No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+[2025-05-12 17:40:59] Information: Application started. Press Ctrl+C to shut down.
+[2025-05-12 17:40:59] Information: Hosting environment: "Development"
+[2025-05-12 17:40:59] Information: Content root path: "C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1"
+[2025-05-12 17:41:01] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost""""/_framework/debug/ws-proxy""?browser=ws%3A%2F%2F127.0.0.1%3A19845%2Fdevtools%2Fbrowser%2F085d378d-9091-4f34-8afe-14ec35f05a62" - null null
+[2025-05-12 17:41:01] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost""""/_framework/debug/ws-proxy""?browser=ws%3A%2F%2F127.0.0.1%3A19845%2Fdevtools%2Fbrowser%2F085d378d-9091-4f34-8afe-14ec35f05a62" - 302 0 null 355.9124ms
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/""" - null null
+[2025-05-12 17:41:02] Information: Executing endpoint '"/ (/)"'
+[2025-05-12 17:41:02] Information: Executed endpoint '"/ (/)"'
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/""" - 200 null "text/html; charset=utf-8" 223.7661ms
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/app.khy4lop6wu.css""" - null null
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_vs/browserLink""" - null null
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/aspnetcore-browser-refresh.js""" - null null
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/BlazorApp1.uin0erjt0i.styles.css""" - null null
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/lib/bootstrap/dist/css/bootstrap.min.46ein0sx1k.css""" - null null
+[2025-05-12 17:41:02] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/aspnetcore-browser-refresh.js""" - 200 16505 "application/javascript; charset=utf-8" 39.4295ms
+[2025-05-12 17:41:02] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:02] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/blazor.web.js""" - null null
+[2025-05-12 17:41:02] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:02] Information: Executing endpoint '"Blazor web static files"'
+[2025-05-12 17:41:02] Information: The file "/_framework/blazor.web.js" was not modified
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_vs/browserLink""" - 200 null "text/javascript; charset=UTF-8" 106.0709ms
+[2025-05-12 17:41:02] Information: Executed endpoint '"Blazor web static files"'
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_framework/blazor.web.js""" - 304 null "text/javascript" 153.5192ms
+[2025-05-12 17:41:02] Information: Sending file. Request path: '"app.khy4lop6wu.css"'. Physical path: '"C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1\obj\Debug\net9.0\compressed\psnyflj9j1-khy4lop6wu.gz"'
+[2025-05-12 17:41:02] Information: Sending file. Request path: '"BlazorApp1.uin0erjt0i.styles.css"'. Physical path: '"C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1\obj\Debug\net9.0\compressed\ysu4imbah3-uin0erjt0i.gz"'
+[2025-05-12 17:41:02] Information: Sending file. Request path: '"lib/bootstrap/dist/css/bootstrap.min.46ein0sx1k.css"'. Physical path: '"C:\Users\a.achilleos\code\MicrosoftFullStack\4. blazor-for-front-end-development\tryOuts\EventEaseAppPart1\BlazorApp1\BlazorApp1\obj\Debug\net9.0\compressed\ouh3edm5j1-46ein0sx1k.gz"'
+[2025-05-12 17:41:02] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:02] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:02] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/app.khy4lop6wu.css""" - 200 2933 "text/css" 285.8633ms
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/BlazorApp1.uin0erjt0i.styles.css""" - 200 6000 "text/css" 225.3309ms
+[2025-05-12 17:41:02] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/lib/bootstrap/dist/css/bootstrap.min.46ein0sx1k.css""" - 200 232871 "text/css" 209.4308ms
+[2025-05-12 17:41:04] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/addevent""" - null null
+[2025-05-12 17:41:04] Information: Executing endpoint '"/addevent (/addevent)"'
+[2025-05-12 17:41:04] Information: AddEvent page initialized
+[2025-05-12 17:41:04] Information: Executed endpoint '"/addevent (/addevent)"'
+[2025-05-12 17:41:04] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/addevent""" - 200 null "text/html; charset=utf-8" 321.4473ms
+[2025-05-12 17:41:04] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_blazor/initializers""" - null null
+[2025-05-12 17:41:04] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:04] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:04] Information: Request finished "HTTP/1.1" "GET" "http"://"localhost:5094""""/_blazor/initializers""" - 200 null "application/json; charset=utf-8" 12.5044ms
+[2025-05-12 17:41:04] Information: Request starting "HTTP/1.1" "POST" "http"://"localhost:5094""""/_blazor/negotiate""?negotiateVersion=1" - null 0
+[2025-05-12 17:41:04] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:04] Information: Executed endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:04] Information: Request finished "HTTP/1.1" "POST" "http"://"localhost:5094""""/_blazor/negotiate""?negotiateVersion=1" - 200 316 "application/json" 19.5715ms
+[2025-05-12 17:41:04] Information: Request starting "HTTP/1.1" "GET" "http"://"localhost:5094""""/_blazor""?id=fUQk4y3vOISyU6Qfs4axrg" - null null
+[2025-05-12 17:41:04] Information: Executing endpoint '"Microsoft.AspNetCore.Routing.RouteEndpoint"'
+[2025-05-12 17:41:04] Information: AddEvent page initialized
+[2025-05-12 17:41:11] Information: Handle submit started
+[2025-05-12 17:41:11] Information: Handle submit finished

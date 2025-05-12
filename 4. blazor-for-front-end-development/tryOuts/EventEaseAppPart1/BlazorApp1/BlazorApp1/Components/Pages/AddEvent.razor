@@ -38,9 +38,14 @@
 
 	<button type="submit">Submit</button>
 </EditForm>
+@if (IsSuccess)
+{
+	<p>Event has been added successfully!!!</p>
+}
 
 @code {
 	private EventCard card = new EventCard();
+	private bool IsSuccess = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -53,5 +58,14 @@
 		card.Id = Guid.NewGuid().ToString();
 		await EventCardDataService.AddEventCardAsync(card);
 		Logger.LogInformation("Handle submit finished");
+		IsSuccess = true;
+		_ = Task.Run(async () =>
+		{
+			await Task.Delay(2000);
+			IsSuccess = false;
+			await InvokeAsync(StateHasChanged);
+		});
+
+		card = new EventCard(); // Reset the form	
 	}
 }
