@@ -2,12 +2,15 @@ using BlazorApp1.Components;
 using Serilog;
 using Serilog.Events;
 
+using Shared.Extentions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddDataService(builder.Configuration);
 
 Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Debug()
@@ -17,7 +20,6 @@ Log.Logger = new LoggerConfiguration()
 	.CreateLogger();
 
 builder.Host.UseSerilog();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,8 +31,6 @@ else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
 }
-
-
 
 app.UseAntiforgery();
 

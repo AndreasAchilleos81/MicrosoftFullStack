@@ -1,0 +1,75 @@
+﻿using Microsoft.Extensions.Configuration;
+using Shared.Interfaces;
+using Shared.Models;
+using Microsoft.Data.Sqlite;
+using Dapper;
+using SQLitePCL;
+
+namespace Shared.Services
+{
+	public class EventCardDataService : IEventCardDataService, IDisposable
+	{
+		private readonly IConfiguration _configuration;
+		private readonly SqliteConnection _connection;
+		private bool disposed = false;
+
+		public EventCardDataService(IConfiguration configuration)
+		{
+			Batteries.Init();
+			_configuration = configuration;
+			var relativeLocation = _configuration["Logging:ConnectionStrings:DefaultConnection"].TrimEnd(';');
+			var absolutePath =  Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativeLocation));
+			var connectionString = $"Data Source={absolutePath};";
+			_connection = new SqliteConnection(connectionString);
+			_connection.Open();
+		}
+
+		// Create
+		public async Task AddEventCardAsync(EventCard eventCard)
+		{
+			return;
+		}
+
+		// Read
+		public async Task<EventCard?> GetEventCardByIdAsync(string id)
+		{
+			var query = "SELECT * FROM EventCard WHERE Id = @Id LIMIT 1";
+			var result = await _connection.QueryFirstOrDefaultAsync<EventCard>(query, new { Id = id });
+			return result;
+		}
+
+		public async Task<IEnumerable<EventCard>> GetAllEventCardsAsync()
+		{
+			return await Task.FromResult(new[] { new EventCard() });
+		}
+
+		// Update
+		public async Task<bool> UpdateEventCardAsync(EventCard updatedEventCard)
+		{
+			return await Task.FromResult(false);
+		}
+
+		// Delete
+		public async Task<bool> DeleteEventCardAsync(Guid id)
+		{
+			return await Task.FromResult(false);
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					_connection.Close();
+				}
+				disposed = true;
+			}
+		}
+	}
+}
