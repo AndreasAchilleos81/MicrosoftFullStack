@@ -1,0 +1,51 @@
+﻿@page "/eventsList"
+@rendermode InteractiveServer
+@using Shared.Interfaces;
+@using Shared.Models;
+@inject ILogger<EventsLists> Logger;
+@inject IEventCardDataService EventCardDataService;
+
+<h3>Events List</h3>
+
+@if (eventCards == null || !eventCards.Any())
+{
+    <p>No events available.</p>
+}
+else
+{
+    <div class="event-list">
+        @foreach (var card in eventCards)
+        {
+			navPerCard = $"/event/{Guid.Parse(card.Id)}";
+            <div class="event-card">
+                <h4>@card.Name</h4>
+                <p><strong>Description:</strong> @card.Description</p>
+                <p><strong>Location:</strong> @card.Location</p>
+                <p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
+                <p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
+                <p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+                <NavLink target="_blank" href="@navPerCard">View Details</NavLink>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<EventCard> eventCards = new List<EventCard>();
+    private string navPerCard = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("EventsLists page initialized");
+        int counter = 0;
+        await foreach (var cardItem in EventCardDataService.GetAllEventCardsAsync())
+        {
+            eventCards.Add(cardItem);
+            counter++;
+
+            if (counter == 10)
+            {
+                StateHasChanged();
+            }
+        }
+    }
+}

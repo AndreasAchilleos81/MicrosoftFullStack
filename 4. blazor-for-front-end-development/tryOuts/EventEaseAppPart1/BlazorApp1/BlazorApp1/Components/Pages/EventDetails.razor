@@ -1,0 +1,37 @@
+﻿@page "/event/{id:guid}"
+@using Shared.Models
+@using Shared.Interfaces;
+@inject ILogger<EventDetails> Logger;
+@inject IEventCardDataService EventCardDataService;
+
+<h3>EventDetails</h3>
+<div class="event-card-details">
+	<h4>@card.Name</h4>
+	<p><strong>Description:</strong> @card.Description</p>
+	<p><strong>Location:</strong> @card.Location</p>
+	<p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
+	<p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
+	<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+</div>
+
+@code {
+	[Parameter]
+	public Guid Id { get; set; }
+	private EventCard? card = null;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Logger.LogInformation("EventDetails page initialized");
+		card = await EventCardDataService.GetEventCardByIdAsync(Id.ToString());
+		if (card == null)
+		{
+			Logger.LogInformation("EventCard not found");
+		}
+		else
+		{
+			Logger.LogInformation($"EventCard found: {card.ToString()}");
+		}
+	}
+}
+
+

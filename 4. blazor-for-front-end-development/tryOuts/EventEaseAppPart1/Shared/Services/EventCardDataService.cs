@@ -48,9 +48,23 @@ namespace Shared.Services
 			return result;
 		}
 
-		public async Task<IEnumerable<EventCard>> GetAllEventCardsAsync()
+		public async IAsyncEnumerable<EventCard> GetAllEventCardsAsync()
 		{
-			return await Task.FromResult(new[] { new EventCard() });
+			var query = "SELECT * FROM EventCard";
+			using var command  = new SqliteCommand(query, _connection);
+			using var reader = await command.ExecuteReaderAsync();
+			while (await reader.ReadAsync())
+			{
+				yield return new EventCard
+				{
+					Id = reader.GetString(0),
+					Name = reader.GetString(1),
+					Description = reader.GetString(2),
+					Location = reader.GetString(3),
+					IsPublic = reader.GetBoolean(4),
+					CurrentAttendees = reader.GetInt32(6)
+				};
+			}
 		}
 
 		// Update
