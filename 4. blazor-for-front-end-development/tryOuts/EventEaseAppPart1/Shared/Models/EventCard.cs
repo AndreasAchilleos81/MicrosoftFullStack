@@ -13,14 +13,14 @@ namespace Shared.Models
 		[Required(ErrorMessage = "Event name is required")]
 		public string Name { get; set; } = string.Empty;
 
+
+		[StringLength(300, MinimumLength = 15, ErrorMessage = "Location of event must between 3 to 50 chars")]
 		public string Description { get; set; } = string.Empty;
 
 
-		[StringLength(30, MinimumLength = 3, ErrorMessage = "Location of event must between 3 to 50 chars")]
+		[StringLength(30, MinimumLength = 3, ErrorMessage = "Location of event must between 3 to 30 chars")]
 		public string Location { get; set; } = string.Empty;
 
-
-		[Required(ErrorMessage = "Access type to Event is required")]
 		public bool IsPublic { get; set; }
 
 		[Range(10, 100, ErrorMessage = "From 10 to 100 attendees to host an event")]
