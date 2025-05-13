@@ -5,19 +5,32 @@
 @inject IEventCardDataService EventCardDataService;
 
 <h3>EventDetails</h3>
-<div class="event-card-details">
-	<h4>@card.Name</h4>
-	<p><strong>Description:</strong> @card.Description</p>
-	<p><strong>Location:</strong> @card.Location</p>
-	<p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
-	<p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
-	<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
-</div>
+@if (isNotFound)
+{
+	<div class="alert alert-warning">
+		Event not found or has been deleted.<br />
+		<NavLink href="/eventsList">Return to Events List</NavLink>
+	</div>
+}
+else
+{
+	<div class="event-card-details">
+		<h4>@card.Name</h4>
+		<p><strong>Description:</strong> @card.Description</p>
+		<p><strong>Location:</strong> @card.Location</p>
+		<p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
+		<p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
+		<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+	</div>
+}
+
 
 @code {
 	[Parameter]
 	public Guid Id { get; set; }
 	private EventCard? card = null;
+
+	private bool isNotFound = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -26,6 +39,7 @@
 		if (card == null)
 		{
 			Logger.LogInformation("EventCard not found");
+			isNotFound = true;
 		}
 		else
 		{
@@ -33,5 +47,3 @@
 		}
 	}
 }
-
-

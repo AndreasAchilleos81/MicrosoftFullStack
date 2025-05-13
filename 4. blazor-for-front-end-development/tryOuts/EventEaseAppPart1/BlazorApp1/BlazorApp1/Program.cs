@@ -40,4 +40,6 @@ app.MapRazorComponents<App>()
     //.AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorApp1.Client._Imports).Assembly);
 
+app.UseStatusCodePagesWithRedirects("/PageNotExists");
+
 app.Run();
