@@ -5,40 +5,69 @@
 @using System.Collections.ObjectModel;
 @inject ILogger<EventsLists> Logger;
 @inject IEventCardDataService EventCardDataService;
+@inject NavigationManager NavigationManager;
 
 <h3>Events List</h3>
+<button class="btn-primary" @onclick="ShowAddEventComponent">@toggleAddEventText</button>
 
-@if (eventCardsObservable == null || !eventCardsObservable.Any())
-{
-    <p>No events available.</p>
-}
-else
-{
-    <div class="event-list" >
-        @foreach (var card in eventCardsObservable)
-        {
-            navPerCard = $"/event/{Guid.Parse(card.Id)}";
-            <div class="event-card" @key=card.Id>
-                <h4>@card.Name</h4>
-                <p><strong>Description:</strong> @card.Description</p>
-                <p><strong>Location:</strong> @card.Location</p>
-                <p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
-                <p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
-                <p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
-                <NavLink target="_blank" href="@navPerCard">View Details</NavLink>
-            </div>
-        }
-    </div>
-}
+<div class="grid-container">
+    
+    @if (eventCardsObservable == null || !eventCardsObservable.Any())
+    {
+        <p>No events available.</p>
+    }
+    else
+    {
+        <div class="event-list" >
+            @foreach (var card in eventCardsObservable)
+            {
+                navPerCard = $"/event/{Guid.Parse(card.Id)}";
+                <div class="event-card" @key=card.Id>
+                    <h4>@card.Name</h4>
+                    <p><strong>Description:</strong> @card.Description</p>
+                    <p><strong>Location:</strong> @card.Location</p>
+                    <p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
+                    <p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
+                    <p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+                    <NavLink target="_blank" href="@navPerCard">View Details</NavLink>
+                </div>
+            }
+        </div>
+    }
 
+    @if (showAddEventComponent)
+    {
+        <div class="add-event-panel">
+            <AddEvent OnSuccess="UpdateEventCards" />
+        </div>
+    }
+
+</div>
 
 @code {
     private ObservableCollection<EventCard> eventCardsObservable;
     private string navPerCard = string.Empty;
+    private bool showAddEventComponent = false;
+    private string toggleAddEventText = "Show Add Event dialogue";
 
     protected override async Task OnInitializedAsync()
     {
         Logger.LogInformation("EventsLists page initialized");
         eventCardsObservable = new ObservableCollection<EventCard>(await EventCardDataService.GetEventCardsAsync());
+    }
+
+    private void ShowAddEventComponent()
+    {
+        showAddEventComponent = !showAddEventComponent;
+        toggleAddEventText = showAddEventComponent ? "Hide Add Event dialogue" : "Show Add Event dialogue";
+    }
+
+    private async Task UpdateEventCards(bool successful)
+    {
+        if (successful)
+        {
+            eventCardsObservable = new ObservableCollection<EventCard>(await EventCardDataService.GetEventCardsAsync());
+            StateHasChanged();
+        }
     }
 }

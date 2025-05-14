@@ -20,6 +20,10 @@ else if (isDeleted)
 		<NavLink href="/eventsList">Return to Events List</NavLink>
 	</div>
 }
+else if (isEditing)
+{
+	<AddEvent />
+}
 else
 {
 	<div class="event-card-details">
@@ -30,7 +34,7 @@ else
 		<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
 		<div class="horizontal">
 			<button class="btn-primary" @onclick="() => DeleteCard(card.Id)"> Delete </button>
-			<button class="btn-primary" @onclick="() => EditCard(card.Id)"> Edit Card </button>
+			<button class="btn-primary" @onclick="() => EditCard(card)"> Edit Card </button>
 		</div>
 	</div>
 }
@@ -43,6 +47,7 @@ else
 
 	private bool isNotFound = false;
 	private bool isDeleted = false;
+	private bool isEditing = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -69,8 +74,8 @@ else
 		}
 	}
 
-	private async Task EditCard(string cardId)
+	private async Task EditCard(EventCard card)
 	{
-		await Task.CompletedTask;
+		isEditing = true;
 	}
 }

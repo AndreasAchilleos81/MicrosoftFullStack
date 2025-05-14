@@ -10,40 +10,42 @@
 <EditForm FormName="AddEventForm" Model="@card" OnValidSubmit="@HandleSubmit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
-
-	<div>
-		<label for="name">Enter Name of Event:</label>
-		<InputText id="name" @bind-Value=@card.Name />
+	<div class="event-card">
+		<div class="form-grid">
+			<div>
+				<label for="name">Event Name:</label>
+				<InputText id="name" @bind-Value=@card.Name />
+			</div>
+			<div>
+				<label for="description">Description:</label>
+				<InputText id="description" @bind-Value=@card.Description />
+			</div>
+			<div>
+				<label for="location">Location:</label>
+				<InputText id="location" @bind-Value=@card.Location />
+			</div>
+			<div>
+				<label for="isPublic">Is public:</label>
+				<InputCheckbox id="isPublic" @bind-Value=@card.IsPublic />
+			</div>
+			<div>
+				<label for="maxAtendees">Max Attendees:</label>
+				<label>@card.MaxAttendees</label>
+			</div>
+		</div>
 	</div>
-
-	<div>
-		<label for="description">Enter Description of Event:</label>
-		<InputText id="description" @bind-Value=@card.Description />
-	</div>
-
-	<div>
-		<label for="location">Enter Location of Event:</label>
-		<InputText id="location" @bind-Value=@card.Location />
-	</div>
-
-	<div>
-		<label for="isPublic">Is event public:</label>
-		<InputCheckbox id="isPublic" @bind-Value=@card.IsPublic />
-	</div>
-
-	<div>
-		<label for="maxAtendees">Max Attendees allowed:</label>
-		<label>@card.MaxAttendees</label>
-	</div>
-
 	<button type="submit">Submit</button>
 </EditForm>
+
 @if (IsSuccess)
 {
 	<p>Event has been added successfully!</p>
 }
 
 @code {
+
+	[Parameter]
+	public EventCallback<bool> OnSuccess { get; set; }
 
 	private EventCard card = new EventCard();
 	private bool IsSuccess = false;
@@ -60,6 +62,7 @@
 		await EventCardDataService.AddEventCardAsync(card);
 		Logger.LogInformation("Handle submit finished");
 		IsSuccess = true;
+		await NotifyParent(IsSuccess);
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(2000);
@@ -67,6 +70,14 @@
 			await InvokeAsync(StateHasChanged);
 		});
 
-		card = new EventCard(); // Reset the form	
+		card = new EventCard(); // Reset the form
+	}
+
+	private async Task NotifyParent(bool success)
+	{
+		if (OnSuccess.HasDelegate)
+		{
+			await OnSuccess.InvokeAsync(success);
+		}
 	}
 }

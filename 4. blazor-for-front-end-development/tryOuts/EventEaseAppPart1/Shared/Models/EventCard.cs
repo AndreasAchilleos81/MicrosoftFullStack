@@ -14,7 +14,7 @@ namespace Shared.Models
 		public string Name { get; set; } = string.Empty;
 
 
-		[StringLength(300, MinimumLength = 15, ErrorMessage = "Location of event must between 3 to 50 chars")]
+		[StringLength(300, MinimumLength = 3, ErrorMessage = "Description of event must between 3 to 300 chars")]
 		public string Description { get; set; } = string.Empty;
 
 

@@ -79,7 +79,23 @@ namespace Shared.Services
 		// Update
 		public async Task<bool> UpdateEventCardAsync(EventCard updatedEventCard)
 		{
-			return await Task.FromResult(false);
+			var query = @"""
+							UPDATE EventCard
+							SET Name = @Name, Description = @Description, Location = @Location, IsPublic = @IsPublic, CurrentAttendees = @CurrentAttendees
+							WHERE Id = @Id;
+						""";
+
+			var result = await _connection.ExecuteAsync(query, new
+			{
+				Id = updatedEventCard.Id,
+				Name = updatedEventCard.Name,
+				Description = updatedEventCard.Description,
+				Location = updatedEventCard.Location,
+				IsPublic = updatedEventCard.IsPublic,
+				MaxAttendees = updatedEventCard.MaxAttendees,
+				CurrentAttendees = updatedEventCard.CurrentAttendees
+			});
+			return result > 0;
 		}
 
 		// Delete
