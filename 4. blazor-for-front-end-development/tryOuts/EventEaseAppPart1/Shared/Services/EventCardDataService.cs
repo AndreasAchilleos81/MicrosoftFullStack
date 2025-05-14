@@ -86,7 +86,7 @@ namespace Shared.Services
 		public async Task<bool> DeleteEventCardAsync(Guid id)
 		{
 			var query = "DELETE FROM EventCard WHERE Id = @Id";
-			var result = await _connection.ExecuteAsync(query, new { Id = id });
+			var result = await _connection.ExecuteAsync(query, new { Id = id.ToString() });
 			return result > 0;
 		}
 

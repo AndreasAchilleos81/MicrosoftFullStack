@@ -105,8 +105,18 @@ h1:focus {
 	}
 
 .horizontal {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+	display: inline-grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+	align-items: self-start;
+	justify-items: start;
+	column-gap: 0;
 }
+
+	.horizontal > * {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
