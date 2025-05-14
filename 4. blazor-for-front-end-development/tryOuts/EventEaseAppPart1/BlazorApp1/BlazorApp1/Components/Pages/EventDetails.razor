@@ -22,7 +22,7 @@ else if (isDeleted)
 }
 else if (isEditing)
 {
-	<AddEvent />
+	<AddEvent Card="@card" OnSuccess="HandleEdit"/>
 }
 else
 {
@@ -77,5 +77,10 @@ else
 	private async Task EditCard(EventCard card)
 	{
 		isEditing = true;
+	}
+
+	private void HandleEdit(bool isSuccess)
+	{
+		isEditing = false;
 	}
 }

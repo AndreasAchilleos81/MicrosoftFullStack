@@ -19,7 +19,7 @@ namespace Shared.Services
 			Batteries.Init();
 			_configuration = configuration;
 			var relativeLocation = _configuration["Logging:ConnectionStrings:DefaultConnection"].TrimEnd(';');
-			var absolutePath =  Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativeLocation));
+			var absolutePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativeLocation));
 			var connectionString = $"Data Source={absolutePath};";
 			_connection = new SqliteConnection(connectionString);
 			_connection.Open();
@@ -53,7 +53,7 @@ namespace Shared.Services
 		public async IAsyncEnumerable<EventCard> GetAllEventCardsAsync()
 		{
 			var query = "SELECT * FROM EventCard";
-			using var command  = new SqliteCommand(query, _connection);
+			using var command = new SqliteCommand(query, _connection);
 			using var reader = await command.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
 			{
@@ -79,22 +79,29 @@ namespace Shared.Services
 		// Update
 		public async Task<bool> UpdateEventCardAsync(EventCard updatedEventCard)
 		{
-			var query = @"""
-							UPDATE EventCard
-							SET Name = @Name, Description = @Description, Location = @Location, IsPublic = @IsPublic, CurrentAttendees = @CurrentAttendees
-							WHERE Id = @Id;
-						""";
-
-			var result = await _connection.ExecuteAsync(query, new
+			var query = @"
+						UPDATE EventCard
+						SET Name = @Name, Description = @Description, Location = @Location, IsPublic = @IsPublic, CurrentAttendees = @CurrentAttendees
+						WHERE Id = @Id;
+					";
+			int result = 0;
+			try
 			{
-				Id = updatedEventCard.Id,
-				Name = updatedEventCard.Name,
-				Description = updatedEventCard.Description,
-				Location = updatedEventCard.Location,
-				IsPublic = updatedEventCard.IsPublic,
-				MaxAttendees = updatedEventCard.MaxAttendees,
-				CurrentAttendees = updatedEventCard.CurrentAttendees
-			});
+				result = await _connection.ExecuteAsync(query, new
+				{
+					Id = updatedEventCard.Id,
+					Name = updatedEventCard.Name,
+					Description = updatedEventCard.Description,
+					Location = updatedEventCard.Location,
+					IsPublic = updatedEventCard.IsPublic,
+					CurrentAttendees = updatedEventCard.CurrentAttendees
+				});
+				Console.WriteLine($"Update result: {result}");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Update error: {ex.Message}");
+			}
 			return result > 0;
 		}
 

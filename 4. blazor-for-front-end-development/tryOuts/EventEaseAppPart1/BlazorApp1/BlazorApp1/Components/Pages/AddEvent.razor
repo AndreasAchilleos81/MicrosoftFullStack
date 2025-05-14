@@ -7,30 +7,30 @@
 
 <h3>AddEvent</h3>
 
-<EditForm FormName="AddEventForm" Model="@card" OnValidSubmit="@HandleSubmit">
+<EditForm FormName="AddEventForm" Model="@Card" OnValidSubmit="@HandleSubmit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
 	<div class="event-card">
 		<div class="form-grid">
 			<div>
 				<label for="name">Event Name:</label>
-				<InputText id="name" @bind-Value=@card.Name />
+				<InputText id="name" @bind-Value=@Card.Name />
 			</div>
 			<div>
 				<label for="description">Description:</label>
-				<InputText id="description" @bind-Value=@card.Description />
+				<InputText id="description" @bind-Value=@Card.Description />
 			</div>
 			<div>
 				<label for="location">Location:</label>
-				<InputText id="location" @bind-Value=@card.Location />
+				<InputText id="location" @bind-Value=@Card.Location />
 			</div>
 			<div>
 				<label for="isPublic">Is public:</label>
-				<InputCheckbox id="isPublic" @bind-Value=@card.IsPublic />
+				<InputCheckbox id="isPublic" @bind-Value=@Card.IsPublic />
 			</div>
 			<div>
 				<label for="maxAtendees">Max Attendees:</label>
-				<label>@card.MaxAttendees</label>
+				<label>@Card.MaxAttendees</label>
 			</div>
 		</div>
 	</div>
@@ -43,12 +43,27 @@
 }
 
 @code {
-
 	[Parameter]
 	public EventCallback<bool> OnSuccess { get; set; }
 
-	private EventCard card = new EventCard();
+	[Parameter]
+	public EventCard Card { get; set; }
+
 	private bool IsSuccess = false;
+	private bool InEditMode = false;
+
+	protected override void OnParametersSet()
+	{
+		Logger.LogInformation("AddEvent page parameters set");
+		if (Card == null)
+		{
+			Card = new EventCard();
+		}
+		else
+		{
+			InEditMode = true;
+		}
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -58,10 +73,22 @@
 	private async Task HandleSubmit()
 	{
 		Logger.LogInformation("Handle submit started");
-		card.Id = Guid.NewGuid().ToString();
-		await EventCardDataService.AddEventCardAsync(card);
+
+		if (InEditMode)
+		{
+			await EventCardDataService.UpdateEventCardAsync(Card);
+			await NotifyParent(true);
+		}
+		else
+		{
+			Card.Id = Guid.NewGuid().ToString();
+			await EventCardDataService.AddEventCardAsync(Card);
+		}
+
 		Logger.LogInformation("Handle submit finished");
 		IsSuccess = true;
+
+
 		await NotifyParent(IsSuccess);
 		_ = Task.Run(async () =>
 		{
@@ -70,7 +97,7 @@
 			await InvokeAsync(StateHasChanged);
 		});
 
-		card = new EventCard(); // Reset the form
+		Card = new EventCard(); // Reset the form
 	}
 
 	private async Task NotifyParent(bool success)
