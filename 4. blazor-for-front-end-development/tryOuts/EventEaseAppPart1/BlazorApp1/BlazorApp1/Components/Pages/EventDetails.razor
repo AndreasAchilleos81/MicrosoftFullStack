@@ -21,6 +21,12 @@ else
 		<p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
 		<p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
 		<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+		<div class="horizontal">
+			<button @onclick="() => DeleteCard(card.Id)">Delete</button>
+			<button @onclick="() => EditCard(card.Id)">Delete</button>
+
+		</div>
+
 	</div>
 }
 
@@ -45,5 +51,20 @@ else
 		{
 			Logger.LogInformation($"EventCard found: {card.ToString()}");
 		}
+	}
+
+	private async Task DeleteCard(string cardId)
+	{
+		if (card != null)
+		{
+			EventCardDataService.DeleteEventCardAsync(Guid.Parse(cardId));
+			Logger.LogInformation($"EventCard deleted: {card.ToString()}");
+			isNotFound = true;
+		}
+	}
+
+	private async Task EditCard(string cardId)
+	{
+		await Task.CompletedTask;
 	}
 }

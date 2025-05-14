@@ -1,0 +1,7 @@
+﻿.event-list {
+	display: flex;
+	flex-wrap: wrap; /* Allows wrapping to the next row */
+	gap: 20px; /* Adds spacing between cards */
+	justify-content: center; /* Centers the cards horizontally */
+	margin-top: 20px;
+}

@@ -2,22 +2,23 @@
 @rendermode InteractiveServer
 @using Shared.Interfaces;
 @using Shared.Models;
+@using System.Collections.ObjectModel;
 @inject ILogger<EventsLists> Logger;
 @inject IEventCardDataService EventCardDataService;
 
 <h3>Events List</h3>
 
-@if (eventCards == null || !eventCards.Any())
+@if (eventCardsObservable == null || !eventCardsObservable.Any())
 {
     <p>No events available.</p>
 }
 else
 {
-    <div class="event-list">
-        @foreach (var card in eventCards)
+    <div class="event-list" >
+        @foreach (var card in eventCardsObservable)
         {
-			navPerCard = $"/event/{Guid.Parse(card.Id)}";
-            <div class="event-card">
+            navPerCard = $"/event/{Guid.Parse(card.Id)}";
+            <div class="event-card" @key=card.Id>
                 <h4>@card.Name</h4>
                 <p><strong>Description:</strong> @card.Description</p>
                 <p><strong>Location:</strong> @card.Location</p>
@@ -30,22 +31,14 @@ else
     </div>
 }
 
+
 @code {
-    private List<EventCard> eventCards = new List<EventCard>();
+    private ObservableCollection<EventCard> eventCardsObservable;
     private string navPerCard = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         Logger.LogInformation("EventsLists page initialized");
-        int counter = 0;
-        await foreach (var cardItem in EventCardDataService.GetAllEventCardsAsync())
-        {
-            eventCards.Add(cardItem);
-            counter++;
-
-            if (counter == 10)
-            {
-                StateHasChanged();
-            }
-        }
+        eventCardsObservable = new ObservableCollection<EventCard>(await EventCardDataService.GetEventCardsAsync());
     }
 }

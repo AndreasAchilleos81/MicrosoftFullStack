@@ -7,6 +7,7 @@ namespace Shared.Interfaces
 		Task AddEventCardAsync(EventCard eventCard);
 		Task<EventCard?> GetEventCardByIdAsync(string id);
 		IAsyncEnumerable<EventCard> GetAllEventCardsAsync();
+		Task<IEnumerable<EventCard>> GetEventCardsAsync();
 		Task<bool> UpdateEventCardAsync(EventCard updatedEventCard);
 		Task<bool> DeleteEventCardAsync(Guid id);
 	}

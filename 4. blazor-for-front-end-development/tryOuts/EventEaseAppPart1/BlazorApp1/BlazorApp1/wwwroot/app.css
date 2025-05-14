@@ -59,14 +59,6 @@ h1:focus {
 	text-align: start;
 }
 
-.event-list {
-	display: flex;
-	flex-wrap: wrap; /* Allows wrapping to the next row */
-	gap: 20px; /* Adds spacing between cards */
-	justify-content: center; /* Centers the cards horizontally */
-	margin-top: 20px;
-}
-
 .event-card {
 	background-color: #f9f9f9;
 	border: 1px solid #ddd;
@@ -112,50 +104,9 @@ h1:focus {
 		box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
 	}
 
-
-.event-card-details {
-	background-color: #f4f4f9; /* Light neutral background for a casual yet formal look */
-	border: 2px solid #ccc; /* Subtle border for a clean appearance */
-	border-radius: 12px;
-	padding: 20px;
-	width: 80%; /* Take up 80% of the available screen width */
-	max-width: 1200px; /* Prevent it from growing too large on wide screens */
-	margin: 20px auto; /* Center the card horizontally and add vertical spacing */
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern look */
-	text-align: left;
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font for readability */
-	color: #333; /* Neutral text color */
-	transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+.horizontal {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
-
-	.event-card-details:hover {
-		transform: translateY(-5px); /* Slight lift on hover */
-		box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-	}
-
-	.event-card-details h4 {
-		color: #007bff; /* Subtle blue for a formal yet inviting look */
-		margin-bottom: 10px;
-	}
-
-	.event-card-details p {
-		margin: 5px 0;
-		color: #555; /* Slightly muted text for secondary information */
-	}
-
-	.event-card-details .btn {
-		margin-top: 15px;
-		background-color: #ff6f61; /* Hint of party with a coral-like color */
-		color: white;
-		border: none;
-		padding: 10px 15px;
-		border-radius: 5px;
-		cursor: pointer;
-		text-align: center;
-		font-size: 1rem;
-		transition: background-color 0.3s ease;
-	}
-
-		.event-card-details .btn:hover {
-			background-color: #e55b50; /* Darker coral for hover effect */
-		}

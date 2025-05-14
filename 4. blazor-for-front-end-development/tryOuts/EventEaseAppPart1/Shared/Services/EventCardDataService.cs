@@ -4,6 +4,7 @@ using Shared.Models;
 using Microsoft.Data.Sqlite;
 using Dapper;
 using SQLitePCL;
+using System.Security.Cryptography;
 
 namespace Shared.Services
 {
@@ -48,6 +49,7 @@ namespace Shared.Services
 			return result;
 		}
 
+		//Streaming data
 		public async IAsyncEnumerable<EventCard> GetAllEventCardsAsync()
 		{
 			var query = "SELECT * FROM EventCard";
@@ -67,6 +69,13 @@ namespace Shared.Services
 			}
 		}
 
+		public async Task<IEnumerable<EventCard>> GetEventCardsAsync()
+		{
+			var query = "SELECT * FROM EventCard";
+			var result = await _connection.QueryAsync<EventCard>(query);
+			return result;
+		}
+
 		// Update
 		public async Task<bool> UpdateEventCardAsync(EventCard updatedEventCard)
 		{
@@ -76,7 +85,9 @@ namespace Shared.Services
 		// Delete
 		public async Task<bool> DeleteEventCardAsync(Guid id)
 		{
-			return await Task.FromResult(false);
+			var query = "DELETE FROM EventCard WHERE Id = @Id";
+			var result = await _connection.ExecuteAsync(query, new { Id = id });
+			return result > 0;
 		}
 
 		public void Dispose()
