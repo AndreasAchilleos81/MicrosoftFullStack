@@ -1,0 +1,45 @@
+Registration form for users
+- query how to have them login - keep that login in the user sessio tracker
+
+
+Attendance Tracker 
+
+
+A User Session Tracker for state management:
+
+	User Session Tracker: A feature that records and maintains a user's session state, ensuring continuity across different components and pages within the Blazor app.
+
+	State Management: The ability to track user sessions and their interactions within the app, possibly storing information like login status, preferences, or active selections.
+
+	Persistent State Handling: Ensuring that session data does not get lost when navigating between pages or refreshing the app.
+
+	Events the user has subscribed to or registered for—allowing them to see which events they plan to attend.
+
+	Personalized session details—such as saved preferences or bookmarked events.
+
+	User-specific interactions—like RSVP status, comments, or feedback on events.
+
+	Session continuity—so users don't lose their data when navigating between pages.
+	
+	Better yet look into this:
+		Attendance Tracking – Logs whether a user actually attends an event they've registered for.
+		Event Registrations & RSVPs – Tracks which events a user has signed up for or shown interest in.
+	
+	
+
+
+
+
+Key Functionality of An Attendance Tracker to monitor event participation.
+Track Registered vs. Attended Events – Monitor which events users signed up for and whether they actually attended.
+
+Real-Time Check-In System – Users can confirm attendance through QR codes, manual check-ins, or geolocation tracking.
+
+Session Logs & Analytics – Generate reports on attendance patterns to help event organizers understand user engagement.
+
+Automated Notifications – Send reminders or follow-ups based on attendance behavior (Implement Signal R to notify users when their event is up like an event reminder).
+
+
+
+deploy on github CHECK IF YOU CAN DEPLOY BLAZOR ON GITHUB
+
