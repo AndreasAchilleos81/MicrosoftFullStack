@@ -5,6 +5,7 @@
 @using System.Collections.ObjectModel;
 @inject ILogger<EventsLists> Logger;
 @inject IEventCardDataService EventCardDataService;
+@inject IGenericRepository<EventCard> EventCardRepository;
 @inject NavigationManager NavigationManager;
 
 <h3>Events List</h3>
@@ -53,7 +54,7 @@
     protected override async Task OnInitializedAsync()
     {
         Logger.LogInformation("EventsLists page initialized");
-        eventCardsObservable = new ObservableCollection<EventCard>(await EventCardDataService.GetEventCardsAsync());
+        eventCardsObservable = new ObservableCollection<EventCard>(await EventCardRepository.GetAll());
     }
 
     private void ShowAddEventComponent()
@@ -66,7 +67,7 @@
     {
         if (successful)
         {
-            eventCardsObservable = new ObservableCollection<EventCard>(await EventCardDataService.GetEventCardsAsync());
+            eventCardsObservable = new ObservableCollection<EventCard>(await EventCardRepository.GetAll());
             StateHasChanged();
         }
     }
