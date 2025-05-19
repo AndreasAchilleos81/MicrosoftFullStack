@@ -4,6 +4,7 @@
 @using Shared.Interfaces;
 @inject ILogger<AddEvent> Logger;
 @inject IEventCardDataService EventCardDataService;
+@inject IGenericRepository<EventCard> EventCardRepository;
 
 <h3>AddEvent</h3>
 
@@ -76,13 +77,15 @@
 
 		if (InEditMode)
 		{
-			await EventCardDataService.UpdateEventCardAsync(Card);
+			await EventCardRepository.Update(Card);
+			// await EventCardDataService.UpdateEventCardAsync(Card);
 			await NotifyParent(true);
 		}
 		else
 		{
 			Card.Id = Guid.NewGuid().ToString();
-			await EventCardDataService.AddEventCardAsync(Card);
+			await EventCardRepository.Add(Card);
+			// await EventCardDataService.AddEventCardAsync(Card);
 		}
 
 		Logger.LogInformation("Handle submit finished");

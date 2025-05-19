@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddDataService(builder.Configuration);
+builder.Services.AddDataRepositories(builder.Configuration);
 
 Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Debug()

@@ -49,3 +49,4 @@ secrets.json
 **.bin
 **/Logs/**.txt
 *Logs*
+**/Logs/log*.txt

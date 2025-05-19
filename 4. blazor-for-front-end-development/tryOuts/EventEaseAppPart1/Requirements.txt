@@ -1,33 +1,37 @@
+Added tables:
+ - Sessions
+ - Attendance
+ - Registration
+ - "User"
+
+
+
 Registration form for users
 - query how to have them login - keep that login in the user sessio tracker
+	DB table user 
 
-
-Attendance Tracker 
+Attendance Tracker   2025-04-04 16:30:10
 
 
 A User Session Tracker for state management:
 
 	User Session Tracker: A feature that records and maintains a user's session state, ensuring continuity across different components and pages within the Blazor app.
-
-	State Management: The ability to track user sessions and their interactions within the app, possibly storing information like login status, preferences, or active selections.
-
-	Persistent State Handling: Ensuring that session data does not get lost when navigating between pages or refreshing the app.
+			db Table sessions - historical track keeping of their sessions
 
 	Events the user has subscribed to or registered for—allowing them to see which events they plan to attend.
-
-	Personalized session details—such as saved preferences or bookmarked events.
-
-	User-specific interactions—like RSVP status, comments, or feedback on events.
-
-	Session continuity—so users don't lose their data when navigating between pages.
+		DB table for event registration
+		Service to notify users that the even is up or happening in the next hour for subscribed and registered event users different message
 	
 	Better yet look into this:
-		Attendance Tracking – Logs whether a user actually attends an event they've registered for.
+		Attendance Tracking – Logs whether a user actually attends an event they've registered for or interested(marks event as interested)
+				Personalized session details—such as saved preferences or bookmarked events.
+				Interested in events 
+				
 		Event Registrations & RSVPs – Tracks which events a user has signed up for or shown interest in.
+					User-specific interactions—like RSVP status, comments, or feedback on events.
+							DB table for event registration  - type of registration RSVP - show in event details who is going also
+							DB table for comments/feedback per event load it in event details 
 	
-	
-
-
 
 
 Key Functionality of An Attendance Tracker to monitor event participation.
