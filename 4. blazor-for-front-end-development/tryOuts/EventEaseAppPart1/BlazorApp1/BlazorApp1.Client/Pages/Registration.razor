@@ -1,7 +1,72 @@
-﻿@page "/Register"
+﻿@page "/register"
+@using Shared.Models
+@using Shared.Repository;
+@using Shared.Interfaces;
 @rendermode InteractiveWebAssembly
+@inject ILogger<Registration> Logger;
+@inject IGenericRepository<User> UserRepository;
 <h4>Registration</h4>
 
-@code {
+<EditForm FormName="RegisterUserForm" EditContext="userContext" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
+    <div class="mb-3">
+        <label for="name" class="form-label">Username</label>
+        <InputText id="name" class="form-control" @bind-Value="user.Name" />
+        <ValidationMessage For="@(() => user.Name)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <InputText id="lastName" class="form-control" @bind-Value="user.LastName" />
+        <ValidationMessage For="@(() => user.LastName)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="user.Email" />
+        <ValidationMessage For="@(() => user.Email)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</EditForm>
+
+@code {
+    private EditContext userContext;
+    private User user;
+    private bool validating = false;
+
+    private async Task HandleValidSubmit()
+    {
+        Logger.LogInformation("User registration form submitted");
+        if( await UserRepository.Add(user))
+        {
+            Logger.LogInformation(
+                $"Registered successfully User: {user.ToString()}");
+        }
+        else
+        {
+            Logger.LogInformation(
+                   $"Failed to Register User: {user.ToString()}");
+        }
+
+    }	
+
+    protected override void OnInitialized()
+    {
+        user = new User();
+        userContext = new EditContext(user);
+        userContext.OnValidationRequested += (sender, args) =>
+        {
+            if (validating) return;
+            validating = true;
+
+            if (!userContext.Validate())
+            {
+				Logger.LogInformation("Validation failed");
+            }
+			validating = false;
+        };
+    }	
 }
