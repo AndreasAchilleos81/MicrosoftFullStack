@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddDataRepositories(builder.Configuration);
 
 Log.Logger = new LoggerConfiguration()
@@ -38,7 +37,7 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-    //.AddInteractiveWebAssemblyRenderMode()
+    .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorApp1.Client._Imports).Assembly);
 
 app.UseStatusCodePagesWithRedirects("/PageNotExists");

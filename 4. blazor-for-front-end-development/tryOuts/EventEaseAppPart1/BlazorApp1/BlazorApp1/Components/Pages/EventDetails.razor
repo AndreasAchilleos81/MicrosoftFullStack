@@ -3,7 +3,7 @@
 @using Shared.Models
 @using Shared.Interfaces;
 @inject ILogger<EventDetails> Logger;
-@inject IEventCardDataService EventCardDataService;
+@inject IGenericRepository<EventCard> EventCardRepository;
 
 <h3>EventDetails</h3>
 @if (isNotFound)
@@ -52,7 +52,7 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 		Logger.LogInformation("EventDetails page initialized");
-		card = await EventCardDataService.GetEventCardByIdAsync(Id.ToString());
+		card = await EventCardRepository.GetById(Id.ToString());
 		if (card == null)
 		{
 			Logger.LogInformation("EventCard not found");
@@ -68,7 +68,7 @@ else
 	{
 		if (card != null)
 		{
-			await EventCardDataService.DeleteEventCardAsync(Guid.Parse(cardId));
+			await EventCardRepository.Delete(card);
 			Logger.LogInformation($"EventCard deleted: {card.ToString()}");
 			isDeleted = true;
 		}

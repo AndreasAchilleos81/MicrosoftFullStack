@@ -11,6 +11,5 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
-builder.Services.AddSingleton<IEventCardDataService>();
 
 await builder.Build().RunAsync();

@@ -2,8 +2,6 @@
 @using Shared.Interfaces
 @attribute [StreamRendering]  
 @inject ILogger<Weather> Logger;
-@inject IEventCardDataService EventCardDataService;
-@inject IConfiguration Configuration;
 <PageTitle>Weather</PageTitle>
 
 <h1>Weather</h1>
@@ -45,11 +43,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         Logger.LogInformation("Weather forecast page initialized.");
-        Configuration.GetConnectionString("DefaultConnection");
-
-        var eventCard = await EventCardDataService.GetEventCardByIdAsync("42310753-88ed-458f-bea3-af1b25fb4e5f");
-        Logger.LogWarning(eventCard.ToString());
-
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
 

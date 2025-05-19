@@ -89,11 +89,32 @@ namespace Shared.Repository
 				string tableName = GetTableName();
 				string keyColumn = GetKeyColumnName();
 				string query = $"SELECT  * From {tableName} WHERE {keyColumn} = '{Id}'";
+				result = await _connection.QueryAsync<T>(query);
 
 			}
 			catch (Exception ex) {
 				_logger.LogError(ex.ToString());
 			}
+
+			return result.FirstOrDefault();
+		}
+
+		public async Task<T> GetById(string Id)
+		{
+			IEnumerable<T> result = null;
+			try
+			{
+				string tableName = GetTableName();
+				string keyColumn = GetKeyColumnName();
+				string query = $"SELECT  * From {tableName} WHERE {keyColumn} = '{Id}'";
+				result = await _connection.QueryAsync<T>(query);
+
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.ToString());
+			}
+
 
 			return result.FirstOrDefault();
 		}
