@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Serilog;
-using System.Diagnostics;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 Log.Logger = new LoggerConfiguration()

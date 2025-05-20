@@ -4,9 +4,9 @@ using Shared.Models;
 
 namespace Shared.Repository
 {
-	public class UserRepository : GenericRepository<User>
+	public class RegistrationRepository : GenericRepository<Registration>
 	{
-		public UserRepository(IConfiguration configuration, ILogger<User> logger) 
+		public RegistrationRepository(IConfiguration configuration, ILogger<Registration> logger) 
 			: base(configuration, logger) { }
 	}
 }

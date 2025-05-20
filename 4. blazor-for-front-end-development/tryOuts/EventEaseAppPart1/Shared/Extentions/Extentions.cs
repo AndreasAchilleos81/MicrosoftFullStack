@@ -13,6 +13,17 @@ namespace Shared.Extentions
 			services.AddSingleton(configuration);
 			services.AddSingleton<IGenericRepository<EventCard>, EventCardRepository>();
 			services.AddSingleton<IGenericRepository<User>, UserRepository>();
+			services.AddSingleton<IGenericRepository<Registration>, RegistrationRepository>();
+		}
+
+		public static Registration CreateRegistration(this User user)
+		{
+			return new Registration
+			{
+				UserId = user.Id.ToString(),
+				RegisteredAt = DateTime.UtcNow,
+				TerminatedAt = null
+			};
 		}
 	}
 }

@@ -41,18 +41,18 @@
 	private bool validating = false;
 
 	private async Task HandleValidSubmit()
-{
-    this.user.Id = Guid.NewGuid().ToString();
-    Logger.LogInformation("User registration form submitted");
+	{
+		this.user.Id = Guid.NewGuid().ToString();
+		Logger.LogInformation("User registration form submitted");
 
-    if (SignalRService.HubConnection.State != HubConnectionState.Connected)
-    {
-        await SignalRService.HubConnection.StartAsync();
-    }
+		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
+		{
+			await SignalRService.HubConnection.StartAsync();
+		}
 
-    await SignalRService.SendUserAsync(user);
-    Logger.LogInformation($"Registered successfully User: {user}");
-}
+		await SignalRService.SendUserAsync(user);
+		Logger.LogInformation($"Registered successfully User: {user}");
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
