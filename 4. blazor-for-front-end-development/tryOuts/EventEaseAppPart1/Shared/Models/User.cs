@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shared.Models
 {
+	[Table("User")]
 	public class User
 	{
 		[Key]
 		[Column("Id")]
-		public int Id { get; set; }
+		public string Id { get; set; }
 
 		[Required(ErrorMessage = "Username is required")]
 		[Column("Name")]

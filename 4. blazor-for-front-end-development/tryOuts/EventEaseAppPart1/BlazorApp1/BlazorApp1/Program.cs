@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddDataRepositories(builder.Configuration);
+builder.Services.AddScoped<Shared.Communication.SignalRService>();
 
 Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Debug()
@@ -41,5 +42,7 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(BlazorApp1.Client._Imports).Assembly);
 
 app.UseStatusCodePagesWithRedirects("/PageNotExists");
+
+app.MapHub<DataHub>("/datahub");
 
 app.Run();
