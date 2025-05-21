@@ -8,7 +8,5 @@ namespace Shared.Repository
 	{
 		public EventCardRepository(IConfiguration configuration, ILogger<EventCard> logger)
 			: base(configuration, logger) { }
-
-
 	}
 }

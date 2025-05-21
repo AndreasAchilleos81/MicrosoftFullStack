@@ -1,4 +1,7 @@
+using BlazorApp1.Auth;
 using BlazorApp1.Components;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 
@@ -11,7 +14,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddDataRepositories(builder.Configuration);
+builder.Services.AddAuthRepositories(builder.Configuration);
 builder.Services.AddScoped<Shared.Communication.SignalRService>();
+
 
 Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Debug()

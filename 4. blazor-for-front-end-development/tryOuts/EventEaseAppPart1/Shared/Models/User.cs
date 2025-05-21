@@ -23,6 +23,9 @@ namespace Shared.Models
 		[Column("Email")]
 		public string Email { get; set; } = string.Empty;
 
+		[Required(ErrorMessage = "Password is required")]
+		public string Password { get; set; } = string.Empty;	
+
 		public override string ToString()
 		{
 			return $"Id: {Id}, Name: {Name}, LastName: {LastName}, Email: {Email}";
