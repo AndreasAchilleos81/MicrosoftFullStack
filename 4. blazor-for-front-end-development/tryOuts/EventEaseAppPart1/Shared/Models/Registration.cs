@@ -13,7 +13,7 @@ namespace Shared.Models
 		[Column("registered_at")]
 		public DateTime RegisteredAt { get; set; }
 
-		[Column("terminated_at")]
+		[Column("terminated_At")]
 		public DateTime? TerminatedAt { get; set; }
 
 	}

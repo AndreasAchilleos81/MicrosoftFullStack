@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace BlazorApp1.Auth
 {
@@ -13,7 +12,16 @@ namespace BlazorApp1.Auth
 			var connectionString = $"Data Source={absolutePath};";
 
 			services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
-			services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+			services.AddDefaultIdentity<IdentityUser>(options =>
+			{
+				options.Password.RequireDigit = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.SignIn.RequireConfirmedPhoneNumber = false;
+				options.SignIn.RequireConfirmedEmail = false;	
+				options.SignIn.RequireConfirmedAccount = false;
+			}).AddEntityFrameworkStores<ApplicationDbContext>();
+
 			services.AddAuthorization();
 			services.AddAuthentication();
 		}

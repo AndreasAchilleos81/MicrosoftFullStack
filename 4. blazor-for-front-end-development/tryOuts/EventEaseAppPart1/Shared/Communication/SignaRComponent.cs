@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Components;
 using Shared.Models;
+using Shared.Result;
 
 namespace Shared.Communication
 {
@@ -15,9 +16,14 @@ namespace Shared.Communication
                 .Build();
         }
 
-        public async Task SendUserAsync(User user)
+        public async Task<RegistrationResult> SendUserAsync(User user)
         {
-            await HubConnection.InvokeAsync("SaveUser", user);
+           return await HubConnection.InvokeAsync<RegistrationResult>("SaveUser", user);
         }
-    }
+
+        public async Task<LoginResult> LoginUserAsync(LoginModel loginModel)
+		{
+			return await HubConnection.InvokeAsync<LoginResult>("LoginUser", loginModel);
+		}
+	}
 }

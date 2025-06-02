@@ -1,0 +1,92 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.SignalR.Client
+@using Shared.Models
+@using Shared.Communication
+@rendermode InteractiveWebAssembly
+@inject ILogger<Login> Logger
+@inject Shared.Communication.SignalRService SignalRService
+@inject NavigationManager Navigation
+
+<h4>Login</h4>
+
+@if (loginResult == null)
+{
+	<EditForm FormName="LoginForm" EditContext="loginContext" OnValidSubmit="@HandleValidSubmit">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+
+		<div class="mb-3">
+			<label for="email" class="form-label">Email</label>
+			<InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+			<ValidationMessage For="@(() => loginModel.Email)" />
+		</div>
+
+		<div class="mb-3">
+			<label for="password" class="form-label">Password</label>
+			<InputText id="password" class="form-control" @bind-Value="loginModel.Password" type="password" />
+			<ValidationMessage For="@(() => loginModel.Password)" />
+		</div>
+
+		<button type="submit" class="btn btn-primary">Login</button>
+	</EditForm>
+}
+else if (loginResult.Succeeded)
+{
+	<h2>Login successful! Redirecting...</h2>
+}
+else
+{
+	<h2>Login failed. Please check your credentials.</h2>
+}
+
+@code {
+	private EditContext loginContext;
+	private LoginModel loginModel;
+	private LoginResult loginResult;
+	private bool validating = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (loginModel == null)
+		{
+			loginModel = new LoginModel();
+			loginContext = new EditContext(loginModel);
+			loginContext.OnValidationRequested += (sender, args) =>
+			{
+				if (validating) return;
+				validating = true;
+				if (!loginContext.Validate())
+				{
+					Logger.LogInformation("Validation failed");
+				}
+				validating = false;
+				Logger.LogInformation("Validation requested for login form");
+			};
+		}
+	}
+
+	private async Task HandleValidSubmit()
+	{
+		Logger.LogInformation("Login form submitted");
+
+		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
+		{
+			await SignalRService.HubConnection.StartAsync();
+		}
+
+		loginResult = await SignalRService.LoginUserAsync(loginModel);
+
+		StateHasChanged();
+
+		if (loginResult.Succeeded)
+		{
+			Logger.LogInformation("Login successful");
+			await Task.Delay(2000);
+			Navigation.NavigateTo("/eventsList");
+		}
+		else
+		{
+			Logger.LogWarning("Login failed");
+		}
+	}
+}

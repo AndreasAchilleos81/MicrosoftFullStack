@@ -4,41 +4,62 @@
 @using Shared.Repository;
 @using Shared.Interfaces;
 @using Microsoft.AspNetCore.SignalR.Client;
+@using Shared.Result
 @rendermode InteractiveWebAssembly
 @inject ILogger<Registration> Logger;
 @inject Shared.Communication.SignalRService SignalRService;
+@inject NavigationManager Navigation;
+
 <h4>Registration</h4>
 
-<EditForm FormName="RegisterUserForm" EditContext="userContext" OnValidSubmit="@HandleValidSubmit">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
+@if (registrationResult == null)
+{
+	<EditForm FormName="RegisterUserForm" EditContext="userContext" OnValidSubmit="@HandleValidSubmit">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
 
-	<div class="mb-3">
-		<label for="name" class="form-label">Name</label>
-		<InputText id="name" class="form-control" @bind-Value="user.Name" />
-		<ValidationMessage For="@(() => user.Name)" />
-	</div>
+		<div class="mb-3">
+			<label for="name" class="form-label">Name</label>
+			<InputText id="name" class="form-control" @bind-Value="user.Name" />
+			<ValidationMessage For="@(() => user.Name)" />
+		</div>
 
-	<div class="mb-3">
-		<label for="lastName" class="form-label">Last Name</label>
-		<InputText id="lastName" class="form-control" @bind-Value="user.LastName" />
-		<ValidationMessage For="@(() => user.LastName)" />
-	</div>
+		<div class="mb-3">
+			<label for="lastName" class="form-label">Last Name</label>
+			<InputText id="lastName" class="form-control" @bind-Value="user.LastName" />
+			<ValidationMessage For="@(() => user.LastName)" />
+		</div>
 
-	<div class="mb-3">
-		<label for="email" class="form-label">Email</label>
-		<InputText id="email" class="form-control" @bind-Value="user.Email" />
-		<ValidationMessage For="@(() => user.Email)" />
-	</div>
+		<div class="mb-3">
+			<label for="email" class="form-label">Email</label>
+			<InputText id="email" class="form-control" @bind-Value="user.Email" />
+			<ValidationMessage For="@(() => user.Email)" />
+		</div>
 
-	<button type="submit" class="btn btn-primary">Register</button>
-</EditForm>
+		<div>
+			<label for="password" class="form-label">Password</label>
+			<InputText id="password" class="form-control" @bind-Value="user.Password" type="password" />
+			<ValidationMessage For="@(() => user.Password)" />
+		</div>
+
+		<button type="submit" class="btn btn-primary">Register</button>
+	</EditForm>
+}
+else if (registrationResult.Succeeded)
+{
+	<h2>Registration was successfull routing you to login page</h2>
+}
+else
+{
+	<h2>Registration has failed please contact support or try again</h2>
+}
 
 @code {
 	private EditContext userContext;
 	private User user;
 	private HubConnection hubConnection;
 	private bool validating = false;
+	private RegistrationResult registrationResult = null;
 
 	private async Task HandleValidSubmit()
 	{
@@ -50,8 +71,28 @@
 			await SignalRService.HubConnection.StartAsync();
 		}
 
-		await SignalRService.SendUserAsync(user);
-		Logger.LogInformation($"Registered successfully User: {user}");
+		registrationResult = await SignalRService.SendUserAsync(user);
+
+		StateHasChanged();  // update state to updatea UI
+		// start task here and wait for user to read message and then re-route user
+		_ = Task.Factory.StartNew(async () =>
+		{
+			await Task.Delay(3000);
+			registrationResult = null;
+			StateHasChanged();  // update state to updatea UI
+
+		});
+
+		if (registrationResult.Succeeded)
+		{
+			Logger.LogInformation($"Registered successfully User: {user}");
+			Navigation.NavigateTo("login");
+		}
+		else
+		{
+			var errorMessages = string.Join(Environment.NewLine, registrationResult.Errors);
+			Logger.LogError($"Failure Reason: {errorMessages} Registration failed for user: {user}");
+		}
 	}
 
 	protected override async Task OnInitializedAsync()

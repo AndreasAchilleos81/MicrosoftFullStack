@@ -41,7 +41,8 @@ namespace Shared.Repository
 				string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 				rowsAffected = await _connection.ExecuteAsync(query, entity);
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				_logger.LogError(ex.ToString());
 			}
 			return rowsAffected > 0 ? true : false;
@@ -58,7 +59,8 @@ namespace Shared.Repository
 				string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 				rowsAffected = await _connection.ExecuteAsync(query, entity);
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				_logger.LogError(ex.ToString());
 			}
 
@@ -74,7 +76,8 @@ namespace Shared.Repository
 				string query = $"SELECT * FROM {tableName}";
 				result = await _connection.QueryAsync<T>(query);
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				_logger.LogError(ex.ToString());
 			}
 
@@ -92,7 +95,8 @@ namespace Shared.Repository
 				result = await _connection.QueryAsync<T>(query);
 
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				_logger.LogError(ex.ToString());
 			}
 
@@ -144,7 +148,8 @@ namespace Shared.Repository
 				query.Append($" WHERE {keyColumn} = @{keyProperty}");
 				rowsAffected = await _connection.ExecuteAsync(query.ToString(), entity);
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				_logger.LogError(ex.ToString());
 			}
 
@@ -194,20 +199,55 @@ namespace Shared.Repository
 		private string GetColumns(bool excludekey = false)
 		{
 			var type = typeof(T);
-			var columns = string.Join(", ", type.GetProperties()
-				.Where(p => !excludekey || !p.IsDefined(typeof(KeyAttribute)))
-				.Select(p =>
-				{
-					var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
-					return columnAttr != null ? columnAttr.Name : p.Name;
-				}));
+			//var columns = string.Join(", ", type.GetProperties()
+			//	.Where(p => !excludekey || !p.IsDefined(typeof(KeyAttribute)))
+			//	.Select(p =>
+			//	{
+			//		var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
+			//		return columnAttr != null ? columnAttr.Name : p.Name;
+			//	}));
+
+			var properties = type.GetProperties();
+			if (excludekey)
+			{
+				properties = properties.Where(p => !p.IsDefined(typeof(KeyAttribute))).ToArray();
+			}
+
+			var columnNames = properties
+								.Where(p => p.GetCustomAttribute<ColumnAttribute>() != null)
+								.Select(c => c.GetCustomAttribute<ColumnAttribute>())
+								.Select(j => j.Name);
+
+			var columns = string.Join(", ", columnNames);
+
+			//.Where(p => !excludekey || !p.IsDefined(typeof(KeyAttribute)))
+			//.Select(p =>
+			//{
+			//	var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
+			//	return columnAttr != null ? columnAttr.Name : p.Name;
+			//}));
+
 
 			return columns;
 		}
 
 		protected string GetPropertyNames(bool excludekey = false)
 		{
-			var properties = typeof(T).GetProperties().Where(p => !excludekey || p.GetCustomAttribute<KeyAttribute>() == null);
+			//var properties = typeof(T).GetProperties().Where(p => !excludekey || p.GetCustomAttribute<KeyAttribute>() == null);
+			//var values = string.Join(", ", properties.Select(p =>
+			//{
+			//	return $"@{p.Name}"; ;
+			//}));
+
+			//return values;
+
+			var properties = typeof(T).GetProperties().ToList(); //.Where(p => !excludekey || p.GetCustomAttribute<KeyAttribute>() == null);
+			if (excludekey)
+			{
+				properties = properties.Where(p => p.GetCustomAttribute<KeyAttribute>() == null).Select(pi => pi).ToList();
+			}
+			properties = properties.Where(p => p.GetCustomAttribute<ColumnAttribute>() != null).ToList();
+
 			var values = string.Join(", ", properties.Select(p =>
 			{
 				return $"@{p.Name}"; ;

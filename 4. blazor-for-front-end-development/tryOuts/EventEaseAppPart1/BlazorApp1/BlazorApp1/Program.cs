@@ -1,10 +1,7 @@
 using BlazorApp1.Auth;
 using BlazorApp1.Components;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
-
 using Shared.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-builder.Services.AddDataRepositories(builder.Configuration);
+builder.Services.AddRazorPages(); // for cshtml pages
 builder.Services.AddAuthRepositories(builder.Configuration);
+builder.Services.AddServerSideBlazor();
+builder.Services.AddDataRepositories(builder.Configuration);
 builder.Services.AddScoped<Shared.Communication.SignalRService>();
 
 
@@ -38,8 +37,11 @@ else
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
 }
 
+app.UseStaticFiles();
+app.UseRouting();
 app.UseAntiforgery();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
@@ -49,5 +51,6 @@ app.MapRazorComponents<App>()
 app.UseStatusCodePagesWithRedirects("/PageNotExists");
 
 app.MapHub<DataHub>("/datahub");
+app.MapRazorPages(); // for cshtml pages
 
 app.Run();
