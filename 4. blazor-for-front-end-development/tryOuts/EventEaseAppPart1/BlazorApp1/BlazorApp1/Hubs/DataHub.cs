@@ -35,7 +35,6 @@ public class DataHub : Hub
 
 		if (!result.Succeeded)
 		{
-			// Return errors so you can see what went wrong
 			return ConvertIdentityResult(result);
 		}
 
