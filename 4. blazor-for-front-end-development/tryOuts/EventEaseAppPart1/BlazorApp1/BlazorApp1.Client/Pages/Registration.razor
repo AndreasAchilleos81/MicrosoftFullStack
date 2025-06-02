@@ -63,7 +63,7 @@ else
 
 	private async Task HandleValidSubmit()
 	{
-		this.user.Id = Guid.NewGuid().ToString();
+		// this.user.Id = Guid.NewGuid().ToString();
 		Logger.LogInformation("User registration form submitted");
 
 		if (SignalRService.HubConnection.State != HubConnectionState.Connected)

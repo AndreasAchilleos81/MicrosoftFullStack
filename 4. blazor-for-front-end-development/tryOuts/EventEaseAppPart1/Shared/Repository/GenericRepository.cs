@@ -199,14 +199,6 @@ namespace Shared.Repository
 		private string GetColumns(bool excludekey = false)
 		{
 			var type = typeof(T);
-			//var columns = string.Join(", ", type.GetProperties()
-			//	.Where(p => !excludekey || !p.IsDefined(typeof(KeyAttribute)))
-			//	.Select(p =>
-			//	{
-			//		var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
-			//		return columnAttr != null ? columnAttr.Name : p.Name;
-			//	}));
-
 			var properties = type.GetProperties();
 			if (excludekey)
 			{
@@ -219,29 +211,12 @@ namespace Shared.Repository
 								.Select(j => j.Name);
 
 			var columns = string.Join(", ", columnNames);
-
-			//.Where(p => !excludekey || !p.IsDefined(typeof(KeyAttribute)))
-			//.Select(p =>
-			//{
-			//	var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
-			//	return columnAttr != null ? columnAttr.Name : p.Name;
-			//}));
-
-
 			return columns;
 		}
 
 		protected string GetPropertyNames(bool excludekey = false)
 		{
-			//var properties = typeof(T).GetProperties().Where(p => !excludekey || p.GetCustomAttribute<KeyAttribute>() == null);
-			//var values = string.Join(", ", properties.Select(p =>
-			//{
-			//	return $"@{p.Name}"; ;
-			//}));
-
-			//return values;
-
-			var properties = typeof(T).GetProperties().ToList(); //.Where(p => !excludekey || p.GetCustomAttribute<KeyAttribute>() == null);
+			var properties = typeof(T).GetProperties().ToList();
 			if (excludekey)
 			{
 				properties = properties.Where(p => p.GetCustomAttribute<KeyAttribute>() == null).Select(pi => pi).ToList();
@@ -256,8 +231,6 @@ namespace Shared.Repository
 			return values;
 		}
 
-		// excludeKey = false returns all properties including the ones that are of keyAttribute
-		// excludeKey = true returns all properties that do not have the keyAttribute therefore all propeties that are not the primary key of the table row entry
 		protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
 		{
 			var properties = typeof(T).GetProperties()

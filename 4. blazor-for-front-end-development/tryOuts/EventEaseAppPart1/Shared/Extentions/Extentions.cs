@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Interfaces;
 using Shared.Models;
 using Shared.Repository;
+using Shared.Services;
 
 namespace Shared.Extentions
 {
@@ -14,6 +15,8 @@ namespace Shared.Extentions
 			services.AddSingleton<IGenericRepository<EventCard>, EventCardRepository>();
 			services.AddSingleton<IGenericRepository<User>, UserRepository>();
 			services.AddSingleton<IGenericRepository<Registration>, RegistrationRepository>();
+			services.AddSingleton<IGenericRepository<Session>, SessionRepository>();
+			services.AddSingleton<SessionManagement>();
 		}
 
 		public static Registration CreateRegistration(this User user)

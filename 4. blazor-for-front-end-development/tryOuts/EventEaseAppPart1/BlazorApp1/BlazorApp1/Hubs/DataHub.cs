@@ -3,6 +3,7 @@ using Shared.Models;
 using Shared.Interfaces;
 using Shared.Extentions;
 using Shared.Result;
+using Shared.Services;
 using Microsoft.AspNetCore.Identity;
 
 public class DataHub : Hub
@@ -10,17 +11,18 @@ public class DataHub : Hub
 	private readonly IGenericRepository<User> _userRepository;
 	private readonly IGenericRepository<Registration> _registrationRepository;
 	private readonly UserManager<IdentityUser> _userManager;
-	private readonly SignInManager<IdentityUser> _signInManager;
+	private readonly SessionManagement _sessionManagement;
 
 	public DataHub(IGenericRepository<User> userRepository,
 				   IGenericRepository<Registration> registrationRepository,
 				   UserManager<IdentityUser> userManager,
-				   SignInManager<IdentityUser> signInManager)
+				   SignInManager<IdentityUser> signInManager,
+				   SessionManagement sessionManagement)
 	{
 		_userRepository = userRepository;
 		_registrationRepository = registrationRepository;
 		_userManager = userManager;
-		_signInManager = signInManager;
+		_sessionManagement = sessionManagement;
 	}
 
 	public async Task<RegistrationResult> SaveUser(User user)
@@ -38,6 +40,9 @@ public class DataHub : Hub
 			return ConvertIdentityResult(result);
 		}
 
+		// syncing on registration Ids in AspNetUser and Registration Table
+		user.Id = _userManager.Users.First(u => u.Email == user.Email).Id;
+		
 		await _userRepository.Add(user);
 		await _registrationRepository.Add(user.CreateRegistration());
 
@@ -55,6 +60,9 @@ public class DataHub : Hub
 		if (!passwordValid)
 			return new LoginResult { Succeeded = false, Errors = new[] { "Invalid credentials." } };
 
+
+		await _sessionManagement.SessionStart(user.Id);
+		
 		return new LoginResult { Succeeded = true };
 	}
 
