@@ -11,6 +11,13 @@ namespace Shared.Repository
 			: base(configuration, logger) { }
 
 
+		public async Task<bool> IsSessionActive(string userId)
+		{
+			var session = await GetLastSession(userId); 
+			var isActive  = session != null && session.EndTime == null || session.EndTime > DateTime.Now;
+			return isActive;
+		}
+
 		public async Task<Session> GetLastSession(string userId)
 		{
 			string tableName = GetTableName();
