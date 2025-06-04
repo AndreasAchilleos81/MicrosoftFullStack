@@ -1,13 +1,30 @@
-﻿@page "/logout";
+﻿@page "/logout"
 @rendermode InteractiveWebAssembly
+@using Microsoft.AspNetCore.SignalR.Client
+@using Shared.Services
 @inject NavigationManager Navigation;
+@inject Shared.Communication.SignalRService SignalRService
+@inject ILogger<Logout> Logger;
+@inject ApplicationStorage ApplicationStorage;
 
-<h3>Logout</h3>
+<button @onclick="SignOut">Logout</button>
 
 @code {
-    protected override void OnInitialized()
-    {
-        // Redirect to login or home
-        Navigation.NavigateTo("/login", forceLoad: true);
-    }
+
+	public async Task SignOut()
+	{
+		Logger.LogInformation("Starting to logout");
+
+		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
+		{
+			// get localstorage item with User Id
+			await SignalRService.HubConnection.StartAsync();
+		}
+		var userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
+		await SignalRService.LogoutUserAsync(userId);
+		await ApplicationStorage.RemoveItem(ApplicationStorage.UserKey);
+
+		// Redirect to login or home
+		Navigation.NavigateTo("/login", forceLoad: true);
+	}
 }

@@ -17,6 +17,7 @@ namespace Shared.Extentions
 			services.AddSingleton<IGenericRepository<Registration>, RegistrationRepository>();
 			services.AddSingleton<IGenericRepository<Session>, SessionRepository>();
 			services.AddSingleton<SessionManagement>();
+			services.AddScoped<ApplicationStorage>();
 		}
 
 		public static Registration CreateRegistration(this User user)

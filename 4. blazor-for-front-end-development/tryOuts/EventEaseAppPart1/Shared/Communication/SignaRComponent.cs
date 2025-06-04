@@ -25,5 +25,15 @@ namespace Shared.Communication
 		{
 			return await HubConnection.InvokeAsync<LoginResult>("LoginUser", loginModel);
 		}
+
+		public async Task LogoutUserAsync(string userId)
+		{
+			await HubConnection.InvokeAsync<LoginResult>("LogoutUser", userId);
+		}
+
+        public async Task<string> GetUserId(string email)
+        {
+            return await HubConnection.InvokeAsync<string>("GetUserId", email);
+		}
 	}
 }

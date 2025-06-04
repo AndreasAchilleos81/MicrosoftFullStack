@@ -5,6 +5,7 @@ using Shared.Extentions;
 using Shared.Result;
 using Shared.Services;
 using Microsoft.AspNetCore.Identity;
+using Shared.Repository;
 
 public class DataHub : Hub
 {
@@ -12,17 +13,20 @@ public class DataHub : Hub
 	private readonly IGenericRepository<Registration> _registrationRepository;
 	private readonly UserManager<IdentityUser> _userManager;
 	private readonly SessionManagement _sessionManagement;
+	private readonly ApplicationStorage _applicationStorage;
 
 	public DataHub(IGenericRepository<User> userRepository,
 				   IGenericRepository<Registration> registrationRepository,
 				   UserManager<IdentityUser> userManager,
 				   SignInManager<IdentityUser> signInManager,
-				   SessionManagement sessionManagement)
+				   SessionManagement sessionManagement,
+				   ApplicationStorage applicationStorage)
 	{
 		_userRepository = userRepository;
 		_registrationRepository = registrationRepository;
 		_userManager = userManager;
 		_sessionManagement = sessionManagement;
+		_applicationStorage = applicationStorage;
 	}
 
 	public async Task<RegistrationResult> SaveUser(User user)
@@ -49,7 +53,6 @@ public class DataHub : Hub
 		return ConvertIdentityResult(result);
 	}
 
-
 	public async Task<LoginResult> LoginUser(LoginModel loginModel)
 	{
 		var user = await _userManager.FindByEmailAsync(loginModel.Email);
@@ -60,10 +63,24 @@ public class DataHub : Hub
 		if (!passwordValid)
 			return new LoginResult { Succeeded = false, Errors = new[] { "Invalid credentials." } };
 
-
+		// Add session has started
 		await _sessionManagement.SessionStart(user.Id);
-		
+
 		return new LoginResult { Succeeded = true };
+	}
+
+	public async Task LogoutUser(string userId)
+	{
+		await _sessionManagement.SessionStop(userId);
+	}
+
+	public async Task<string> GetUserId(string email)
+	{
+		var userRepo = (UserRepository)_userRepository;
+		var user = await userRepo.GetUserByEmail(email);
+		if (user == null)
+			return null;
+		return user.Id;
 	}
 
 	private RegistrationResult ConvertIdentityResult(IdentityResult result)

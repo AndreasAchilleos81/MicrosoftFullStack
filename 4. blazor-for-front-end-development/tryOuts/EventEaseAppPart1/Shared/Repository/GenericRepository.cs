@@ -112,13 +112,11 @@ namespace Shared.Repository
 				string keyColumn = GetKeyColumnName();
 				string query = $"SELECT  * From {tableName} WHERE {keyColumn} = '{Id}'";
 				result = await _connection.QueryAsync<T>(query);
-
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex.ToString());
 			}
-
 
 			return result.FirstOrDefault();
 		}

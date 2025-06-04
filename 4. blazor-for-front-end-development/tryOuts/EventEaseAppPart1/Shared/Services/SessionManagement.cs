@@ -20,11 +20,11 @@ namespace Shared.Services
 
 		public async Task SessionStop(string userId)
 		{
-			var session = await _sessionRepository.GetById(userId);
+			var session = await (_sessionRepository as SessionRepository).GetLastSession(userId);
 			if (session != null)
 			{
 				session.EndTime = DateTime.Now;
-				_sessionRepository.Update(session);
+				await _sessionRepository.Update(session);
 			}
 		}
 

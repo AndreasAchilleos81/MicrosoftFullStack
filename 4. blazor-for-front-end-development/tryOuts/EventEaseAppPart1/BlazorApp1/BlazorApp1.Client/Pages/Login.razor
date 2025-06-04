@@ -1,11 +1,15 @@
 ﻿@page "/login"
 @using Microsoft.AspNetCore.SignalR.Client
+@using Shared.Interfaces
 @using Shared.Models
 @using Shared.Communication
+@using Shared.Repository
+@using Shared.Services
 @rendermode InteractiveWebAssembly
 @inject ILogger<Login> Logger
 @inject Shared.Communication.SignalRService SignalRService
 @inject NavigationManager Navigation
+@inject ApplicationStorage ApplicationStorage
 
 <h4>Login</h4>
 
@@ -39,11 +43,13 @@ else
 	<h2>Login failed. Please check your credentials.</h2>
 }
 
+
 @code {
 	private EditContext loginContext;
 	private LoginModel loginModel;
 	private LoginResult loginResult;
 	private bool validating = false;
+	private bool afterRender = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -81,12 +87,17 @@ else
 		if (loginResult.Succeeded)
 		{
 			Logger.LogInformation("Login successful");
-			await Task.Delay(2000);
+
+			// set here in local storage the userId
+			var userId = await SignalRService.GetUserId(loginModel.Email);
+			await ApplicationStorage.AddItem(ApplicationStorage.UserKey, userId);
 			Navigation.NavigateTo("/eventsList");
 		}
 		else
 		{
 			Logger.LogWarning("Login failed");
+			await Task.Delay(500); // Simulate delay for user to read message
+			Navigation.NavigateTo("/login", true);
 		}
 	}
 }
