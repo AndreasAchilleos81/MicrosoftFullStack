@@ -11,12 +11,14 @@ public class DataHub : Hub
 {
 	private readonly IGenericRepository<User> _userRepository;
 	private readonly IGenericRepository<Registration> _registrationRepository;
+	private readonly IGenericRepository<Session> _sessionRepository;
 	private readonly UserManager<IdentityUser> _userManager;
 	private readonly SessionManagement _sessionManagement;
 	private readonly ApplicationStorage _applicationStorage;
 
 	public DataHub(IGenericRepository<User> userRepository,
 				   IGenericRepository<Registration> registrationRepository,
+				   IGenericRepository<Session> sessionRepository,
 				   UserManager<IdentityUser> userManager,
 				   SignInManager<IdentityUser> signInManager,
 				   SessionManagement sessionManagement,
@@ -24,6 +26,7 @@ public class DataHub : Hub
 	{
 		_userRepository = userRepository;
 		_registrationRepository = registrationRepository;
+		_sessionRepository = sessionRepository;
 		_userManager = userManager;
 		_sessionManagement = sessionManagement;
 		_applicationStorage = applicationStorage;
@@ -81,6 +84,24 @@ public class DataHub : Hub
 		if (user == null)
 			return null;
 		return user.Id;
+	}
+
+	public async Task<string> GetLoggedInUserId()
+	{
+		var userId = await _applicationStorage.GetItem(_applicationStorage.UserKey);
+		return userId;
+	}
+
+	public async Task<bool> IsSessionActive(string userId)
+	{
+		var sessionRepo = (SessionRepository)_sessionRepository;
+		return await sessionRepo.IsSessionActive(userId);
+	}
+
+	public async Task UpdateSessionStatus(string userId, bool isLoggedIn)
+	{
+		if (string.IsNullOrEmpty(userId)) return;
+		await Clients.User(userId).SendAsync("SessionStatusChanged", isLoggedIn);
 	}
 
 	private RegistrationResult ConvertIdentityResult(IdentityResult result)

@@ -32,6 +32,12 @@ A User Session Tracker for state management:
 							DB table for event registration  - type of registration RSVP - show in event details who is going also
 							DB table for comments/feedback per event load it in event details 
 	
+	
+-----------------------------
+IF active sessio show logged in icon up top
+if active session allow event details
+
+REFACTOR STARTING CONNECTION OF DATAHUB PUT IT IN ONE PLACE
 
 
 Key Functionality of An Attendance Tracker to monitor event participation.

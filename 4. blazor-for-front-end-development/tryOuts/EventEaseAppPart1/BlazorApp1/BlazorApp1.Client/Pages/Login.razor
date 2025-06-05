@@ -91,6 +91,9 @@ else
 			// set here in local storage the userId
 			var userId = await SignalRService.GetUserId(loginModel.Email);
 			await ApplicationStorage.AddItem(ApplicationStorage.UserKey, userId);
+			// Notify the SignalR service about the session status change
+			await SignalRService.NotifySessionStatusChanged(userId, true);
+
 			Navigation.NavigateTo("/eventsList");
 		}
 		else

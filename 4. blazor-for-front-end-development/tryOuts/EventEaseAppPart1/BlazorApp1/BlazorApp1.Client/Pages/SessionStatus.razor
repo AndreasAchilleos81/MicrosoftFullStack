@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@using Shared.Communication
+@using Shared.Services
+@rendermode InteractiveWebAssembly
+@inject ApplicationStorage ApplicationStorage;
+@inject SignalRService SignalRService;
+@inject ILogger<SessionStatus> Logger;
+
+<span class="status-dot @(IsLoggedIn ? "online" : "offline")"></span>
+<span>@(IsLoggedIn ? "Online" : "Offline")</span>
+
+@code {
+	private bool IsLoggedIn;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender) return;
+		await CheckSessionStatus().ContinueWith(task =>
+		{
+			if (task.IsCompletedSuccessfully)
+			{
+				StateHasChanged();
+			}
+			else
+			{
+				// Handle any errors that occurred during the session check
+				Logger.LogError("Error checking session status: " + task.Exception?.Message);
+			}
+		});
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
+		{
+			await SignalRService.HubConnection.StartAsync();
+		}
+		SignalRService.HubConnection.On<bool>("SessionStatusChanged", async (isLoggedIn) =>
+		{
+			Logger.LogInformation($"Session status changed: {(isLoggedIn ? "Online" : "Offline")}");
+			this.IsLoggedIn = isLoggedIn;
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+
+	private async Task CheckSessionStatus()
+	{
+
+        if (SignalRService.HubConnection.State != HubConnectionState.Connected)
+        {
+            await SignalRService.HubConnection.StartAsync();
+        }
+        
+		string userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
+        IsLoggedIn = await SignalRService.IsSessionActive(userId);
+	}
+}

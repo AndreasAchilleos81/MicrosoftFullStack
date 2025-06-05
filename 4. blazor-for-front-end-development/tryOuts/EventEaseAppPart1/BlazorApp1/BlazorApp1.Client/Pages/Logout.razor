@@ -23,6 +23,7 @@
 		var userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
 		await SignalRService.LogoutUserAsync(userId);
 		await ApplicationStorage.RemoveItem(ApplicationStorage.UserKey);
+		await SignalRService.NotifySessionStatusChanged(userId, false);
 
 		// Redirect to login or home
 		Navigation.NavigateTo("/login", forceLoad: true);

@@ -35,5 +35,20 @@ namespace Shared.Communication
         {
             return await HubConnection.InvokeAsync<string>("GetUserId", email);
 		}
+
+		public async Task<bool> IsSessionActive(string userId)
+        {
+			return await HubConnection.InvokeAsync<bool>("IsSessionActive", userId);
+		}
+
+		public async Task<string> GetLoggedInUserId()
+        {
+			return await HubConnection.InvokeAsync<string>("GetLoggedInUserId");
+		}
+
+		public async Task NotifySessionStatusChanged(string userId, bool isLoggedIn)
+		{
+            await HubConnection.InvokeAsync("UpdateSessionStatus", userId, isLoggedIn);
+		}
 	}
 }

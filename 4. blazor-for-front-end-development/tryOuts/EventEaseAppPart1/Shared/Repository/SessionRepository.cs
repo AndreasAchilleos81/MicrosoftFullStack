@@ -13,6 +13,7 @@ namespace Shared.Repository
 
 		public async Task<bool> IsSessionActive(string userId)
 		{
+			if (userId == null) return false;
 			var session = await GetLastSession(userId); 
 			var isActive  = session != null && session.EndTime == null || session.EndTime > DateTime.Now;
 			return isActive;
