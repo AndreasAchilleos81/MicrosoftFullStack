@@ -102,7 +102,6 @@ public class DataHub : Hub
 	{
 		if (string.IsNullOrEmpty(userId)) return;
 		await Clients.Caller.SendAsync("SessionStatusChanged", isLoggedIn);
-		//await Clients.User(userId).SendAsync("SessionStatusChanged", isLoggedIn);
 	}
 
 	private RegistrationResult ConvertIdentityResult(IdentityResult result)
