@@ -14,12 +14,8 @@
 	public async Task SignOut()
 	{
 		Logger.LogInformation("Starting to logout");
-
-		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
-		{
-			// get localstorage item with User Id
-			await SignalRService.HubConnection.StartAsync();
-		}
+		
+		await SignalRService.EnsureConnectionOpen();
 		var userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
 		await SignalRService.LogoutUserAsync(userId);
 		await ApplicationStorage.RemoveItem(ApplicationStorage.UserKey);

@@ -101,7 +101,8 @@ public class DataHub : Hub
 	public async Task UpdateSessionStatus(string userId, bool isLoggedIn)
 	{
 		if (string.IsNullOrEmpty(userId)) return;
-		await Clients.User(userId).SendAsync("SessionStatusChanged", isLoggedIn);
+		await Clients.Caller.SendAsync("SessionStatusChanged", isLoggedIn);
+		//await Clients.User(userId).SendAsync("SessionStatusChanged", isLoggedIn);
 	}
 
 	private RegistrationResult ConvertIdentityResult(IdentityResult result)

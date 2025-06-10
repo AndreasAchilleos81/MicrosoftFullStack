@@ -11,10 +11,11 @@
 
 @code {
 	private bool IsLoggedIn;
-
+	private bool _hasCheckedStatusRun = false;
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (firstRender) return;
+		if (firstRender || _hasCheckedStatusRun) return;
+		_hasCheckedStatusRun = true;
 		await CheckSessionStatus().ContinueWith(task =>
 		{
 			if (task.IsCompletedSuccessfully)
@@ -31,27 +32,22 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
-		{
-			await SignalRService.HubConnection.StartAsync();
-		}
+		await SignalRService.EnsureConnectionOpen();
 		SignalRService.HubConnection.On<bool>("SessionStatusChanged", async (isLoggedIn) =>
 		{
 			Logger.LogInformation($"Session status changed: {(isLoggedIn ? "Online" : "Offline")}");
-			this.IsLoggedIn = isLoggedIn;
-			await InvokeAsync(StateHasChanged);
+			if (this.IsLoggedIn != isLoggedIn)
+			{
+				this.IsLoggedIn = isLoggedIn;
+				await InvokeAsync(StateHasChanged);
+			}
 		});
 	}
 
 	private async Task CheckSessionStatus()
 	{
-
-        if (SignalRService.HubConnection.State != HubConnectionState.Connected)
-        {
-            await SignalRService.HubConnection.StartAsync();
-        }
-        
+		await SignalRService.EnsureConnectionOpen();
 		string userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
-        IsLoggedIn = await SignalRService.IsSessionActive(userId);
+		IsLoggedIn = await SignalRService.IsSessionActive(userId);
 	}
 }

@@ -75,11 +75,7 @@ else
 	{
 		Logger.LogInformation("Login form submitted");
 
-		if (SignalRService.HubConnection.State != HubConnectionState.Connected)
-		{
-			await SignalRService.HubConnection.StartAsync();
-		}
-
+		await SignalRService.EnsureConnectionOpen();
 		loginResult = await SignalRService.LoginUserAsync(loginModel);
 
 		StateHasChanged();

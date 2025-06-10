@@ -16,6 +16,14 @@ namespace Shared.Communication
                 .Build();
         }
 
+        public async Task EnsureConnectionOpen()
+        {
+			if (HubConnection.State == HubConnectionState.Disconnected)
+			{
+				await HubConnection.StartAsync();
+			}
+		}
+
         public async Task<RegistrationResult> SendUserAsync(User user)
         {
            return await HubConnection.InvokeAsync<RegistrationResult>("SaveUser", user);
