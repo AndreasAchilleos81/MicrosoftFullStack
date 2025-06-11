@@ -42,9 +42,22 @@ else
 		<p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
 		<p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
 		<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+		<p><strong>Date:</strong> @card.Date</p>
 		<div class="horizontal">
 			<button class="@showButton btn-primary" @onclick="() => DeleteCard(card.Id)"> Delete </button>
 			<button class="@showButton btn-primary" @onclick="() => EditCard(card)"> Edit Card </button>
+		</div>
+		<div class="custom-radio-group">
+			<label class="custom-radio">
+				<input type="radio" name="eventInterest" value="Interested" />
+				<span class="star"></span>
+				<span class="radio-label">interested</span>
+			</label>
+			<label class="custom-radio">
+				<input type="radio" name="eventInterest" value="going" />
+				<span class="cartoon-btn"></span>
+				<span class="radio-label">Going</span>
+			</label>
 		</div>
 	</div>
 }

@@ -12,22 +12,38 @@
 	<ValidationSummary />
 	<div class="event-card">
 		<div class="form-grid">
+			
 			<div>
 				<label for="name">Event Name:</label>
 				<InputText id="name" @bind-Value=@Card.Name />
 			</div>
+			
 			<div>
 				<label for="description">Description:</label>
 				<InputText id="description" @bind-Value=@Card.Description />
 			</div>
+			
 			<div>
 				<label for="location">Location:</label>
 				<InputText id="location" @bind-Value=@Card.Location />
 			</div>
-			<div>
-				<label for="isPublic">Is public:</label>
+
+			<div class="flex-row-center">
+				<label for="isPublic" style="margin-bottom:0;">Is public:</label>
 				<InputCheckbox id="isPublic" @bind-Value=@Card.IsPublic />
 			</div>
+
+
+			<div>
+				<label for="date">Event Date</label>
+
+				<input type="datetime-local" 
+						id="date" 
+						class="form-control" 
+						min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"
+					    value="@dateString" />
+			</div>
+
 			<div>
 				<label for="maxAtendees">Max Attendees:</label>
 				<label>@Card.MaxAttendees</label>
@@ -48,7 +64,20 @@
 	public EventCallback<bool> OnSuccess { get; set; }
 
 	[Parameter]
-	public EventCard Card { get; set; } = new();
+	public EventCard Card { get; set; } = new() { Date = DateTime.Now };
+
+	private string dateString
+	{
+		get => Card.Date.ToString("yyyy-MM-ddTHH:mm");
+		set
+		{
+			if (DateTime.TryParse(value, out var dt))
+			{
+				Card.Date = dt;
+			}
+		}
+	}
+
 
 	private bool IsSuccess = false;
 	private bool InEditMode = false;

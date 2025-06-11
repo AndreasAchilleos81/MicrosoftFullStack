@@ -59,6 +59,31 @@ h1:focus {
 	text-align: start;
 }
 
+.form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+@media (max-width: 768px) {
+	.form-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.form-grid label,
+.form-grid input,
+.form-grid select {
+	width: 100%;
+}
+
+.flex-row-center {
+	display: flex;
+	align-items: center;
+	gap: 0;
+}
+
+
 .event-card {
 	background: linear-gradient(135deg, #e3f0ff 0%, #b3d1ff 100%);
 	border: 1.5px solid #3399ff;

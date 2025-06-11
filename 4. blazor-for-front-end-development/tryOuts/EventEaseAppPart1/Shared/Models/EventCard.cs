@@ -39,6 +39,9 @@ namespace Shared.Models
 		[Column("CurrentAttendees")]
 		public int CurrentAttendees { get; set; }
 
+		[Column("Date")]
+		public DateTime Date { get; set; }
+
 		public void Attend(int attendees = 1)
 		{
 			if ((CurrentAttendees + attendees) > MaxAttendees)

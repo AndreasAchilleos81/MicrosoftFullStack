@@ -36,11 +36,17 @@ A User Session Tracker for state management:
 -----------------------------
 
 
-on event details they should be able to register 
+on event details they should be able to register for said event to go to id
+add also button for interested - Star if interested and RedButton for going DONE
+
 and from that we can check attendance
+
 IF THEY ARE LOGGED IN DONT HANDLE ADMIN CASE NO NEED
+
 NEED AN ATTENDANCE DB AND A PAGE FOR USERS TO SEE THEIR ATTENDANCE
+
 AND A NOTIFICATION THAT EVENT IS AROUND TBHE CORNER
+
 
 
 

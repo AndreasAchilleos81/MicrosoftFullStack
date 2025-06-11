@@ -11,7 +11,7 @@
 <button class="btn-primary" @onclick="ShowAddEventComponent">@toggleAddEventText</button>
 
 <div class="grid-container">
-    
+
     @if (eventCardsObservable == null || !eventCardsObservable.Any())
     {
         <p>No events available.</p>
@@ -29,6 +29,7 @@
                     <p><strong>Is Public:</strong> @(card.IsPublic ? "Yes" : "No")</p>
                     <p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
                     <p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
+                    <p><strong>Date:</strong> @card.Date</p>
                     <NavLink target="_blank" href="@navPerCard">View Details</NavLink>
                 </div>
             }
