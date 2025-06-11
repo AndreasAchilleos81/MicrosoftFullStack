@@ -42,6 +42,11 @@
 		transition: background-color 0.3s ease;
 	}
 
-		.event-card-details .btn:hover {
-			background-color: #e55b50; /* Darker coral for hover effect */
-		}
+	.event-card-details .btn:hover {
+		background-color: #e55b50; /* Darker coral for hover effect */
+	}
+
+.none {
+	display: none !important;
+}
+   

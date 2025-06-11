@@ -6,12 +6,14 @@ using Shared.Result;
 using Shared.Services;
 using Microsoft.AspNetCore.Identity;
 using Shared.Repository;
+using System.Runtime.CompilerServices;
 
 public class DataHub : Hub
 {
 	private readonly IGenericRepository<User> _userRepository;
 	private readonly IGenericRepository<Registration> _registrationRepository;
 	private readonly IGenericRepository<Session> _sessionRepository;
+	private readonly IGenericRepository<EventCard> _eventCardRepository;
 	private readonly UserManager<IdentityUser> _userManager;
 	private readonly SessionManagement _sessionManagement;
 	private readonly ApplicationStorage _applicationStorage;
@@ -19,6 +21,7 @@ public class DataHub : Hub
 	public DataHub(IGenericRepository<User> userRepository,
 				   IGenericRepository<Registration> registrationRepository,
 				   IGenericRepository<Session> sessionRepository,
+				   IGenericRepository<EventCard> eventCardRepository,
 				   UserManager<IdentityUser> userManager,
 				   SignInManager<IdentityUser> signInManager,
 				   SessionManagement sessionManagement,
@@ -30,6 +33,7 @@ public class DataHub : Hub
 		_userManager = userManager;
 		_sessionManagement = sessionManagement;
 		_applicationStorage = applicationStorage;
+		_eventCardRepository = eventCardRepository;
 	}
 
 	public async Task<RegistrationResult> SaveUser(User user)
@@ -92,6 +96,14 @@ public class DataHub : Hub
 		return userId;
 	}
 
+	public async Task<bool> IsAdmin(string userId)
+	{
+		if (string.IsNullOrEmpty(userId)) return false;
+		var user = _userManager.Users.FirstOrDefault(u => u.Id == userId);
+		var isInRole = await _userManager.IsInRoleAsync(user, "Admin");
+		return isInRole;
+	}
+
 	public async Task<bool> IsSessionActive(string userId)
 	{
 		var sessionRepo = (SessionRepository)_sessionRepository;
@@ -102,6 +114,27 @@ public class DataHub : Hub
 	{
 		if (string.IsNullOrEmpty(userId)) return;
 		await Clients.Caller.SendAsync("SessionStatusChanged", isLoggedIn);
+	}
+
+	public async Task<EventCard> GetCard(string cardId)
+	{
+		return await _eventCardRepository.GetById(cardId);
+	}
+
+	public async Task<bool> AddCard(EventCard card)
+	{
+		if (card == null) return false;
+		return await _eventCardRepository.Add(card);
+	}
+
+	public async Task<bool> UpdateEventCard(EventCard card)
+	{
+		return await _eventCardRepository.Update(card);
+	}
+
+	public async Task<bool> DeleteCard(EventCard card)
+	{
+		return await _eventCardRepository.Delete(card);
 	}
 
 	private RegistrationResult ConvertIdentityResult(IdentityResult result)

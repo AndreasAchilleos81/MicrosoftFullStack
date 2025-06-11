@@ -1,11 +1,11 @@
 ﻿@page "/addevent"
-@rendermode InteractiveServer
+@rendermode InteractiveWebAssembly
 @using Shared.Models;
 @using Shared.Interfaces;
+@inject Shared.Communication.SignalRService SignalRService;
 @inject ILogger<AddEvent> Logger;
-@inject IGenericRepository<EventCard> EventCardRepository;
-
 <h3>AddEvent</h3>
+
 
 <EditForm FormName="AddEventForm" Model="@Card" OnValidSubmit="@HandleSubmit">
 	<DataAnnotationsValidator />
@@ -43,46 +43,29 @@
 }
 
 @code {
+
 	[Parameter]
 	public EventCallback<bool> OnSuccess { get; set; }
 
 	[Parameter]
-	public EventCard Card { get; set; }
+	public EventCard Card { get; set; } = new();
 
 	private bool IsSuccess = false;
 	private bool InEditMode = false;
 
-	protected override void OnParametersSet()
-	{
-		Logger.LogInformation("AddEvent page parameters set");
-		if (Card == null)
-		{
-			Card = new EventCard();
-		}
-		else
-		{
-			InEditMode = true;
-		}
-	}
-
-	protected override async Task OnInitializedAsync()
-	{
-		Logger.LogInformation("AddEvent page initialized");
-	}
-
 	private async Task HandleSubmit()
 	{
 		Logger.LogInformation("Handle submit started");
-
+		await SignalRService.EnsureConnectionOpen();
 		if (InEditMode)
 		{
-			await EventCardRepository.Update(Card);
+			await SignalRService.UpdateCard(Card); // await EventCardRepository.Update(Card);
 			await NotifyParent(true);
 		}
 		else
 		{
 			Card.Id = Guid.NewGuid().ToString();
-			await EventCardRepository.Add(Card);
+			await SignalRService.AddCard(Card); // await EventCardRepository.Add(Card);
 		}
 
 		Logger.LogInformation("Handle submit finished");

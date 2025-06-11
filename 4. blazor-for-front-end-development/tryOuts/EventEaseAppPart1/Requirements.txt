@@ -34,10 +34,16 @@ A User Session Tracker for state management:
 	
 	
 -----------------------------
-IF active sessio show logged in icon up top
-if active session allow event details
 
-REFACTOR STARTING CONNECTION OF DATAHUB PUT IT IN ONE PLACE
+
+on event details they should be able to register 
+and from that we can check attendance
+IF THEY ARE LOGGED IN DONT HANDLE ADMIN CASE NO NEED
+NEED AN ATTENDANCE DB AND A PAGE FOR USERS TO SEE THEIR ATTENDANCE
+AND A NOTIFICATION THAT EVENT IS AROUND TBHE CORNER
+
+
+
 
 
 Key Functionality of An Attendance Tracker to monitor event participation.

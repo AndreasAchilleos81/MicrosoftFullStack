@@ -2,9 +2,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Serilog;
 using Shared.Services;
 using Shared.Communication;
-using Shared.Interfaces;
-using Shared.Models;
-using Shared.Repository;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 Log.Logger = new LoggerConfiguration()

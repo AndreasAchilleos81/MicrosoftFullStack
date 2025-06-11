@@ -18,9 +18,12 @@ namespace BlazorApp1.Auth
 				options.Password.RequireUppercase = false;
 				options.Password.RequireNonAlphanumeric = false;
 				options.SignIn.RequireConfirmedPhoneNumber = false;
-				options.SignIn.RequireConfirmedEmail = false;	
+				options.SignIn.RequireConfirmedEmail = false;
 				options.SignIn.RequireConfirmedAccount = false;
-			}).AddEntityFrameworkStores<ApplicationDbContext>();
+			})
+			.AddRoles<IdentityRole>()
+			.AddEntityFrameworkStores<ApplicationDbContext>();
+			
 
 			services.AddAuthorization();
 			services.AddAuthentication();

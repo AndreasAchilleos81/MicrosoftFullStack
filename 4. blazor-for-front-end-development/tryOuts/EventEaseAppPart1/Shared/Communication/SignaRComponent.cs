@@ -7,14 +7,14 @@ namespace Shared.Communication
 {
     public class SignalRService
     {
-        public HubConnection HubConnection { get; }
+		public HubConnection HubConnection { get; }
 
         public SignalRService(NavigationManager navigationManager)
         {
             HubConnection = new HubConnectionBuilder()
                 .WithUrl(navigationManager.ToAbsoluteUri("/datahub"))
                 .Build();
-        }
+		}
 
         public async Task EnsureConnectionOpen()
         {
@@ -50,13 +50,38 @@ namespace Shared.Communication
 		}
 
 		public async Task<string> GetLoggedInUserId()
-        {
+		{
 			return await HubConnection.InvokeAsync<string>("GetLoggedInUserId");
+		}
+
+		public async Task<bool> IsAdmin(string userId)
+		{
+			return await HubConnection.InvokeAsync<bool>("IsAdmin", userId);
 		}
 
 		public async Task NotifySessionStatusChanged(string userId, bool isLoggedIn)
 		{
             await HubConnection.InvokeAsync("UpdateSessionStatus", userId, isLoggedIn);
+		}
+
+		public async Task<bool> AddCard(EventCard card)
+		{
+			return await HubConnection.InvokeAsync<bool>("AddCard", card);
+		}
+
+		public async Task<bool> UpdateCard(EventCard card)
+		{
+			return await HubConnection.InvokeAsync<bool>("UpdateEventCard", card);
+		}
+
+		public async Task<EventCard> GetCard(string cardId)
+		{
+			return await HubConnection.InvokeAsync<EventCard>("GetCard", cardId);
+		}
+
+		public async Task<bool> DeleteCard(EventCard card)
+		{
+			return await HubConnection.InvokeAsync<bool>("DeleteCard", card);
 		}
 	}
 }

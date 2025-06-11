@@ -1,12 +1,22 @@
 ﻿@page "/event/{id:guid}"
-@rendermode InteractiveServer
 @using Shared.Models
 @using Shared.Interfaces;
+@rendermode InteractiveWebAssembly
 @inject ILogger<EventDetails> Logger;
-@inject IGenericRepository<EventCard> EventCardRepository;
+@inject Shared.Communication.SignalRService SignalRService;
+@inject Shared.Services.ApplicationStorage AppStorage
 
 <h3>EventDetails</h3>
-@if (isNotFound)
+
+@if (stillRendering)
+{
+	<p>Loading in progress...</p>
+}
+else if (!isUserLoggedIn)
+{
+	<p>Please login to be able to view event details</p>
+}
+else if (isNotFound)
 {
 	<div class="alert alert-warning">
 		Event not found or has been deleted.<br />
@@ -33,8 +43,8 @@ else
 		<p><strong>Max Attendees:</strong> @card.MaxAttendees</p>
 		<p><strong>Current Attendees:</strong> @card.CurrentAttendees</p>
 		<div class="horizontal">
-			<button class="btn-primary" @onclick="() => DeleteCard(card.Id)"> Delete </button>
-			<button class="btn-primary" @onclick="() => EditCard(card)"> Edit Card </button>
+			<button class="@showButton btn-primary" @onclick="() => DeleteCard(card.Id)"> Delete </button>
+			<button class="@showButton btn-primary" @onclick="() => EditCard(card)"> Edit Card </button>
 		</div>
 	</div>
 }
@@ -43,16 +53,40 @@ else
 @code {
 	[Parameter]
 	public Guid Id { get; set; }
-	private EventCard? card = null;
+	private EventCard? card = new EventCard();
+	private string showButton = "none"; // keeps buttons invisible only show if Admin
+	private bool stillRendering = true;
+	private string userId = string.Empty;
+	private bool isUserLoggedIn = false;
+	private bool isAdmin = false; // This will be set based on the user's role
+
 
 	private bool isNotFound = false;
 	private bool isDeleted = false;
 	private bool isEditing = false;
 
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			userId = await AppStorage.GetItem(AppStorage.UserKey);
+			
+			await SignalRService.EnsureConnectionOpen();
+			
+			isUserLoggedIn = await SignalRService.IsSessionActive(userId);
+			isAdmin = await SignalRService.IsAdmin(userId);
+			
+			showButton = isAdmin ? "" : "none";
+			stillRendering = false;
+			StateHasChanged();
+		}
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
+		await SignalRService.EnsureConnectionOpen();
+		card = await SignalRService.GetCard(Id.ToString());
 		Logger.LogInformation("EventDetails page initialized");
-		card = await EventCardRepository.GetById(Id.ToString());
 		if (card == null)
 		{
 			Logger.LogInformation("EventCard not found");
@@ -62,13 +96,14 @@ else
 		{
 			Logger.LogInformation($"EventCard found: {card.ToString()}");
 		}
+
 	}
 
 	private async Task DeleteCard(string cardId)
 	{
 		if (card != null)
 		{
-			await EventCardRepository.Delete(card);
+			await SignalRService.DeleteCard(card);
 			Logger.LogInformation($"EventCard deleted: {card.ToString()}");
 			isDeleted = true;
 		}
@@ -77,10 +112,12 @@ else
 	private async Task EditCard(EventCard card)
 	{
 		isEditing = true;
+		StateHasChanged();
 	}
 
 	private void HandleEdit(bool isSuccess)
 	{
 		isEditing = false;
+		StateHasChanged();
 	}
 }

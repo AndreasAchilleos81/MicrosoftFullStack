@@ -15,6 +15,7 @@ namespace Shared.Repository
 		{
 			if (userId == null) return false;
 			var session = await GetLastSession(userId); 
+			if (session == null) return false;
 			var isActive  = session != null && session.EndTime == null || session.EndTime > DateTime.Now;
 			return isActive;
 		}
