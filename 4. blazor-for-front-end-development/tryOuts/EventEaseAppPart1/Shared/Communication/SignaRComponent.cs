@@ -83,5 +83,15 @@ namespace Shared.Communication
 		{
 			return await HubConnection.InvokeAsync<bool>("DeleteCard", card);
 		}
+
+		public async Task<bool> InterestedInEvent(string eventId, string userId)
+		{
+			return await HubConnection.InvokeAsync<bool>("InterestedInEvent", eventId, userId);
+		}
+
+		public async Task<bool> GoingToEvent(string eventId, string userId)
+		{
+			return await HubConnection.InvokeAsync<bool>("GoingToEvent", eventId, userId);
+		}
 	}
 }

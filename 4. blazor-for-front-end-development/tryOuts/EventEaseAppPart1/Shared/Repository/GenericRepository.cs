@@ -170,6 +170,34 @@ namespace Shared.Repository
 
 		public static string GetKeyColumnName()
 		{
+			return GetKeycolumnNames().FirstOrDefault() ?? string.Empty;
+			//PropertyInfo[] properties = typeof(T).GetProperties();
+			//foreach (PropertyInfo property in properties)
+			//{
+			//	object[] keyAttributes = property.GetCustomAttributes(typeof(KeyAttribute), true);
+
+			//	if (keyAttributes != null && keyAttributes.Length > 0)
+			//	{
+			//		object[] columnAttributes = property.GetCustomAttributes(typeof(ColumnAttribute), true);
+
+			//		if (columnAttributes != null && columnAttributes.Length > 0)
+			//		{
+			//			ColumnAttribute columnAttribute = (ColumnAttribute)columnAttributes[0];
+			//			return columnAttribute.Name;
+			//		}
+			//		else
+			//		{
+			//			return property.Name;
+			//		}
+			//	}
+			//}
+
+			//return null;
+		}
+
+		public static IEnumerable<string> GetKeycolumnNames()
+		{
+			List<string> keyColumnNames = new List<string>();
 			PropertyInfo[] properties = typeof(T).GetProperties();
 			foreach (PropertyInfo property in properties)
 			{
@@ -179,19 +207,15 @@ namespace Shared.Repository
 				{
 					object[] columnAttributes = property.GetCustomAttributes(typeof(ColumnAttribute), true);
 
-					if (columnAttributes != null && columnAttributes.Length > 0)
+					foreach (var columnAttribute in columnAttributes)
 					{
-						ColumnAttribute columnAttribute = (ColumnAttribute)columnAttributes[0];
-						return columnAttribute.Name;
-					}
-					else
-					{
-						return property.Name;
+						ColumnAttribute colAttribute = (ColumnAttribute)columnAttribute;
+						if (columnAttribute == null) continue;
+						keyColumnNames.Add(colAttribute.Name);
 					}
 				}
 			}
-
-			return null;
+			return keyColumnNames;
 		}
 
 		private string GetColumns(bool excludekey = false)

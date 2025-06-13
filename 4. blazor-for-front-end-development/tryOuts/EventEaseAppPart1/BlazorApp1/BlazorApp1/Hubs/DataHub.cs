@@ -14,14 +14,18 @@ public class DataHub : Hub
 	private readonly IGenericRepository<Registration> _registrationRepository;
 	private readonly IGenericRepository<Session> _sessionRepository;
 	private readonly IGenericRepository<EventCard> _eventCardRepository;
+	private readonly IGenericRepository<Attendance> _attendanceRepository;
+
 	private readonly UserManager<IdentityUser> _userManager;
 	private readonly SessionManagement _sessionManagement;
 	private readonly ApplicationStorage _applicationStorage;
+
 
 	public DataHub(IGenericRepository<User> userRepository,
 				   IGenericRepository<Registration> registrationRepository,
 				   IGenericRepository<Session> sessionRepository,
 				   IGenericRepository<EventCard> eventCardRepository,
+					IGenericRepository<Attendance> attendanceRepository,
 				   UserManager<IdentityUser> userManager,
 				   SignInManager<IdentityUser> signInManager,
 				   SessionManagement sessionManagement,
@@ -30,6 +34,7 @@ public class DataHub : Hub
 		_userRepository = userRepository;
 		_registrationRepository = registrationRepository;
 		_sessionRepository = sessionRepository;
+		_attendanceRepository = attendanceRepository;
 		_userManager = userManager;
 		_sessionManagement = sessionManagement;
 		_applicationStorage = applicationStorage;
@@ -53,7 +58,7 @@ public class DataHub : Hub
 
 		// syncing on registration Ids in AspNetUser and Registration Table
 		user.Id = _userManager.Users.First(u => u.Email == user.Email).Id;
-		
+
 		await _userRepository.Add(user);
 		await _registrationRepository.Add(user.CreateRegistration());
 
@@ -135,6 +140,46 @@ public class DataHub : Hub
 	public async Task<bool> DeleteCard(EventCard card)
 	{
 		return await _eventCardRepository.Delete(card);
+	}
+
+	public async Task<bool> InterestedInEvent(string eventId, string userId)
+	{
+		Attendance attendance = CreateEvent(eventId, userId);
+		attendance.Attended = AttendanceStatus.Interested;
+
+		return await CheckToAddOrUpdate(eventId, userId, attendance);
+	}
+
+	public async Task<bool> GoingToEvent(string eventId, string userId)
+	{
+		Attendance attendance = CreateEvent(eventId, userId);
+		attendance.Attended = AttendanceStatus.Going;
+
+		return await CheckToAddOrUpdate(eventId, userId, attendance);
+	}
+
+	private async Task<bool> CheckToAddOrUpdate(string eventId, string userId, Attendance attendance)
+	{
+		var repo = (AttendanceRepository)_attendanceRepository;
+		var attendanceInDb = await repo.GetAttendance(eventId, userId);
+		if (attendanceInDb == null)
+		{
+			return await _attendanceRepository.Add(attendance);
+		}
+		else
+		{
+			return await _attendanceRepository.Update(attendance);
+		}
+	}
+
+	private Attendance CreateEvent(string eventId, string userId)
+	{
+		return new Attendance
+		{
+			EventId = eventId,
+			UserId = userId,
+			Attended = AttendanceStatus.Interested,
+		};
 	}
 
 	private RegistrationResult ConvertIdentityResult(IdentityResult result)

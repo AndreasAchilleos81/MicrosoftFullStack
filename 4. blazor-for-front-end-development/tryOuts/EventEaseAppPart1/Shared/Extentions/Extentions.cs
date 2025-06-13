@@ -15,6 +15,7 @@ namespace Shared.Extentions
 			services.AddSingleton<IGenericRepository<EventCard>, EventCardRepository>();
 			services.AddSingleton<IGenericRepository<User>, UserRepository>();
 			services.AddSingleton<IGenericRepository<Registration>, RegistrationRepository>();
+			services.AddSingleton<IGenericRepository<Attendance>, AttendanceRepository>();
 			services.AddSingleton<IGenericRepository<Session>, SessionRepository>();
 			services.AddSingleton<SessionManagement>();
 			services.AddScoped<ApplicationStorage>();

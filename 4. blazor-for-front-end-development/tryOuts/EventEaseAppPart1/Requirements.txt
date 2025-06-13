@@ -39,15 +39,18 @@ A User Session Tracker for state management:
 on event details they should be able to register for said event to go to id
 add also button for interested - Star if interested and RedButton for going DONE
 
-and from that we can check attendance
+and from that we can check attendance 
 
-IF THEY ARE LOGGED IN DONT HANDLE ADMIN CASE NO NEED
+IF THEY ARE LOGGED IN DONT HANDLE ADMIN CASE NO NEED DONE 
 
-NEED AN ATTENDANCE DB AND A PAGE FOR USERS TO SEE THEIR ATTENDANCE
+NEED AN ATTENDANCE DB AND A PAGE FOR USERS 
+TO SEE THEIR ATTENDANCE and what they are interested in do one table
+
+Notification service
 
 AND A NOTIFICATION THAT EVENT IS AROUND TBHE CORNER
 
-
+ADDIN OF EVENTS SHOUDL ONLY BE HANDED BY THE ADMIN - CHANGED MY MIND SHOULD BE DONE BY WHO EVER LOGS IN TO POST THEIR EVENTS
 
 
 

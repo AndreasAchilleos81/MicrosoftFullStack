@@ -49,12 +49,12 @@ else
 		</div>
 		<div class="custom-radio-group">
 			<label class="custom-radio">
-				<input type="radio" name="eventInterest" value="Interested" />
+				<input type="radio" name="interestedInEvent" value="Interested" @onclick="() => Interested(card)" />
 				<span class="star"></span>
 				<span class="radio-label">interested</span>
 			</label>
 			<label class="custom-radio">
-				<input type="radio" name="eventInterest" value="going" />
+				<input type="radio" name="goingToEvent" value="going" @onclick="() => Going(card)" />
 				<span class="cartoon-btn"></span>
 				<span class="radio-label">Going</span>
 			</label>
@@ -133,4 +133,33 @@ else
 		isEditing = false;
 		StateHasChanged();
 	}
+
+	private async Task Interested(EventCard card)
+	{
+		if (card != null)
+		{
+			await SignalRService.EnsureConnectionOpen();
+			await SignalRService.InterestedInEvent(card.Id,  userId);
+			Logger.LogInformation($"User expressed interest in EventCard: {card.ToString()}");
+		}
+		else
+		{
+			Logger.LogWarning("EventCard is null when trying to express interest.");
+		}
+	}
+
+	private async Task Going(EventCard card)
+	{
+		if (card != null)
+		{
+			await SignalRService.EnsureConnectionOpen();
+			await SignalRService.GoingToEvent(card.Id, userId);
+			Logger.LogInformation($"User expressed interest in EventCard: {card.ToString()}");
+		}
+		else
+		{
+			Logger.LogWarning("EventCard is null when trying to express interest.");
+		}
+	}
+
 }
