@@ -49,11 +49,6 @@ namespace Shared.Communication
 			return await HubConnection.InvokeAsync<bool>("IsSessionActive", userId);
 		}
 
-		public async Task<string> GetLoggedInUserId()
-		{
-			return await HubConnection.InvokeAsync<string>("GetLoggedInUserId");
-		}
-
 		public async Task<bool> IsAdmin(string userId)
 		{
 			return await HubConnection.InvokeAsync<bool>("IsAdmin", userId);
@@ -92,6 +87,16 @@ namespace Shared.Communication
 		public async Task<bool> GoingToEvent(string eventId, string userId)
 		{
 			return await HubConnection.InvokeAsync<bool>("GoingToEvent", eventId, userId);
+		}
+
+		public async Task<IEnumerable<EventCard>> GetEvents(IEnumerable<string> eventIds)
+		{
+			return await HubConnection.InvokeAsync<IEnumerable<EventCard>>("GetEvents", eventIds);
+		}
+
+		public async Task<IEnumerable<Attendance>> Attendances(string userId)
+		{
+			return await HubConnection.InvokeAsync<IEnumerable<Attendance>>("Attendances", userId);
 		}
 	}
 }

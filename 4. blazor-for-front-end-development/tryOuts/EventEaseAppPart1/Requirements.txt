@@ -45,12 +45,17 @@ IF THEY ARE LOGGED IN DONT HANDLE ADMIN CASE NO NEED DONE
 
 NEED AN ATTENDANCE DB AND A PAGE FOR USERS 
 TO SEE THEIR ATTENDANCE and what they are interested in do one table
+in table Attendance if user says attending then set Attended to 1 otherwise set it to zero IF they state interested 
+  
+ ON LOG IN SAVE USER ID IN SCOPED SERVICE ON CLIEN TONLY SIDE AND INJECT THAT WHENEVER YOU NEED IT 
+ IF USERiD IS NULL then just state users is not logged in
 
 Notification service
 
 AND A NOTIFICATION THAT EVENT IS AROUND TBHE CORNER
 
 ADDIN OF EVENTS SHOUDL ONLY BE HANDED BY THE ADMIN - CHANGED MY MIND SHOULD BE DONE BY WHO EVER LOGS IN TO POST THEIR EVENTS
+Account page - load all events interested in and or going  they can mark if they attended or not specific event
 
 
 

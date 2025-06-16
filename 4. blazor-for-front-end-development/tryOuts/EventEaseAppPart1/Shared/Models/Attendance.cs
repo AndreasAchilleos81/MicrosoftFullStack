@@ -6,9 +6,7 @@ namespace Shared.Models
 	[Table("Attendance")]
 	public class Attendance
 	{
-		public Attendance()
-		{
-		}
+		public Attendance() { }
 
 		[Key]
 		[Column("EventId")]
@@ -21,6 +19,8 @@ namespace Shared.Models
 		// null for not intested/going, true for going, false for interested
 		[Column("Attended")]
 		public bool? Attended { get; set; }
+
+
 	}
 
 	public static class AttendanceStatus

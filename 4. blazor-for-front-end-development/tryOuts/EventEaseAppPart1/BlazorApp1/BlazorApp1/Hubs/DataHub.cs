@@ -95,12 +95,6 @@ public class DataHub : Hub
 		return user.Id;
 	}
 
-	public async Task<string> GetLoggedInUserId()
-	{
-		var userId = await _applicationStorage.GetItem(_applicationStorage.UserKey);
-		return userId;
-	}
-
 	public async Task<bool> IsAdmin(string userId)
 	{
 		if (string.IsNullOrEmpty(userId)) return false;
@@ -156,6 +150,19 @@ public class DataHub : Hub
 		attendance.Attended = AttendanceStatus.Going;
 
 		return await CheckToAddOrUpdate(eventId, userId, attendance);
+	}
+
+	public async Task<IEnumerable<Attendance>> Attendances(string userId)
+	{
+		if (string.IsNullOrEmpty(userId)) return Enumerable.Empty<Attendance>();
+		var repo = (AttendanceRepository)_attendanceRepository;
+		return await repo.GetAttendances(userId);
+	}
+
+	public async Task<IEnumerable<EventCard>> EventCards(IEnumerable<string> eventIds)
+	{
+		var repo = (EventCardRepository)_eventCardRepository;	
+		return await repo.GetEvents(eventIds);
 	}
 
 	private async Task<bool> CheckToAddOrUpdate(string eventId, string userId, Attendance attendance)

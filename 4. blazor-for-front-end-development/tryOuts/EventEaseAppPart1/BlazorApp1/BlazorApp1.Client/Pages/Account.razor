@@ -1,0 +1,97 @@
+﻿@page "/account"
+@rendermode InteractiveWebAssembly
+@using Shared.Models
+@inject ILogger<Account> Logger;
+@inject Shared.Communication.SignalRService SignalRService;
+@inject Shared.Services.ApplicationStorage AppStorage;
+
+<h3>Account</h3>
+@if (IsLoggedIn)
+{
+	if (NoEvents)
+	{
+		<p>You are not interested or attending any events</p>
+	}
+	<h2>Going To Events</h2>
+	<ul>
+		@foreach (var goingTo in goingToEvents)
+		{
+			<li>@goingTo.ToString()</li>
+		}
+	</ul>
+	<br />
+	<h2>Interested in Events</h2>
+	<ul>
+		@foreach (var interestedIn in interestedInEvents)
+		{
+			<li>@interestedIn.ToString()</li>
+		}
+	</ul>
+}
+else
+{
+	<p>Please login to view your account details.</p>
+
+}
+
+@code {
+	public bool IsLoggedIn { get; set; }
+	public bool NoEvents { get; set; }
+	private string userId = string.Empty;	
+	private IEnumerable<Attendance> collection = new List<Attendance>();
+	private List<EventCard> goingToEvents = new List<EventCard>();
+	private List<EventCard> interestedInEvents = new List<EventCard>();
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			userId = await AppStorage.GetItem(AppStorage.UserKey);
+		}
+
+		await SignalRService.EnsureConnectionOpen();
+		Logger.LogInformation("SignalR connection established successfully.");
+
+		IsLoggedIn = !string.IsNullOrEmpty(userId);
+		if (IsLoggedIn)
+		{
+			Logger.LogInformation($"User {userId} is logged in.");
+			var collection = await SignalRService.Attendances(userId);
+			if (collection.Any())
+			{
+				goingToEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == true).Select(e => e.EventId)));
+				interestedInEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == false).Select(e => e.EventId)));
+			}
+			else
+			{
+				NoEvents = true;
+			}
+		}
+		else
+		{
+			Logger.LogInformation("No user is currently logged in.");
+		}
+
+	}
+	// protected override async Task OnInitializedAsync()
+	// {
+	// 	await SignalRService.EnsureConnectionOpen();
+	// 	Logger.LogInformation("SignalR connection established successfully.");
+
+	// 	IsLoggedIn = !string.IsNullOrEmpty(userId);
+	// 	if (IsLoggedIn)
+	// 	{
+	// 		Logger.LogInformation($"User {userId} is logged in.");
+	// 		var collection = await SignalRService.Attendances(userId);
+	// 		if (collection.Any())
+	// 		{
+	// 			goingToEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == true).Select(e => e.EventId)));
+	// 			interestedInEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == false).Select(e => e.EventId)));
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		Logger.LogInformation("No user is currently logged in.");
+	// 	}
+	// }
+}

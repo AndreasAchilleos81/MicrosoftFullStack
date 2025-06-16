@@ -28,5 +28,16 @@ namespace Shared.Repository
 
 			return result.FirstOrDefault();
 		}
+
+		public async Task<IEnumerable<Attendance>> GetAttendances(string userId)
+		{
+			string tableName = GetTableName();
+			var keyColumns = GetKeycolumnNames().ToArray();
+
+			string query = $"SELECT  * From {tableName} WHERE {keyColumns[1]} = '{userId}' ";
+			var result = await _connection.QueryAsync<Attendance>(query);
+
+			return result;	
+		}
 	}
 }
