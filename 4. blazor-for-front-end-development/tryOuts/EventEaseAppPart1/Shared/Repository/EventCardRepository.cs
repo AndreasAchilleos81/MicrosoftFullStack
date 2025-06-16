@@ -12,12 +12,13 @@ namespace Shared.Repository
 
 		public async Task<IEnumerable<EventCard>> GetEvents( IEnumerable<string> eventIds)
 		{
+			eventIds = eventIds.Select(id => $"'{id}'").ToList(); // Ensure IDs are properly quoted for SQL
 			IEnumerable<EventCard> result = null;
 			try
 			{
 				string tableName = GetTableName();
 				string keyColumn = GetKeyColumnName();
-				string query = $"SELECT  * From {tableName} WHERE {keyColumn} IN ({eventIds})";
+				string query = $"SELECT  * From {tableName} WHERE {keyColumn} IN ({ String.Join(',', eventIds) })";
 				result = await _connection.QueryAsync<EventCard>(query);
 
 			}

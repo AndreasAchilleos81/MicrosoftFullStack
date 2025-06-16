@@ -159,7 +159,7 @@ public class DataHub : Hub
 		return await repo.GetAttendances(userId);
 	}
 
-	public async Task<IEnumerable<EventCard>> EventCards(IEnumerable<string> eventIds)
+	public async Task<IEnumerable<EventCard>> GetEvents(IEnumerable<string> eventIds)
 	{
 		var repo = (EventCardRepository)_eventCardRepository;	
 		return await repo.GetEvents(eventIds);

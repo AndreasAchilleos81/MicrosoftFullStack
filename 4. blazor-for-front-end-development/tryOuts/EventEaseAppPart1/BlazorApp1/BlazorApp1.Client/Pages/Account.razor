@@ -12,21 +12,40 @@
 	{
 		<p>You are not interested or attending any events</p>
 	}
-	<h2>Going To Events</h2>
-	<ul>
-		@foreach (var goingTo in goingToEvents)
-		{
-			<li>@goingTo.ToString()</li>
-		}
-	</ul>
-	<br />
-	<h2>Interested in Events</h2>
-	<ul>
-		@foreach (var interestedIn in interestedInEvents)
-		{
-			<li>@interestedIn.ToString()</li>
-		}
-	</ul>
+	<div style="display: flex; gap: 2rem; align-items: flex-start;">
+		<div>
+			<h4 style="color: #1976d2;">Going To Events</h4>
+			<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+				@foreach (var goingTo in goingToEvents)
+				{
+					<div style="background: #e3f2fd; color: #1976d2; border-radius: 16px; padding: 1rem; min-width: 220px; box-shadow: 0 1px 3px #1976d233; margin-bottom: 0.5rem;">
+						<strong>@goingTo.Name</strong><br />
+						<span>@goingTo.Description</span><br />
+						<span><b>Location:</b> @goingTo.Location</span><br />
+						<span><b>Date:</b> @goingTo.Date.ToString("yyyy-MM-dd HH:mm")</span><br />
+						<span><b>Attendees:</b> @goingTo.CurrentAttendees / @goingTo.MaxAttendees</span><br />
+						<span><b>Public:</b> @(goingTo.IsPublic ? "Yes" : "No")</span>
+					</div>
+				}
+			</div>
+		</div>
+		<div>
+			<h4 style="color: #388e3c;">Interested in Events</h4>
+			<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+				@foreach (var interestedIn in interestedInEvents)
+				{
+					<div style="background: #e8f5e9; color: #388e3c; border-radius: 16px; padding: 1rem; min-width: 220px; box-shadow: 0 1px 3px #388e3c33; margin-bottom: 0.5rem;">
+						<strong>@interestedIn.Name</strong><br />
+						<span>@interestedIn.Description</span><br />
+						<span><b>Location:</b> @interestedIn.Location</span><br />
+						<span><b>Date:</b> @interestedIn.Date.ToString("yyyy-MM-dd HH:mm")</span><br />
+						<span><b>Attendees:</b> @interestedIn.CurrentAttendees / @interestedIn.MaxAttendees</span><br />
+						<span><b>Public:</b> @(interestedIn.IsPublic ? "Yes" : "No")</span>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 }
 else
 {
@@ -47,32 +66,34 @@ else
 		if (firstRender)
 		{
 			userId = await AppStorage.GetItem(AppStorage.UserKey);
-		}
 
-		await SignalRService.EnsureConnectionOpen();
-		Logger.LogInformation("SignalR connection established successfully.");
+			await SignalRService.EnsureConnectionOpen();
+			Logger.LogInformation("SignalR connection established successfully.");
 
-		IsLoggedIn = !string.IsNullOrEmpty(userId);
-		if (IsLoggedIn)
-		{
-			Logger.LogInformation($"User {userId} is logged in.");
-			var collection = await SignalRService.Attendances(userId);
-			if (collection.Any())
+			IsLoggedIn = !string.IsNullOrEmpty(userId);
+			if (IsLoggedIn)
 			{
-				goingToEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == true).Select(e => e.EventId)));
-				interestedInEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == false).Select(e => e.EventId)));
+				Logger.LogInformation($"User {userId} is logged in.");
+				var collection = await SignalRService.Attendances(userId);
+				if (collection.Any())
+				{
+					goingToEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == true).Select(e => e.EventId)));
+					interestedInEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == false).Select(e => e.EventId)));
+				}
+				else
+				{
+					NoEvents = true;
+				}
 			}
 			else
 			{
-				NoEvents = true;
+				Logger.LogInformation("No user is currently logged in.");
 			}
-		}
-		else
-		{
-			Logger.LogInformation("No user is currently logged in.");
-		}
 
+			StateHasChanged();
+		}
 	}
+
 	// protected override async Task OnInitializedAsync()
 	// {
 	// 	await SignalRService.EnsureConnectionOpen();
