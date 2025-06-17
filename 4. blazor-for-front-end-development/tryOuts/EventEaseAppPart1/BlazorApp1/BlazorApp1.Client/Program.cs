@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Serilog;
-using Shared.Services;
 using Shared.Communication;
+using Shared.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 Log.Logger = new LoggerConfiguration()
@@ -13,5 +13,6 @@ builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
 builder.Services.AddSingleton<SignalRService>();
 builder.Services.AddScoped<ApplicationStorage>();
+builder.Services.AddScoped<Shared.Services.LoginState>();
 
 await builder.Build().RunAsync();

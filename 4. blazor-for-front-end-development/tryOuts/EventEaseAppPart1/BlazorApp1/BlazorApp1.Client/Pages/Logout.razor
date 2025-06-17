@@ -6,6 +6,7 @@
 @inject Shared.Communication.SignalRService SignalRService
 @inject ILogger<Logout> Logger;
 @inject ApplicationStorage ApplicationStorage;
+@inject Shared.Services.LoginState LoginState
 
 <button @onclick="SignOut">Logout</button>
 
@@ -21,7 +22,8 @@
 		await ApplicationStorage.RemoveItem(ApplicationStorage.UserKey);
 		await SignalRService.NotifySessionStatusChanged(userId, false);
 
+		LoginState.Clear();
 		// Redirect to login or home
-		Navigation.NavigateTo("/login", forceLoad: true);
+		Navigation.NavigateTo("/login");
 	}
 }

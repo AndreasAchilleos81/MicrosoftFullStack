@@ -15,6 +15,7 @@ builder.Services.AddAuthRepositories(builder.Configuration);
 builder.Services.AddServerSideBlazor();
 builder.Services.AddDataRepositories(builder.Configuration);
 builder.Services.AddScoped<Shared.Communication.SignalRService>();
+builder.Services.AddScoped<Shared.Services.LoginState>();
 
 
 Log.Logger = new LoggerConfiguration()

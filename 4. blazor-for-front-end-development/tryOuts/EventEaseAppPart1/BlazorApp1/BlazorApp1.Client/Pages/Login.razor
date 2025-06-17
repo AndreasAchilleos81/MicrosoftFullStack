@@ -7,6 +7,7 @@
 @using Shared.Services
 @rendermode InteractiveWebAssembly
 @inject ILogger<Login> Logger
+@inject Shared.Services.LoginState LoginState
 @inject Shared.Communication.SignalRService SignalRService
 @inject NavigationManager Navigation
 @inject ApplicationStorage ApplicationStorage
@@ -80,6 +81,8 @@ else
 
 		StateHasChanged();
 
+		Logger.LogInformation(LoginState.ToString());
+
 		if (loginResult.Succeeded)
 		{
 			Logger.LogInformation("Login successful");
@@ -89,6 +92,8 @@ else
 			await ApplicationStorage.AddItem(ApplicationStorage.UserKey, userId);
 			// Notify the SignalR service about the session status change
 			await SignalRService.NotifySessionStatusChanged(userId, true);
+
+			LoginState.SetLoginState(userId, true);
 
 			Navigation.NavigateTo("/eventsList");
 		}

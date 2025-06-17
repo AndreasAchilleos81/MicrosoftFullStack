@@ -4,7 +4,8 @@
 @rendermode InteractiveWebAssembly
 @inject ILogger<EventDetails> Logger;
 @inject Shared.Communication.SignalRService SignalRService;
-@inject Shared.Services.ApplicationStorage AppStorage
+@inject Shared.Services.ApplicationStorage AppStorage;
+@inject Shared.Services.LoginState LoginState;
 
 <h3>EventDetails</h3>
 
@@ -97,6 +98,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
+		Logger.LogInformation("Initializing EventDetails page with Id: {Id}", LoginState.ToString());
 		await SignalRService.EnsureConnectionOpen();
 		card = await SignalRService.GetCard(Id.ToString());
 		Logger.LogInformation("EventDetails page initialized");

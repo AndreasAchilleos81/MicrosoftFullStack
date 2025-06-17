@@ -6,7 +6,6 @@ using Shared.Result;
 using Shared.Services;
 using Microsoft.AspNetCore.Identity;
 using Shared.Repository;
-using System.Runtime.CompilerServices;
 
 public class DataHub : Hub
 {

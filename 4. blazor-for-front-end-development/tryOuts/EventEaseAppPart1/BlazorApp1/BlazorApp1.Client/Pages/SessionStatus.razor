@@ -5,6 +5,7 @@
 @inject ApplicationStorage ApplicationStorage;
 @inject SignalRService SignalRService;
 @inject ILogger<SessionStatus> Logger;
+@inject Shared.Services.LoginState LoginState;
 
 <span class="status-dot @(IsLoggedIn ? "online" : "offline")"></span>
 <span>@(IsLoggedIn ? "Online" : "Offline")</span>
@@ -49,5 +50,6 @@
 		await SignalRService.EnsureConnectionOpen();
 		string userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
 		IsLoggedIn = await SignalRService.IsSessionActive(userId);
+		LoginState.SetLoginState(userId, IsLoggedIn);
 	}
 }
