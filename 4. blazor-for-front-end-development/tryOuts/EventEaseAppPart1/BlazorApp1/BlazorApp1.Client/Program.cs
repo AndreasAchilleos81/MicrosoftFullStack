@@ -11,6 +11,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 builder.Services.AddSingleton<SignalRService>();
 builder.Services.AddScoped<ApplicationStorage>();
 builder.Services.AddScoped<Shared.Services.LoginState>();

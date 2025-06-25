@@ -39,5 +39,32 @@ namespace Shared.Repository
 
 			return result;	
 		}
+
+		public async Task<IEnumerable<string>> GetUsersForUpcomingEventsIds(IEnumerable<string> eventCardIds)
+		{
+			if (eventCardIds.Count() == 0) return Enumerable.Empty<string>();
+
+			var eventIds = string.Join(", ", eventCardIds.Select(p =>
+			{
+				return $"'{p}'";
+			}));
+
+			IEnumerable<string> result = null;
+
+			try
+			{
+				string tableName = GetTableName();
+				var keyColumns = GetKeycolumnNames().ToArray();
+				string query = $"SELECT  UserId From {tableName} WHERE {keyColumns[0]} IN ({eventIds})";
+				result = await _connection.QueryAsync<string>(query);
+
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.ToString());
+			}
+
+			return result;
+		}
 	}
 }

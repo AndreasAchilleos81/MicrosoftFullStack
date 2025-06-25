@@ -17,7 +17,7 @@
 			_ = InitializeFromStorage();
 		}
 
-		private async Task InitializeFromStorage()
+		public async Task InitializeFromStorage()
 		{
 			_userId = await _storage.GetItem(_storage.UserKey)
 							   ?? string.Empty;

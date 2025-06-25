@@ -1,35 +1,39 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Shared.Models;
 using Shared.Result;
 
 namespace Shared.Communication
 {
-    public class SignalRService
-    {
-		public HubConnection HubConnection { get; }
+	public class SignalRService
+	{
+		private readonly string _hubUrl;
+		private HubConnection _hubConnection;
+		public HubConnection HubConnection => _hubConnection ??= new HubConnectionBuilder()
+	   .WithUrl(_hubUrl)
+		.WithAutomaticReconnect()
+	   .Build();
 
-        public SignalRService(NavigationManager navigationManager)
-        {
-            HubConnection = new HubConnectionBuilder()
-                .WithUrl(navigationManager.ToAbsoluteUri("/datahub"))
-                .Build();
+		public SignalRService(IConfiguration config)
+		{
+			_hubUrl = config["SignalR:HubUrl"] ?? throw new InvalidOperationException("Hub URL is not configured.");
 		}
 
-        public async Task EnsureConnectionOpen()
-        {
+		public async Task EnsureConnectionOpen()
+		{
 			if (HubConnection.State == HubConnectionState.Disconnected)
 			{
 				await HubConnection.StartAsync();
 			}
 		}
 
-        public async Task<RegistrationResult> SendUserAsync(User user)
-        {
-           return await HubConnection.InvokeAsync<RegistrationResult>("SaveUser", user);
-        }
+		public async Task<RegistrationResult> SendUserAsync(User user)
+		{
+			return await HubConnection.InvokeAsync<RegistrationResult>("SaveUser", user);
+		}
 
-        public async Task<LoginResult> LoginUserAsync(LoginModel loginModel)
+		public async Task<LoginResult> LoginUserAsync(LoginModel loginModel)
 		{
 			return await HubConnection.InvokeAsync<LoginResult>("LoginUser", loginModel);
 		}
@@ -39,13 +43,13 @@ namespace Shared.Communication
 			await HubConnection.InvokeAsync<LoginResult>("LogoutUser", userId);
 		}
 
-        public async Task<string> GetUserId(string email)
-        {
-            return await HubConnection.InvokeAsync<string>("GetUserId", email);
+		public async Task<string> GetUserId(string email)
+		{
+			return await HubConnection.InvokeAsync<string>("GetUserId", email);
 		}
 
 		public async Task<bool> IsSessionActive(string userId)
-        {
+		{
 			return await HubConnection.InvokeAsync<bool>("IsSessionActive", userId);
 		}
 
@@ -56,7 +60,7 @@ namespace Shared.Communication
 
 		public async Task NotifySessionStatusChanged(string userId, bool isLoggedIn)
 		{
-            await HubConnection.InvokeAsync("UpdateSessionStatus", userId, isLoggedIn);
+			await HubConnection.InvokeAsync("UpdateSessionStatus", userId, isLoggedIn);
 		}
 
 		public async Task<bool> AddCard(EventCard card)
@@ -77,6 +81,21 @@ namespace Shared.Communication
 		public async Task<bool> DeleteCard(EventCard card)
 		{
 			return await HubConnection.InvokeAsync<bool>("DeleteCard", card);
+		}
+
+		public async Task AddToEventGroup(string eventId)
+		{
+			await HubConnection.InvokeAsync("AddToEventGroup", eventId);
+		}
+
+		public async Task RemoveFromEventGroup(string eventId)
+		{
+			await HubConnection.InvokeAsync("RemoveFromEventGroup", eventId);
+		}
+
+		public async Task EventCardTimeApproaching(string eventId, string message)
+		{
+			await HubConnection.InvokeAsync("EventCardTimeApproaching", eventId, message);
 		}
 
 		public async Task<bool> InterestedInEvent(string eventId, string userId)

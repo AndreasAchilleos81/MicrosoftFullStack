@@ -1,91 +1,155 @@
-﻿@page "/account"  
-@rendermode InteractiveWebAssembly  
-@using Shared.Models  
-@inject ILogger<Account> Logger;  
-@inject Shared.Communication.SignalRService SignalRService;  
-@inject Shared.Services.ApplicationStorage AppStorage;  
-@inject Shared.Services.LoginState LoginState;  
+﻿@page "/account"
+@rendermode InteractiveWebAssembly
+@using Microsoft.AspNetCore.SignalR.Client
+@using Shared.Models
+@using Shared.Communication
+@inject ILogger<Account> Logger;
+@inject Shared.Communication.SignalRService SignalRService;
+@inject Shared.Services.ApplicationStorage AppStorage;
+@inject Shared.Services.LoginState LoginState;
 
-<h3>Account</h3>  
-@if (IsLoggedIn)  
-{  
-	if (NoEvents)  
-	{  
-		<p>You are not interested or attending any events</p>  
-	}  
-	<div style="display: flex; gap: 2rem; align-items: flex-start;">  
-		<div>  
-			<h4 style="color: #1976d2;">Going To Events</h4>  
-			<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">  
-				@foreach (var goingTo in goingToEvents)  
-				{  
-					<div style="background: #e3f2fd; color: #1976d2; border-radius: 16px; padding: 1rem; min-width: 220px; box-shadow: 0 1px 3px #1976d233; margin-bottom: 0.5rem;">  
-						<strong>@goingTo.Name</strong><br />  
-						<span>@goingTo.Description</span><br />  
-						<span><b>Location:</b> @goingTo.Location</span><br />  
-						<span><b>Date:</b> @goingTo.Date.ToString("yyyy-MM-dd HH:mm")</span><br />  
-						<span><b>Attendees:</b> @goingTo.CurrentAttendees / @goingTo.MaxAttendees</span><br />  
-						<span><b>Public:</b> @(goingTo.IsPublic ? "Yes" : "No")</span>  
-					</div>  
-				}  
-			</div>  
-		</div>  
-		<div>  
-			<h4 style="color: #388e3c;">Interested in Events</h4>  
-			<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">  
-				@foreach (var interestedIn in interestedInEvents)  
-				{  
-					<div style="background: #e8f5e9; color: #388e3c; border-radius: 16px; padding: 1rem; min-width: 220px; box-shadow: 0 1px 3px #388e3c33; margin-bottom: 0.5rem;">  
-						<strong>@interestedIn.Name</strong><br />  
-						<span>@interestedIn.Description</span><br />  
-						<span><b>Location:</b> @interestedIn.Location</span><br />  
-						<span><b>Date:</b> @interestedIn.Date.ToString("yyyy-MM-dd HH:mm")</span><br />  
-						<span><b>Attendees:</b> @interestedIn.CurrentAttendees / @interestedIn.MaxAttendees</span><br />  
-						<span><b>Public:</b> @(interestedIn.IsPublic ? "Yes" : "No")</span>  
-					</div>  
-				}  
-			</div>  
-		</div>  
-	</div>  
-}  
-else  
-{  
-	<p>Please login to view your account details.</p>  
+<h3>Account</h3>
+@if (IsLoggedIn)
+{
+	<div>
+		<h4>Notifications</h4>
+		<ul style="list-style:none; padding:0;">
+			@foreach (var msg in messages)
+			{
+				<li style="margin-bottom:8px;">
+					<span style="padding:6px 12px; border-radius:6px; background:@(msg.IsHighlighted ? "#ffe082" : "#f5f5f5"); transition:background 0.3s;">
+						@msg.Text
+					</span>
+				</li>
+			}
+		</ul>
+	</div>
 
-}  
+	if (NoEvents)
+	{
+		<p>You are not interested or attending any events</p>
+	}
+	<div style="display: flex; gap: 2rem; align-items: flex-start;">
+		<div>
+			<h4 style="color: #1976d2;">Going To Events</h4>
+			<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+				@foreach (var goingTo in goingToEvents)
+				{
+					<div style="background: #e3f2fd; color: #1976d2; border-radius: 16px; padding: 1rem; min-width: 220px; box-shadow: 0 1px 3px #1976d233; margin-bottom: 0.5rem;">
+						<strong>@goingTo.Name</strong><br />
+						<span>@goingTo.Description</span><br />
+						<span><b>Location:</b> @goingTo.Location</span><br />
+						<span><b>Date:</b> @goingTo.Date.ToString("yyyy-MM-dd HH:mm")</span><br />
+						<span><b>Attendees:</b> @goingTo.CurrentAttendees / @goingTo.MaxAttendees</span><br />
+						<span><b>Public:</b> @(goingTo.IsPublic ? "Yes" : "No")</span>
+					</div>
+				}
+			</div>
+		</div>
+		<div>
+			<h4 style="color: #388e3c;">Interested in Events</h4>
+			<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+				@foreach (var interestedIn in interestedInEvents)
+				{
+					<div style="background: #e8f5e9; color: #388e3c; border-radius: 16px; padding: 1rem; min-width: 220px; box-shadow: 0 1px 3px #388e3c33; margin-bottom: 0.5rem;">
+						<strong>@interestedIn.Name</strong><br />
+						<span>@interestedIn.Description</span><br />
+						<span><b>Location:</b> @interestedIn.Location</span><br />
+						<span><b>Date:</b> @interestedIn.Date.ToString("yyyy-MM-dd HH:mm")</span><br />
+						<span><b>Attendees:</b> @interestedIn.CurrentAttendees / @interestedIn.MaxAttendees</span><br />
+						<span><b>Public:</b> @(interestedIn.IsPublic ? "Yes" : "No")</span>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<p>Please login to view your account details.</p>
 
-@code {  
-	public bool IsLoggedIn { get; set; }  
-	public bool NoEvents { get; set; }  
-	private string userId = string.Empty;	  
-	private IEnumerable<Attendance> collection = new List<Attendance>();  
-	private List<EventCard> goingToEvents = new List<EventCard>();  
-	private List<EventCard> interestedInEvents = new List<EventCard>();  
+}
 
-	protected override async Task OnInitializedAsync()  
-	{  
+@code {
+	private bool pollingIsActive = true;
+	public bool IsLoggedIn { get; set; }
+	public bool NoEvents { get; set; }
+	private string userId = string.Empty;
+	private IEnumerable<Attendance> collection = new List<Attendance>();
+	private List<EventCard> goingToEvents = new List<EventCard>();
+	private List<EventCard> interestedInEvents = new List<EventCard>();
+
+	// Message list and set for duplicate prevention
+	private List<MessageItem> messages = new();
+	private HashSet<string> messageSet = new(StringComparer.OrdinalIgnoreCase);
 
 
-		userId = LoginState.UserId;  
-		IsLoggedIn = LoginState.IsLoggedIn == null ? false : LoginState.IsLoggedIn.Value;  
+	protected override async Task OnInitializedAsync()
+	{
+		pollingIsActive = true;
+		await SignalRService.EnsureConnectionOpen();
 
-		if (IsLoggedIn)  
-		{  
-			Logger.LogInformation($"User {userId} is logged in.");  
-			var collection = await SignalRService.Attendances(userId);  
-			if (collection.Any())  
-			{  
-				goingToEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == true).Select(e => e.EventId)));  
-				interestedInEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == false).Select(e => e.EventId)));  
-			}  
-			else  
-			{  
-				NoEvents = true;  
-			}  
-		}  
-		else  
-		{  
-			Logger.LogInformation("No user is currently logged in.");  
-		}  
-	}  
+		SignalRService.HubConnection.On<string>("EventCardTimeApproaching", async (message) =>
+		{
+			Logger.LogInformation($"EventCardTimeApproaching: {message}");
+			await AddMessageAsync(message);
+		});
+
+
+		userId = LoginState.UserId;
+		IsLoggedIn = LoginState.IsLoggedIn == null ? false : LoginState.IsLoggedIn.Value;
+
+		if (IsLoggedIn)
+		{
+			Logger.LogInformation($"User {userId} is logged in.");
+			var collection = await SignalRService.Attendances(userId);
+			if (collection.Any())
+			{
+				goingToEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == true).Select(e => e.EventId)));
+				interestedInEvents.AddRange(await SignalRService.GetEvents(collection.Where(a => a.Attended == false).Select(e => e.EventId)));
+
+				// Re-join SignalR groups for all events
+				foreach (var evt in collection)
+				{
+					await SignalRService.AddToEventGroup(evt.EventId);
+				}
+			}
+			else
+			{
+				NoEvents = true;
+			}
+		}
+		else
+		{
+			Logger.LogInformation("No user is currently logged in.");
+		}
+	}
+
+	private async Task AddMessageAsync(string message)
+	{
+		var trimmed = message?.Trim();
+		if (string.IsNullOrWhiteSpace(trimmed)) return;
+
+		// Prevent duplicates
+		if (messageSet.Contains(trimmed)) return;
+
+		var msgItem = new MessageItem { Text = trimmed, IsHighlighted = true };
+		messages.Insert(0, msgItem); // newest on top
+		messageSet.Add(trimmed);
+		await InvokeAsync(StateHasChanged);
+
+		// Remove highlight after 3 seconds
+		_ = Task.Run(async () =>
+		{
+			await Task.Delay(3000);
+			msgItem.IsHighlighted = false;
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+
+	private class MessageItem
+	{
+		public string Text { get; set; }
+		public bool IsHighlighted { get; set; }
+	}
 }

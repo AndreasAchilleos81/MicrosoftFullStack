@@ -84,12 +84,12 @@ else
 		if (firstRender)
 		{
 			userId = await AppStorage.GetItem(AppStorage.UserKey);
-			
+
 			await SignalRService.EnsureConnectionOpen();
-			
+
 			isUserLoggedIn = await SignalRService.IsSessionActive(userId);
 			isAdmin = await SignalRService.IsAdmin(userId);
-			
+
 			showButton = isAdmin ? "" : "none";
 			stillRendering = false;
 			StateHasChanged();

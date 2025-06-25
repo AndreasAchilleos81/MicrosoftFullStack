@@ -1,5 +1,6 @@
 using BlazorApp1.Auth;
 using BlazorApp1.Components;
+using BlazorApp1.Services;
 using Serilog;
 using Serilog.Events;
 using Shared.Extentions;
@@ -16,6 +17,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddDataRepositories(builder.Configuration);
 builder.Services.AddScoped<Shared.Communication.SignalRService>();
 builder.Services.AddScoped<Shared.Services.LoginState>();
+builder.Services.AddHostedService<EventNotificationService>();
 
 
 Log.Logger = new LoggerConfiguration()

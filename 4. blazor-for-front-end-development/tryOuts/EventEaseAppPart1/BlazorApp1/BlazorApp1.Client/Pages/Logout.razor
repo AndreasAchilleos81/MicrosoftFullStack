@@ -15,7 +15,7 @@
 	public async Task SignOut()
 	{
 		Logger.LogInformation("Starting to logout");
-		
+
 		await SignalRService.EnsureConnectionOpen();
 		var userId = await ApplicationStorage.GetItem(ApplicationStorage.UserKey);
 		await SignalRService.LogoutUserAsync(userId);
@@ -23,7 +23,6 @@
 		await SignalRService.NotifySessionStatusChanged(userId, false);
 
 		LoginState.Clear();
-		// Redirect to login or home
 		Navigation.NavigateTo("/login");
 	}
 }

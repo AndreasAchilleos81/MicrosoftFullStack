@@ -94,13 +94,12 @@ else
 			await SignalRService.NotifySessionStatusChanged(userId, true);
 
 			LoginState.SetLoginState(userId, true);
-
 			Navigation.NavigateTo("/eventsList");
 		}
 		else
 		{
 			Logger.LogWarning("Login failed");
-			await Task.Delay(500); // Simulate delay for user to read message
+			await Task.Delay(2000); // Simulate delay for user to read message
 			Navigation.NavigateTo("/login", true);
 		}
 	}

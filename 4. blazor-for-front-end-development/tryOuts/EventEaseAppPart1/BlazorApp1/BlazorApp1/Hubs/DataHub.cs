@@ -6,6 +6,7 @@ using Shared.Result;
 using Shared.Services;
 using Microsoft.AspNetCore.Identity;
 using Shared.Repository;
+using BlazorApp1.Services;
 
 public class DataHub : Hub
 {
@@ -14,6 +15,7 @@ public class DataHub : Hub
 	private readonly IGenericRepository<Session> _sessionRepository;
 	private readonly IGenericRepository<EventCard> _eventCardRepository;
 	private readonly IGenericRepository<Attendance> _attendanceRepository;
+	private readonly EventAttendance _eventAttendance;
 
 	private readonly UserManager<IdentityUser> _userManager;
 	private readonly SessionManagement _sessionManagement;
@@ -24,7 +26,8 @@ public class DataHub : Hub
 				   IGenericRepository<Registration> registrationRepository,
 				   IGenericRepository<Session> sessionRepository,
 				   IGenericRepository<EventCard> eventCardRepository,
-					IGenericRepository<Attendance> attendanceRepository,
+				   IGenericRepository<Attendance> attendanceRepository,
+				   EventAttendance eventAttendance,
 				   UserManager<IdentityUser> userManager,
 				   SignInManager<IdentityUser> signInManager,
 				   SessionManagement sessionManagement,
@@ -33,7 +36,9 @@ public class DataHub : Hub
 		_userRepository = userRepository;
 		_registrationRepository = registrationRepository;
 		_sessionRepository = sessionRepository;
+		_eventCardRepository = eventCardRepository;
 		_attendanceRepository = attendanceRepository;
+		_eventAttendance = eventAttendance;
 		_userManager = userManager;
 		_sessionManagement = sessionManagement;
 		_applicationStorage = applicationStorage;
@@ -114,6 +119,31 @@ public class DataHub : Hub
 		await Clients.Caller.SendAsync("SessionStatusChanged", isLoggedIn);
 	}
 
+	public async Task EventCardTimeApproaching(string eventId, string message)
+	{
+		await Clients.Groups(eventId).SendAsync("EventCardTimeApproaching", message);
+		//await Clients.Caller.SendAsync("EventCardTimeApproaching", message);
+	}
+
+	public async Task AddToEventGroup(string eventId)
+	{
+		if (string.IsNullOrEmpty(eventId)) return;
+
+		// add an event to teh connection Id of a user so they can be notified of updates
+		await Groups.AddToGroupAsync(Context.ConnectionId, eventId);
+	}
+
+	public async Task RemoveFromEventGroup(string eventId)
+	{
+		if (string.IsNullOrEmpty(eventId)) return;
+		await Groups.RemoveFromGroupAsync(Context.ConnectionId, eventId);
+	}
+
+	public async Task SendToGroup(string eventId, string message)
+	{
+		await Clients.Group(eventId).SendAsync("ReceiveNotification", message);
+	}
+
 	public async Task<EventCard> GetCard(string cardId)
 	{
 		return await _eventCardRepository.GetById(cardId);
@@ -160,7 +190,7 @@ public class DataHub : Hub
 
 	public async Task<IEnumerable<EventCard>> GetEvents(IEnumerable<string> eventIds)
 	{
-		var repo = (EventCardRepository)_eventCardRepository;	
+		var repo = (EventCardRepository)_eventCardRepository;
 		return await repo.GetEvents(eventIds);
 	}
 
