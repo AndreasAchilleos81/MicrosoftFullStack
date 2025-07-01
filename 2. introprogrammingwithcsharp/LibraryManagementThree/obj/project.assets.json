@@ -8,23 +8,25 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\andre\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\a.achilleos\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\CodeProjectsAndLearning\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\LibraryManagementThree\\LibraryManagementThree.csproj",
+      "projectUniqueName": "c:\\Users\\a.achilleos\\code\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\LibraryManagementThree\\LibraryManagementThree.csproj",
       "projectName": "LibraryManagementThree",
-      "projectPath": "D:\\CodeProjectsAndLearning\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\LibraryManagementThree\\LibraryManagementThree.csproj",
-      "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
-      "outputPath": "D:\\CodeProjectsAndLearning\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\LibraryManagementThree\\obj\\",
+      "projectPath": "c:\\Users\\a.achilleos\\code\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\LibraryManagementThree\\LibraryManagementThree.csproj",
+      "packagesPath": "C:\\Users\\a.achilleos\\.nuget\\packages\\",
+      "outputPath": "c:\\Users\\a.achilleos\\code\\MicrosoftFullStack\\2. introprogrammingwithcsharp\\LibraryManagementThree\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\andre\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\a.achilleos\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -52,7 +54,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -73,7 +75,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.104/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

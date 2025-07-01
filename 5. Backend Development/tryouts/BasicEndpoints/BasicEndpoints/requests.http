@@ -1,0 +1,13 @@
+Get http://localhost:5023/
+
+###
+Get http://localhost:5023/downloads
+
+###
+put http://localhost:5023/
+
+###
+DELETE  http://localhost:5023/
+
+###
+post http://localhost:5023/

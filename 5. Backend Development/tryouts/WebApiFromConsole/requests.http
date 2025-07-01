@@ -1,0 +1,24 @@
+Get http://localhost:5144/weatherforecast/
+
+###
+POST http://localhost:5144/weatherforecast 
+Content-Type: application/json
+
+{
+    "date": "2025-07-03T17:27:01.5898911+03:00",
+    "temperatureC": 11,
+    "summary": "Balmy"
+}
+
+###
+PUT http://localhost:5144/weatherforecast/45 
+Content-Type: application/json
+
+{
+    "date": "2025-07-03T17:27:01.5898911+03:00",
+    "temperatureC": 11,
+    "summary": "Balmy"
+}
+
+###
+DELETE http://localhost:5144/weatherforecast/45 

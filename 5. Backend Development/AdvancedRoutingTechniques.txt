@@ -1,0 +1,207 @@
+# ASP.NET Core Routing - Complete Guide
+
+## What is a Route Template?
+
+A **route template** (also called a route pattern) is a string used to determine when a request path should be routed to a specific route handler. Routes can be:
+
+- **Static**: Must match a specific string exactly
+- **Dynamic**: Use parameters and patterns to match multiple paths
+
+### Static Route Examples
+```csharp
+app.MapGet("/", () => "Home page");
+app.MapGet("/users", () => "Users page");
+```
+
+## 1. Route Parameters
+
+Route parameters allow you to capture values from the URL path using curly braces `{}`.
+
+### Basic Route Parameters
+```csharp
+// Route with two parameters
+app.MapGet("/users/{userId}/posts/{slug}", (int userId, string slug) => 
+{
+    return $"User ID: {userId}, Post: {slug}";
+});
+```
+
+### Usage Example
+```http
+GET http://localhost:5000/users/123/posts/my-blog-post
+# Returns: "User ID: 123, Post: my-blog-post"
+```
+
+### Important Notes
+- Parameters are automatically parsed to the specified type
+- If parsing fails, you get a `400 Bad Request` error
+- A **slug** is a user-friendly string used to identify content for readability
+
+## 2. Route Constraints
+
+Route constraints limit what values can be passed to route parameters using a colon `:` followed by the constraint type.
+
+### Basic Constraints
+```csharp
+// Product ID must be an integer greater than 0
+app.MapGet("/products/{id:int:min(1)}", (int id) => 
+{
+    return $"Product ID: {id}";
+});
+```
+
+### Available Constraints
+- `int` - Must be an integer
+- `min(value)` - Must be greater than or equal to value
+- `max(value)` - Must be less than or equal to value
+- `string` - Accepts any string value
+- `alpha` - Must contain only alphabetic characters
+- `guid` - Must be a valid GUID
+
+### Multiple Route Handlers
+```csharp
+// Handle integer IDs
+app.MapGet("/products/{id:int}", (int id) => $"Product ID: {id}");
+
+// Handle string IDs (for edge cases)
+app.MapGet("/products/{id:string}", (string id) => $"Product Code: {id}");
+```
+
+## 3. Optional Parameters
+
+Optional parameters use a question mark `?` and can have default values.
+
+### Optional Parameter Example
+```csharp
+app.MapGet("/reports/{year:int?}", (int year = 2016) => 
+{
+    return $"Report for year: {year}";
+});
+```
+
+### Usage Examples
+```http
+GET /reports/2024        # Returns: "Report for year: 2024"
+GET /reports             # Returns: "Report for year: 2016"
+```
+
+## 4. Catch-All Routes
+
+Catch-all routes use an asterisk `*` to capture everything after a certain point in the URL.
+
+### Catch-All Example
+```csharp
+app.MapGet("/files/{*filepath}", (string filepath) => 
+{
+    return filepath;
+});
+```
+
+### Usage Examples
+```http
+GET /files/images/cats/cat1.jpg
+# Returns: "images/cats/cat1.jpg"
+
+GET /files/documents/2024/report.pdf
+# Returns: "documents/2024/report.pdf"
+```
+
+## 5. Query Parameters
+
+Query parameters are passed after a `?` in the URL and separated by `&`. They're automatically mapped to method parameters by name.
+
+### Query Parameter Example
+```csharp
+app.MapGet("/search", (string? q, int page = 1) => 
+{
+    return $"Searching for: {q} on page {page}";
+});
+```
+
+### Usage Examples
+```http
+GET /search?q=.net&page=2
+# Returns: "Searching for: .net on page 2"
+
+GET /search?q=aspnet
+# Returns: "Searching for: aspnet on page 1"
+
+GET /search
+# Returns: "Searching for:  on page 1"
+```
+
+## 6. Combining Everything
+
+You can combine route parameters, constraints, optional parameters, catch-all routes, and query parameters in a single endpoint.
+
+### Complex Route Example
+```csharp
+app.MapGet("/store/{category}/{productId:int?}/{*extraPath}", 
+    (string category, int? productId, string? extraPath, bool inStock = true) => 
+{
+    return new 
+    {
+        Category = category,
+        ProductId = productId,
+        ExtraPath = extraPath,
+        InStock = inStock
+    };
+});
+```
+
+### Usage Examples
+```http
+# Full route with all parameters
+GET /store/electronics/123/on-sale?inStock=true
+
+# Without optional product ID
+GET /store/electronics/special-offers?inStock=false
+
+# Minimal route
+GET /store/books
+```
+
+## Best Practices
+
+1. **Use meaningful parameter names** that clearly indicate what they represent
+2. **Apply appropriate constraints** to ensure data integrity
+3. **Provide sensible defaults** for optional parameters
+4. **Consider the order** of your routes - more specific routes should come before general ones
+5. **Use query parameters** for optional filtering, paging, and search criteria
+6. **Use route parameters** for required identifiers and hierarchical data
+
+## Key Takeaways
+
+- Route templates make APIs flexible and dynamic
+- Parameters are automatically parsed to specified types
+- Constraints provide validation at the routing level
+- Optional parameters and defaults improve usability
+- Query parameters are perfect for filtering and optional data
+- Combining techniques creates powerful, flexible APIs
+
+## Testing Your Routes
+
+Create a `requests.http` file to test your endpoints:
+
+```http
+### Test basic route parameter
+GET http://localhost:5000/users/123/posts/my-first-post
+
+### Test route constraints
+GET http://localhost:5000/products/456
+
+### Test optional parameters
+GET http://localhost:5000/reports/2024
+GET http://localhost:5000/reports
+
+### Test catch-all routes
+GET http://localhost:5000/files/images/logo.png
+
+### Test query parameters
+GET http://localhost:5000/search?q=aspnet&page=3
+
+### Test complex combined route
+GET http://localhost:5000/store/electronics/999/clearance?inStock=true
+```
+
+Remember to restart your development server when adding new routes during development!
