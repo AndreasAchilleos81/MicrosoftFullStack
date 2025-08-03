@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\MyService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Services\MyService.cs" />
+  </ItemGroup>
+
+</Project>

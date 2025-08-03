@@ -1,0 +1,230 @@
+# ASP.NET Core Middleware Guide
+
+## Introduction
+
+Route handlers are essential in controlling what happens at each endpoint of your application. They allow you to define specific actions for each route. However, there are many situations where you need code to run across all routes or just a selection of them, and this is where **middleware** comes into play.
+
+Middleware enables you to add additional request processing beyond just route handlers. One key benefit is the ability to run additional logic across different parts of your app instead of in just a single route.
+
+## What You Might Not Realize
+
+You're already using middleware - it's just happening behind the scenes! ASP.NET Core wraps your application in middleware, which handles things like routing.
+
+## Built-in Middleware
+
+Let's start with a basic empty web app setup:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => "Hello World!");
+
+app.Run();
+```
+
+### Adding HTTP Logging Middleware
+
+A commonly used piece of middleware is the HTTP logging middleware:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add the HTTP logging service
+builder.Services.AddHttpLogging(options => { });
+
+var app = builder.Build();
+
+// Add the HTTP logging middleware
+app.UseHttpLogging();
+
+app.MapGet("/", () => "Hello World!");
+app.MapGet("/hello", () => "This is the hello route");
+
+app.Run();
+```
+
+### Configuration Setup
+
+You'll also need to configure logging levels in your `appsettings.json`:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware": "Information"
+    }
+  }
+}
+```
+
+### Running the Application
+
+To run with automatic restart on file changes:
+
+```bash
+dotnet watch run
+```
+
+When you navigate to your routes, you'll see detailed logging output showing diagnostic information about each request, including response status codes, content types, timestamps, and more.
+
+## Custom Middleware
+
+You can build your own middleware using `app.Use()`:
+
+### Basic Custom Middleware
+
+```csharp
+app.Use(async (context, next) =>
+{
+    // Logic that runs BEFORE the next middleware
+    Console.WriteLine("Logic before");
+    
+    // Call the next middleware in the pipeline
+    await next.Invoke();
+    
+    // Logic that runs AFTER the next middleware
+    Console.WriteLine("Logic after");
+});
+```
+
+### Terminal Middleware
+
+If you don't call `next.Invoke()`, your middleware becomes **terminal middleware** - it stops the pipeline:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    // This middleware stops here - no further processing
+    await context.Response.WriteAsync("Pipeline terminated!");
+    // next.Invoke() is NOT called
+});
+```
+
+## Middleware Execution Order
+
+The order in which you add middleware matters! Middleware executes in a "pyramid" pattern:
+
+```csharp
+// Middleware 1
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("Middleware 1 - Before");
+    await next.Invoke();
+    Console.WriteLine("Middleware 1 - After");
+});
+
+// Middleware 2
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("Middleware 2 - Before");
+    await next.Invoke();
+    Console.WriteLine("Middleware 2 - After");
+});
+
+// Middleware 3
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("Middleware 3 - Before");
+    await next.Invoke();
+    Console.WriteLine("Middleware 3 - After");
+});
+
+app.MapGet("/", () => "Hello World!");
+```
+
+**Output order:**
+1. Middleware 1 - Before
+2. Middleware 2 - Before  
+3. Middleware 3 - Before
+4. [Route handler executes]
+5. Middleware 3 - After
+6. Middleware 2 - After
+7. Middleware 1 - After
+
+## Behind-the-Scenes Middleware
+
+ASP.NET Core automatically adds several middleware components. You don't need to add these explicitly:
+
+```csharp
+// These are added automatically by ASP.NET Core
+app.UseRouting();              // Handles route matching
+app.UseAuthentication();       // Added conditionally if auth services are configured
+app.UseAuthorization();        // Added conditionally if auth services are configured
+app.UseExceptionHandler();     // Added conditionally in development mode
+
+// Your custom middleware goes here
+app.Use(async (context, next) => { /* your code */ });
+
+// This is added automatically at the end
+app.UseEndpoints();            // Executes the matched route handler
+```
+
+### Exception Handling
+
+The `UseExceptionHandler` middleware:
+- Only runs in **development** mode
+- Provides detailed error pages with full stack traces
+- Helps with debugging but is disabled in production for security reasons
+
+## Key Concepts
+
+### Request Pipeline Flow
+1. **Before Logic**: Runs from first middleware to last
+2. **Route Handler**: Executes the matched endpoint
+3. **After Logic**: Runs from last middleware back to first
+
+### Middleware vs Route Handlers
+- **Route Handlers**: Run only for specific routes
+- **Middleware**: Can run across multiple or all routes
+- **Use Case**: Authentication, logging, error handling, etc.
+
+### Conditional Middleware
+Some middleware is added automatically only when related services are configured:
+- Authentication middleware (when auth services are added)
+- Authorization middleware (when auth services are added)
+- Exception handler (in development environment)
+
+## Best Practices
+
+1. **Order Matters**: Place middleware in the correct sequence
+2. **Always Call Next**: Unless you want terminal middleware
+3. **Handle Errors Gracefully**: Use try-catch blocks in custom middleware
+4. **Keep It Focused**: Each middleware should have a single responsibility
+5. **Consider Performance**: Middleware runs on every request
+
+## Complete Example
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services
+builder.Services.AddHttpLogging(options => { });
+
+var app = builder.Build();
+
+// Built-in middleware
+app.UseHttpLogging();
+
+// Custom middleware
+app.Use(async (context, next) =>
+{
+    var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    Console.WriteLine($"[{timestamp}] Request: {context.Request.Method} {context.Request.Path}");
+    
+    await next.Invoke();
+    
+    Console.WriteLine($"[{timestamp}] Response: {context.Response.StatusCode}");
+});
+
+// Route handlers
+app.MapGet("/", () => "Hello World!");
+app.MapGet("/hello", () => "This is the hello route");
+
+app.Run();
+```
+
+## Conclusion
+
+Both custom and built-in middleware play a crucial role in how your ASP.NET Core application processes requests. They enable you to execute code across multiple routes and enhance your control over the request and response cycle. Properly configuring middleware is key to building robust APIs.

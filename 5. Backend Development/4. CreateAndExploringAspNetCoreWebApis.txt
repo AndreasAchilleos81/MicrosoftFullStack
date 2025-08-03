@@ -1,0 +1,215 @@
+# ASP.NET Core Product Catalog API Tutorial
+
+## Overview
+In this lab, we're creating a simple product catalog using an API in ASP.NET Core with CRUD operations. CRUD stands for Create, Read, Update, and Delete - the four fundamental operations for managing data through API endpoints.
+
+## Step 1: Set Up Basic Application
+
+Create a new ASP.NET Core Web API application using the template:
+
+```bash
+dotnet new webapi -n ProductCatalogAPI
+cd ProductCatalogAPI
+```
+
+## Step 2: Define the Product Model
+
+Create a `Models` folder in the root of your application and add a `Product.cs` file:
+
+```csharp
+// Models/Product.cs
+namespace ProductCatalogAPI.Models
+{
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+    }
+}
+```
+
+This simple class defines our product object with four properties: ID, Name, Description, and Price, each with their appropriate data types.
+
+## Step 3: Implement CRUD Endpoints
+
+Create a `Controllers` folder in the root directory and add a `ProductController.cs` file:
+
+```csharp
+// Controllers/ProductController.cs
+using Microsoft.AspNetCore.Mvc;
+using ProductCatalogAPI.Models;
+
+namespace ProductCatalogAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProductController : ControllerBase
+    {
+        private static List<Product> products = new List<Product>();
+
+        // READ - Get all products
+        [HttpGet]
+        public ActionResult<IEnumerable<Product>> GetAll()
+        {
+            return Ok(products);
+        }
+
+        // READ - Get product by ID
+        [HttpGet("{id}")]
+        public ActionResult<Product> GetById(int id)
+        {
+            var product = products.FirstOrDefault(p => p.Id == id);
+            
+            if (product == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(product);
+        }
+
+        // CREATE - Add new product
+        [HttpPost]
+        public ActionResult<Product> Create([FromBody] Product newProduct)
+        {
+            newProduct.Id = products.Count + 1;
+            products.Add(newProduct);
+            
+            return CreatedAtAction(nameof(GetById), new { id = newProduct.Id }, newProduct);
+        }
+
+        // UPDATE - Update existing product
+        [HttpPut("{id}")]
+        public ActionResult Update(int id, [FromBody] Product updatedProduct)
+        {
+            var product = products.FirstOrDefault(p => p.Id == id);
+            
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(updatedProduct.Name))
+                product.Name = updatedProduct.Name;
+            
+            if (!string.IsNullOrEmpty(updatedProduct.Description))
+                product.Description = updatedProduct.Description;
+            
+            if (updatedProduct.Price > 0)
+                product.Price = updatedProduct.Price;
+
+            return Ok(product);
+        }
+
+        // DELETE - Remove product
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var product = products.FirstOrDefault(p => p.Id == id);
+            
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            products.Remove(product);
+            return NoContent();
+        }
+    }
+}
+```
+
+### Route Configuration
+
+The `[Route("api/[controller]")]` attribute defines the base URL pattern. For our ProductController, the routes will be:
+- Base URL: `https://localhost:5107/api/products`
+
+### CRUD Operations Breakdown
+
+**Read Operations (GET):**
+- `GET /api/products` - Retrieves all products
+- `GET /api/products/{id}` - Retrieves a specific product by ID
+
+**Create Operation (POST):**
+- `POST /api/products` - Creates a new product
+
+**Update Operation (PUT):**
+- `PUT /api/products/{id}` - Updates an existing product
+
+**Delete Operation (DELETE):**
+- `DELETE /api/products/{id}` - Deletes a product
+
+## Step 4: Testing with Postman
+
+### 1. Run the Application
+```bash
+dotnet run
+```
+The application will start on `https://localhost:5107` (or similar port).
+
+### 2. Test GET All Products (Initially Empty)
+- **Method:** GET
+- **URL:** `https://localhost:5107/api/products`
+- **Expected Response:** `200 OK` with empty array `[]`
+
+### 3. Test POST - Create Product
+- **Method:** POST
+- **URL:** `https://localhost:5107/api/products`
+- **Headers:** `Content-Type: application/json`
+- **Body (JSON):**
+```json
+{
+    "id": 1,
+    "name": "Product One",
+    "description": "This is a product description",
+    "price": 9.99
+}
+```
+- **Expected Response:** `201 Created` with the product data
+
+### 4. Test GET All Products (With Data)
+- **Method:** GET
+- **URL:** `https://localhost:5107/api/products`
+- **Expected Response:** `200 OK` with array containing the created product
+
+### 5. Test PUT - Update Product
+- **Method:** PUT
+- **URL:** `https://localhost:5107/api/products/1`
+- **Headers:** `Content-Type: application/json`
+- **Body (JSON):**
+```json
+{
+    "name": "Updated Product One",
+    "description": "This is an updated product description",
+    "price": 12.99
+}
+```
+- **Expected Response:** `200 OK` with updated product data
+
+### 6. Test GET Single Product
+- **Method:** GET
+- **URL:** `https://localhost:5107/api/products/1`
+- **Expected Response:** `200 OK` with the updated product data
+
+### 7. Test DELETE Product
+- **Method:** DELETE
+- **URL:** `https://localhost:5107/api/products/1`
+- **Expected Response:** `204 No Content`
+
+## Key Concepts
+
+**ActionResult:** ASP.NET Core's standard return type for controller actions, providing flexibility in HTTP response types.
+
+**Route Parameters:** Use `{id}` in route templates to capture URL segments as method parameters.
+
+**HTTP Status Codes:**
+- `200 OK` - Successful GET/PUT requests
+- `201 Created` - Successful POST requests
+- `204 No Content` - Successful DELETE requests
+- `404 Not Found` - Resource not found
+
+**Data Binding:** `[FromBody]` attribute tells ASP.NET Core to deserialize JSON from the request body into the specified object.
+
+This creates a basic, lightweight product catalog API using ASP.NET Core that demonstrates all four CRUD operations with proper HTTP methods and status codes.

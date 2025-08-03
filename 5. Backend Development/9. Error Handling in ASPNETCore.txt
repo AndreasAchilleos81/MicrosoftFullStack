@@ -1,0 +1,209 @@
+# ASP.NET Core Error Handling Best Practices
+
+## Introduction
+
+Unexpected issues can crash your app without proper error handling and negatively impact user experience. Proper error handling ensures that issues are managed smoothly, providing informative messages, logging errors for developers, and maintaining a stable user experience, even when things go wrong.
+
+## 1. Try-Catch Blocks
+
+A try-catch block is a programming construct used for error handling that tries code and catches exceptions to prevent crashes. It allows you to try a block of code, and if an exception occurs during execution, the catch block will handle the error without crashing the program.
+
+### Basic Structure
+
+The try-catch block has three main parts:
+
+1. **Try Block**: Where you place the code that might cause an error
+2. **Catch Block**: Handles any exceptions in the try block
+3. **Finally Block** (optional): Executes regardless of whether an error occurred
+
+### Example: Division Operation
+
+```csharp
+int numerator = 10;
+int denominator = 0;
+
+try
+{
+    int result = numerator / denominator;
+    Console.WriteLine($"Result: {result}");
+}
+catch (DivideByZeroException ex)
+{
+    Console.WriteLine("Error: Cannot divide by zero");
+}
+finally
+{
+    Console.WriteLine("Division attempt completed");
+}
+```
+
+### Best Practices for Try-Catch
+
+- **Catch specific exceptions** rather than using generic exception handlers
+- This makes it easier to pinpoint and fix issues when something goes wrong
+- For example, catch database errors specifically rather than all errors with a generic exception handler
+
+### Example: Database Operation
+
+```csharp
+try
+{
+    // Database update operation
+    await dbContext.SaveChangesAsync();
+}
+catch (DbUpdateException ex)
+{
+    // Handle database-specific errors
+    Logger.LogError(ex, "Database update failed");
+    return BadRequest("Unable to save changes. Please try again.");
+}
+catch (Exception ex)
+{
+    // Handle any other unexpected errors
+    Logger.LogError(ex, "Unexpected error occurred");
+    return StatusCode(500, "An unexpected error occurred");
+}
+```
+
+## 2. Global Exception Handling
+
+Global exception handling is a centralized mechanism to catch and handle all unhandled exceptions that occur during runtime. This ensures that any error, no matter where it happens, is caught and managed in a single location.
+
+### Why Use Global Exception Handling?
+
+- Catches errors outside of individual try-catch blocks
+- Provides consistent error responses across your application
+- Ensures users receive proper error messages
+- Centralized logging of all unhandled exceptions
+
+### Example: Global Exception Middleware
+
+In ASP.NET Core, you can use middleware to catch any exceptions during a request and provide a global place to handle and log them.
+
+#### Step 1: Create Global Exception Middleware in Program.cs
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+// Global exception handling middleware
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next.Invoke();
+    }
+    catch (Exception ex)
+    {
+        // Log the error
+        Console.WriteLine($"Global exception caught: {ex.Message}");
+        
+        // Set response status code
+        context.Response.StatusCode = 500;
+        
+        // Return error message
+        await context.Response.WriteAsync("An unexpected error occurred. Please try again later.");
+    }
+});
+
+app.UseRouting();
+app.MapControllers();
+
+app.Run();
+```
+
+### Understanding the Middleware Components
+
+1. **Context**: Represents the current HTTP request/response context
+2. **Next**: Refers to the next middleware in the pipeline
+3. **await next.Invoke()**: Calls the next middleware in the pipeline
+4. **Exception Handling**: If an exception occurs anywhere in the pipeline, the catch block captures it
+
+### Advanced Global Exception Handling
+
+For more sophisticated error handling, you can create a custom middleware class:
+
+```csharp
+public class GlobalExceptionMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        _logger.LogError(exception, "An unhandled exception occurred");
+
+        var response = new
+        {
+            error = "An unexpected error occurred",
+            message = "Please try again later"
+        };
+
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+}
+```
+
+#### Register the Custom Middleware
+
+```csharp
+// In Program.cs
+app.UseMiddleware<GlobalExceptionMiddleware>();
+```
+
+## 3. String Interpolation in Error Messages
+
+The `$"{variable}"` syntax is string interpolation, which dynamically inserts variable values into strings:
+
+```csharp
+catch (Exception ex)
+{
+    // String interpolation example
+    string errorMessage = $"Error occurred: {ex.Message}";
+    Console.WriteLine(errorMessage);
+}
+```
+
+## 4. Common HTTP Status Codes for Errors
+
+- **400 Bad Request**: Client error (invalid input)
+- **401 Unauthorized**: Authentication required
+- **403 Forbidden**: Access denied
+- **404 Not Found**: Resource not found
+- **500 Internal Server Error**: Server error
+
+## Summary
+
+Effective error handling in ASP.NET Core involves:
+
+1. **Try-Catch Blocks**: Handle specific errors in individual code blocks
+2. **Global Exception Handling**: Catch and manage all unhandled exceptions centrally using middleware
+3. **Proper Logging**: Log errors for developers while providing user-friendly messages
+4. **Consistent Error Responses**: Ensure all errors are handled consistently across the application
+
+This approach improves application stability, provides meaningful error messages to users, and helps developers troubleshoot issues more effectively.

@@ -1,0 +1,455 @@
+# ASP.NET Core Web API - Error Handling and Logging Lab
+
+## Overview
+
+In this lab, we'll create a basic Web API project that demonstrates both basic and global error handling. We'll use ASP.NET's built-in logging to show how errors are handled, and then integrate third-party logging libraries for more robust logging capabilities.
+
+## Step 1: Set Up the Project
+
+Create a new ASP.NET Core Web API project using the .NET CLI:
+
+```bash
+dotnet new webapi -n ErrorHandlingProject
+cd ErrorHandlingProject
+```
+
+This creates a templated Web API application with the basic structure needed for our error handling demonstration.
+
+## Step 2: Add Basic Error Handling
+
+### Create the Error Handling Controller
+
+Create a `Controllers` folder at the root of your project and add an `ErrorHandlingController.cs` file:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace ErrorHandlingProject.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ErrorHandlingController : ControllerBase
+    {
+        [HttpGet("division")]
+        public IActionResult GetDivisionResults(int numerator, int denominator)
+        {
+            try
+            {
+                // Attempt to perform division
+                int result = numerator / denominator;
+                
+                return Ok(new { 
+                    Numerator = numerator, 
+                    Denominator = denominator, 
+                    Result = result 
+                });
+            }
+            catch (DivideByZeroException)
+            {
+                // Log the error to console
+                Console.WriteLine("Division by zero is not allowed");
+                
+                // Return a bad request response
+                return BadRequest(new { 
+                    Error = "Division by zero is not allowed",
+                    Message = "Please provide a non-zero denominator"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Handle any other unexpected errors
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                
+                return StatusCode(500, new { 
+                    Error = "An unexpected error occurred",
+                    Message = "Please try again later"
+                });
+            }
+        }
+    }
+}
+```
+
+### Route Structure
+
+- **Base Route**: `api/[controller]` - This means you can access the controller at `api/ErrorHandling`
+- **Division Endpoint**: `api/ErrorHandling/division?numerator=10&denominator=2`
+
+### Error Handling Features
+
+1. **Try-Catch Block**: Attempts the division operation and catches specific exceptions
+2. **Specific Exception Handling**: Catches `DivideByZeroException` specifically
+3. **Generic Exception Handling**: Catches any other unexpected errors
+4. **Proper HTTP Status Codes**: Returns appropriate status codes (400 for bad requests, 500 for server errors)
+
+## Step 3: Implement Global Error Handling
+
+Modify your `Program.cs` file to include global error handling middleware:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Global error handling middleware
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        // Log the global exception
+        Console.WriteLine($"Global exception caught: {ex.Message}");
+        
+        // Set response status code
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        
+        // Return error response
+        var errorResponse = new
+        {
+            Error = "Global exception caught",
+            Message = "An unexpected error occurred. Please try again later.",
+            Details = ex.Message
+        };
+        
+        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(errorResponse));
+    }
+});
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+```
+
+### Global vs. Specific Error Handling
+
+- **Specific Error Handling**: Handles errors for the division operation specifically
+- **Global Error Handling**: Catches any unhandled exceptions from operations that don't have their own error handling
+- **Fallback Mechanism**: If a controller method doesn't have try-catch blocks, the global handler will catch those errors
+
+## Step 4: Implement Basic ASP.NET Logging
+
+Update your `Program.cs` file to include basic ASP.NET logging:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Configure basic ASP.NET logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Global error handling middleware with logging
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        // Use the logging infrastructure
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Global exception caught");
+        
+        // Set response status code
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        
+        // Return error response
+        var errorResponse = new
+        {
+            Error = "Global exception caught",
+            Message = "An unexpected error occurred. Please try again later."
+        };
+        
+        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(errorResponse));
+    }
+});
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+```
+
+### Update the Controller to Use ILogger
+
+Update your `ErrorHandlingController.cs` to use the logging infrastructure:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace ErrorHandlingProject.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ErrorHandlingController : ControllerBase
+    {
+        private readonly ILogger<ErrorHandlingController> _logger;
+
+        public ErrorHandlingController(ILogger<ErrorHandlingController> logger)
+        {
+            _logger = logger;
+        }
+
+        [HttpGet("division")]
+        public IActionResult GetDivisionResults(int numerator, int denominator)
+        {
+            _logger.LogInformation("Division operation requested: {Numerator} / {Denominator}", numerator, denominator);
+
+            try
+            {
+                // Attempt to perform division
+                int result = numerator / denominator;
+                
+                _logger.LogInformation("Division successful: {Result}", result);
+                
+                return Ok(new { 
+                    Numerator = numerator, 
+                    Denominator = denominator, 
+                    Result = result 
+                });
+            }
+            catch (DivideByZeroException ex)
+            {
+                // Log the error using the logging infrastructure
+                _logger.LogWarning("Division by zero attempted: {Numerator} / {Denominator}", numerator, denominator);
+                
+                return BadRequest(new { 
+                    Error = "Division by zero is not allowed",
+                    Message = "Please provide a non-zero denominator"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Handle any other unexpected errors
+                _logger.LogError(ex, "Unexpected error during division operation");
+                
+                return StatusCode(500, new { 
+                    Error = "An unexpected error occurred",
+                    Message = "Please try again later"
+                });
+            }
+        }
+    }
+}
+```
+
+## Step 5: Integrate Third-Party Logging with Serilog
+
+### Install Serilog NuGet Packages
+
+```bash
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.Console
+dotnet add package Serilog.Sinks.File
+```
+
+### Verify Package Installation
+
+Check your `.csproj` file to confirm the packages are installed:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+</Project>
+```
+
+### Configure Serilog in Program.cs
+
+Update your `Program.cs` file to use Serilog:
+
+```csharp
+using Serilog;
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Use Serilog for logging
+builder.Host.UseSerilog();
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Global error handling middleware with Serilog
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        // Use Serilog for logging
+        Log.Error(ex, "Global exception caught for {RequestPath}", context.Request.Path);
+        
+        // Set response status code
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        
+        // Return error response
+        var errorResponse = new
+        {
+            Error = "Global exception caught",
+            Message = "An unexpected error occurred. Please try again later."
+        };
+        
+        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(errorResponse));
+    }
+});
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllers();
+
+try
+{
+    Log.Information("Starting web application");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+```
+
+### Advanced Serilog Configuration
+
+For more robust logging, you can configure Serilog with additional settings:
+
+```csharp
+using Serilog;
+
+// Advanced Serilog configuration
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+    .WriteTo.File("logs/myapp-.txt", 
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+    .CreateLogger();
+```
+
+## Testing the Implementation
+
+### 1. Test Normal Division
+```
+GET /api/ErrorHandling/division?numerator=10&denominator=2
+```
+
+**Expected Response:**
+```json
+{
+    "numerator": 10,
+    "denominator": 2,
+    "result": 5
+}
+```
+
+### 2. Test Division by Zero
+```
+GET /api/ErrorHandling/division?numerator=10&denominator=0
+```
+
+**Expected Response:**
+```json
+{
+    "error": "Division by zero is not allowed",
+    "message": "Please provide a non-zero denominator"
+}
+```
+
+### 3. Check Log Files
+- **Console Output**: Real-time logging in the console
+- **File Output**: Check the `logs/myapp.txt` file for persistent logging
+
+## Key Benefits of This Implementation
+
+1. **Dual Logging Systems**: Both ASP.NET's built-in logging and Serilog for robust logging
+2. **Multiple Log Destinations**: Console for development, files for production
+3. **Structured Logging**: Serilog provides structured logging with better formatting
+4. **Error Tracking**: Both specific and global error handling ensure no errors go unnoticed
+5. **Rolling Log Files**: Daily log rotation prevents log files from growing too large
+
+## Summary
+
+This lab demonstrates how to implement comprehensive error handling and logging in an ASP.NET Core Web API:
+
+- **Basic Error Handling**: Try-catch blocks for specific operations
+- **Global Error Handling**: Middleware to catch all unhandled exceptions
+- **Built-in Logging**: ASP.NET Core's logging infrastructure
+- **Third-Party Logging**: Serilog for enhanced logging capabilities
+- **Multiple Output Destinations**: Console and file logging
+
+This approach ensures that your API is robust, maintainable, and provides excellent debugging capabilities for both development and production environments.

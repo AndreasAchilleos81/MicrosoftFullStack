@@ -1,0 +1,209 @@
+# ASP.NET Core Web API with Dependency Injection and Middleware Tutorial
+
+This lab demonstrates how to create a basic ASP.NET Core Web API using dependency injection to implement middleware that can be used within API calls.
+
+## Step 1: Set Up the Project Template
+
+Create a new ASP.NET Core Web API project using the following command:
+
+```bash
+dotnet new webapi -n DIProject
+cd DIProject
+```
+
+This creates a basic templated project called "DIProject" using the standard Web API template.
+
+## Step 2: Create Interface and Service Class
+
+### Step 2.1: Create the Interface
+
+Create a file called `IMIService.cs` in the root of your API project:
+
+```csharp
+public interface IMIService
+{
+    void LogCreation(string message);
+}
+```
+
+This interface defines a simple method `LogCreation` that logs a message to the log file. Any class implementing this interface must provide an implementation for this method.
+
+### Step 2.2: Create the Service Implementation
+
+Create a file called `MIService.cs`:
+
+```csharp
+public class MIService : IMIService
+{
+    private readonly string _serviceId;
+
+    public MIService()
+    {
+        _serviceId = Guid.NewGuid().ToString();
+    }
+
+    public void LogCreation(string message)
+    {
+        Console.WriteLine($"{message} - Service ID: {_serviceId}");
+    }
+}
+```
+
+This class:
+- Implements the `IMIService` interface
+- Creates a private readonly `_serviceId` with a random ID number
+- Has a constructor that generates the service ID
+- Implements the `LogCreation` method that writes out the message along with the service ID
+
+## Step 3: Register the Service in Program.cs
+
+Add the service registration in your `Program.cs` file:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Register the service as a singleton
+builder.Services.AddSingleton<IMIService, MIService>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+```
+
+By registering the service as a singleton using `AddSingleton<IMIService, MIService>()`, we ensure that a single instance is used across all calls. This means the service ID will remain the same throughout the application's lifetime.
+
+## Step 4: Add Middleware to Log Service Lifecycle
+
+Add middleware to demonstrate the service lifecycle. Insert this code before `app.MapControllers()`:
+
+```csharp
+// First middleware
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMIService>();
+    myService.LogCreation("First middleware called");
+    await next();
+});
+
+// Second middleware
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMIService>();
+    myService.LogCreation("Second middleware called");
+    await next();
+});
+```
+
+Key points about this middleware:
+- Each middleware uses `GetRequiredService<IMIService>()` to obtain the service instance
+- The `async (context, next)` signature allows the middleware to be asynchronous
+- `await next()` ensures the middleware waits for the next middleware in the pipeline to complete
+- Since we registered the service as a singleton, both middleware calls will use the same service instance with the same ID
+
+## Step 5: Create a Route to Use the Service
+
+Add a simple route that uses the service:
+
+```csharp
+app.MapGet("/", (IMIService miService) =>
+{
+    miService.LogCreation("Root endpoint accessed");
+    return Results.Ok("API is working!");
+});
+```
+
+This creates a GET endpoint at the root of your API that:
+- Accepts the `IMIService` as a parameter (dependency injection)
+- Logs that the root endpoint was accessed
+- Returns a 200 OK response with a success message
+
+## Complete Program.cs Example
+
+Here's the complete `Program.cs` file with all components:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Register the service as a singleton
+builder.Services.AddSingleton<IMIService, MIService>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+// First middleware
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMIService>();
+    myService.LogCreation("First middleware called");
+    await next();
+});
+
+// Second middleware
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMIService>();
+    myService.LogCreation("Second middleware called");
+    await next();
+});
+
+app.UseAuthorization();
+
+// Root endpoint
+app.MapGet("/", (IMIService miService) =>
+{
+    miService.LogCreation("Root endpoint accessed");
+    return Results.Ok("API is working!");
+});
+
+app.MapControllers();
+
+app.Run();
+```
+
+## How It Works
+
+When you run the application and navigate to the root endpoint, you'll see console output similar to:
+
+```
+First middleware called - Service ID: 12345678-1234-1234-1234-123456789012
+Second middleware called - Service ID: 12345678-1234-1234-1234-123456789012
+Root endpoint accessed - Service ID: 12345678-1234-1234-1234-123456789012
+```
+
+Notice that all three log entries show the same Service ID, demonstrating that the singleton service maintains the same instance across all calls within the application lifecycle.
+
+## Key Concepts Demonstrated
+
+1. **Dependency Injection**: Services are registered in the DI container and automatically injected where needed
+2. **Singleton Lifetime**: The same service instance is used across all requests
+3. **Middleware Pipeline**: Custom middleware can access and use injected services
+4. **Service Lifecycle**: The logging shows how the same service instance is reused throughout the request pipeline

@@ -1,0 +1,235 @@
+# .NET Deserialization Tutorial
+
+This tutorial explores how to deserialize incoming data (JSON, XML, form data) into C# objects in .NET APIs. We'll cover automatic deserialization, manual deserialization, and custom options.
+
+## Understanding Deserialization
+
+**Serialization** = Sending data out (converting objects to data formats)
+**Deserialization** = Receiving data in (converting data formats back to objects)
+
+## Setup: Person Class
+
+First, let's define our `Person` class with validation attributes:
+
+```csharp
+public class Person
+{
+    [Required]
+    public string UserName { get; set; }
+    
+    public int? UserAge { get; set; } // Optional field
+}
+```
+
+## Method 1: Automatic Deserialization (Recommended)
+
+The simplest way to deserialize data in .NET uses built-in model binding.
+
+```csharp
+app.MapPost("/auto", (Person personFromClient) =>
+{
+    // .NET automatically deserializes the request body to a Person object
+    Console.WriteLine($"Received: {personFromClient.UserName}");
+    
+    // You can modify the object as needed
+    personFromClient.UserName = "Tyler";
+    
+    return TypedResults.Ok(personFromClient);
+});
+```
+
+**How it works:**
+- .NET automatically reads the request body
+- Attempts to deserialize it as a `Person` object
+- Validates required fields
+- Returns validation errors if the contract isn't met
+
+## Method 2: Manual JSON Deserialization
+
+For more control over the deserialization process:
+
+```csharp
+app.MapPost("/json", async (HttpContext context) =>
+{
+    // Explicitly read the Person from the request
+    var person = await context.Request.ReadFromJsonAsync<Person>();
+    
+    return TypedResults.Json(person);
+});
+```
+
+### Testing Different Scenarios
+
+```csharp
+// Valid JSON - Works
+{
+    "UserName": "Alice",
+    "UserAge": 30
+}
+
+// Missing optional field - Works
+{
+    "UserName": "Alice"
+}
+
+// Missing required field - Error
+{
+    "UserAge": 30
+}
+
+// Extra fields - Ignored by default
+{
+    "UserName": "Alice",
+    "UserAge": 30,
+    "ExtraField": "ignored"
+}
+
+// Wrong data type - Error
+{
+    "UserName": "Alice",
+    "UserAge": "buffalo"  // Should be int
+}
+```
+
+## Method 3: Custom Deserialization Options
+
+You can customize deserialization behavior using `JsonSerializerOptions`:
+
+```csharp
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+app.MapPost("/custom-options", async (HttpContext context) =>
+{
+    var options = new JsonSerializerOptions
+    {
+        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow
+    };
+    
+    var person = await context.Request.ReadFromJsonAsync<Person>(options);
+    
+    return TypedResults.Ok(person);
+});
+```
+
+**Common Options:**
+- `UnmappedMemberHandling.Disallow` - Reject requests with extra fields
+- `PropertyNamingPolicy` - Control property name casing
+- `AllowTrailingCommas` - Allow trailing commas in JSON
+- `ReadCommentHandling` - Handle JSON comments
+
+## Method 4: XML Deserialization
+
+XML deserialization requires more manual work:
+
+```csharp
+using System.Xml.Serialization;
+
+app.MapPost("/xml", async (HttpContext context) =>
+{
+    // Step 1: Read the request body as a stream
+    var reader = new StreamReader(context.Request.Body);
+    var body = await reader.ReadToEndAsync();
+    
+    // Step 2: Create XML serializer
+    var xmlSerializer = new XmlSerializer(typeof(Person));
+    
+    // Step 3: Create string reader from body
+    var stringReader = new StringReader(body);
+    
+    // Step 4: Deserialize XML to Person object
+    var person = (Person)xmlSerializer.Deserialize(stringReader);
+    
+    return TypedResults.Ok(person);
+});
+```
+
+### XML Request Example
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Person>
+    <UserName>Alice</UserName>
+    <UserAge>30</UserAge>
+</Person>
+```
+
+## Complete API Example
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Xml.Serialization;
+
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Person class with validation
+public class Person
+{
+    [Required]
+    public string UserName { get; set; }
+    
+    public int? UserAge { get; set; }
+}
+
+// Method 1: Automatic deserialization
+app.MapPost("/auto", (Person personFromClient) =>
+{
+    Console.WriteLine($"Received: {personFromClient.UserName}");
+    return TypedResults.Ok(personFromClient);
+});
+
+// Method 2: Manual JSON deserialization
+app.MapPost("/json", async (HttpContext context) =>
+{
+    var person = await context.Request.ReadFromJsonAsync<Person>();
+    return TypedResults.Json(person);
+});
+
+// Method 3: Custom options
+app.MapPost("/custom-options", async (HttpContext context) =>
+{
+    var options = new JsonSerializerOptions
+    {
+        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow
+    };
+    
+    var person = await context.Request.ReadFromJsonAsync<Person>(options);
+    return TypedResults.Ok(person);
+});
+
+// Method 4: XML deserialization
+app.MapPost("/xml", async (HttpContext context) =>
+{
+    var reader = new StreamReader(context.Request.Body);
+    var body = await reader.ReadToEndAsync();
+    
+    var xmlSerializer = new XmlSerializer(typeof(Person));
+    var stringReader = new StringReader(body);
+    var person = (Person)xmlSerializer.Deserialize(stringReader);
+    
+    return TypedResults.Ok(person);
+});
+
+app.Run();
+```
+
+## Key Takeaways
+
+1. **Use automatic deserialization** for most scenarios - it's the "happy path"
+2. **JSON is preferred** over XML for modern APIs
+3. **Validation attributes** on your models provide automatic validation
+4. **Custom options** give you fine-grained control when needed
+5. **XML requires more boilerplate** but is sometimes necessary for legacy systems
+
+## Best Practices
+
+- Start with automatic deserialization (`Method 1`)
+- Use `TypedResults` instead of `Results` for better type safety
+- Leverage data annotations for validation
+- Only use custom options when you need specific behavior
+- Prefer JSON over XML unless specifically required
+
+This approach provides a solid foundation for handling incoming data in .NET APIs while maintaining clean, readable code.

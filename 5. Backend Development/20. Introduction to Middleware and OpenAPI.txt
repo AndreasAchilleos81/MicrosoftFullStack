@@ -1,0 +1,589 @@
+# Middleware and OpenAPI in ASP.NET Core
+
+## Overview
+
+This module introduces you to the essential role of middleware in managing requests and responses and how to integrate OpenAPI for seamless API documentation. You'll learn to design efficient middleware components and leverage OpenAPI tools to enhance your APIs in modern back-end development.
+
+## Learning Objectives
+
+By the end of this module, you'll have the knowledge and tools to design effective middleware and integrate OpenAPI for seamless API documentation in ASP.NET Core.
+
+## Module Outline
+
+### 1. Understanding Middleware
+
+We will begin by defining middleware and understanding its critical role in managing the flow of requests and responses within ASP.NET Core applications.
+
+**What is Middleware?**
+Middleware components are software components that are assembled into an application pipeline to handle requests and responses. Each component chooses whether to pass the request to the next component in the pipeline and can perform work before and after the next component in the pipeline is invoked.
+
+**Basic Middleware Example:**
+```csharp
+public class CustomMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    public CustomMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        // Do work before calling next middleware
+        Console.WriteLine("Before next middleware");
+        
+        await _next(context);
+        
+        // Do work after calling next middleware
+        Console.WriteLine("After next middleware");
+    }
+}
+
+// Extension method for easier registration
+public static class MiddlewareExtensions
+{
+    public static IApplicationBuilder UseCustomMiddleware(
+        this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<CustomMiddleware>();
+    }
+}
+```
+
+**Registering Middleware in Program.cs:**
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Register middleware in order
+app.UseCustomMiddleware();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.Run();
+```
+
+### 2. Common Middleware Components
+
+Next, we will explore common middleware components used in ASP.NET Core and learn how they contribute to handling various tasks such as authentication, logging, and error handling.
+
+**Authentication Middleware:**
+```csharp
+// In Program.cs
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+// Register in pipeline
+app.UseAuthentication();
+app.UseAuthorization();
+```
+
+**Logging Middleware:**
+```csharp
+public class RequestLoggingMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<RequestLoggingMiddleware> _logger;
+
+    public RequestLoggingMiddleware(RequestDelegate next, 
+        ILogger<RequestLoggingMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        
+        _logger.LogInformation("Request {Method} {Path} started", 
+            context.Request.Method, context.Request.Path);
+
+        await _next(context);
+
+        stopwatch.Stop();
+        _logger.LogInformation("Request {Method} {Path} completed in {Duration}ms with status {StatusCode}",
+            context.Request.Method, 
+            context.Request.Path, 
+            stopwatch.ElapsedMilliseconds,
+            context.Response.StatusCode);
+    }
+}
+```
+
+**Error Handling Middleware:**
+```csharp
+public class GlobalExceptionMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+    public GlobalExceptionMiddleware(RequestDelegate next, 
+        ILogger<GlobalExceptionMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unhandled exception occurred");
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        context.Response.StatusCode = exception switch
+        {
+            NotFoundException => 404,
+            UnauthorizedException => 401,
+            ValidationException => 400,
+            _ => 500
+        };
+
+        var response = new
+        {
+            error = exception.Message,
+            statusCode = context.Response.StatusCode
+        };
+
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+}
+```
+
+### 3. Integrating OpenAPI/Swagger
+
+Then we will focus on integrating OpenAPI Swagger with ASP.NET Core, allowing you to automatically generate comprehensive API documentation.
+
+**Installing Swagger Packages:**
+```xml
+<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+```
+
+**Basic Swagger Configuration:**
+```csharp
+// In Program.cs
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Title = "My API", 
+        Version = "v1",
+        Description = "A comprehensive API for managing resources"
+    });
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // Sets Swagger UI at the app's root
+    });
+}
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+```
+
+**Advanced Swagger Configuration with JWT:**
+```csharp
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Title = "My API", 
+        Version = "v1" 
+    });
+
+    // Add JWT Authentication
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+
+    // Include XML comments
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+```
+
+**Documenting API Endpoints:**
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    /// <summary>
+    /// Gets all products
+    /// </summary>
+    /// <returns>A list of products</returns>
+    /// <response code="200">Returns the list of products</response>
+    /// <response code="500">If there was an internal server error</response>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<Product>), 200)]
+    [ProducesResponseType(500)]
+    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    {
+        // Implementation
+        return Ok(await _productService.GetAllProductsAsync());
+    }
+
+    /// <summary>
+    /// Gets a specific product by ID
+    /// </summary>
+    /// <param name="id">The product ID</param>
+    /// <returns>A product</returns>
+    /// <response code="200">Returns the requested product</response>
+    /// <response code="404">If the product is not found</response>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(Product), 200)]
+    [ProducesResponseType(404)]
+    public async Task<ActionResult<Product>> GetProduct(int id)
+    {
+        var product = await _productService.GetProductByIdAsync(id);
+        if (product == null)
+            return NotFound();
+        
+        return Ok(product);
+    }
+}
+```
+
+### 4. Generating API Clients
+
+After that, we will examine the process of generating API clients using Swagger, making communication and testing your APIs easier.
+
+**Using NSwag for Client Generation:**
+```xml
+<PackageReference Include="NSwag.MSBuild" Version="13.20.0">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+</PackageReference>
+```
+
+**NSwag Configuration (nswag.json):**
+```json
+{
+  "runtime": "Net60",
+  "defaultVariables": null,
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "https://localhost:7001/swagger/v1/swagger.json",
+      "output": null
+    }
+  },
+  "codeGenerators": {
+    "openApiToCSharpClient": {
+      "clientBaseClass": null,
+      "configurationClass": null,
+      "generateClientClasses": true,
+      "generateClientInterfaces": true,
+      "clientBaseInterface": null,
+      "injectHttpClient": true,
+      "disposeHttpClient": true,
+      "protectedMethods": [],
+      "generateExceptionClasses": true,
+      "exceptionClass": "ApiException",
+      "wrapDtoExceptions": true,
+      "useHttpClientCreationMethod": false,
+      "httpClientType": "System.Net.Http.HttpClient",
+      "useHttpRequestMessageCreationMethod": false,
+      "useBaseUrl": true,
+      "generateBaseUrlProperty": true,
+      "generateSyncMethods": false,
+      "generatePrepareRequestAndProcessResponseAsAsyncMethods": false,
+      "exposeJsonSerializerSettings": false,
+      "clientClassAccessModifier": "public",
+      "typeAccessModifier": "public",
+      "generateContractsOutput": false,
+      "contractsNamespace": null,
+      "contractsOutputFilePath": null,
+      "parameterDateTimeFormat": "s",
+      "parameterDateFormat": "yyyy-MM-dd",
+      "generateUpdateJsonSerializerSettingsMethod": true,
+      "useRequestAndResponseSerializationSettings": false,
+      "serializeTypeInformation": false,
+      "queryNullValue": "",
+      "className": "{controller}Client",
+      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "additionalNamespaceUsages": [],
+      "additionalContractNamespaceUsages": [],
+      "generateOptionalParameters": false,
+      "generateJsonMethods": false,
+      "enforceFlagEnums": false,
+      "parameterArrayType": "System.Collections.Generic.IEnumerable",
+      "parameterDictionaryType": "System.Collections.Generic.IDictionary",
+      "responseArrayType": "System.Collections.Generic.ICollection",
+      "responseDictionaryType": "System.Collections.Generic.IDictionary",
+      "wrapResponses": false,
+      "wrapResponseMethods": [],
+      "generateResponseClasses": true,
+      "responseClass": "SwaggerResponse",
+      "namespace": "MyApi.Client",
+      "requiredPropertiesMustBeDefined": true,
+      "dateType": "System.DateTimeOffset",
+      "jsonConverters": null,
+      "anyType": "object",
+      "dateTimeType": "System.DateTimeOffset",
+      "timeType": "System.TimeSpan",
+      "timeSpanType": "System.TimeSpan",
+      "arrayType": "System.Collections.Generic.ICollection",
+      "arrayInstanceType": "System.Collections.ObjectModel.Collection",
+      "dictionaryType": "System.Collections.Generic.IDictionary",
+      "dictionaryInstanceType": "System.Collections.Generic.Dictionary",
+      "arrayBaseType": "System.Collections.ObjectModel.Collection",
+      "dictionaryBaseType": "System.Collections.Generic.Dictionary",
+      "classStyle": "Poco",
+      "jsonLibrary": "NewtonsoftJson",
+      "generateDefaultValues": true,
+      "generateDataAnnotations": true,
+      "excludedTypeNames": [],
+      "excludedParameterNames": [],
+      "handleReferences": false,
+      "generateImmutableArrayProperties": false,
+      "generateImmutableDictionaryProperties": false,
+      "jsonSerializerSettingsTransformationMethod": null,
+      "inlineNamedArrays": false,
+      "inlineNamedDictionaries": false,
+      "inlineNamedTuples": true,
+      "inlineNamedAny": false,
+      "generateDtoTypes": true,
+      "generateOptionalPropertiesAsNullable": false,
+      "generateNullableReferenceTypes": false,
+      "templateDirectory": null,
+      "typeNameGeneratorType": null,
+      "propertyNameGeneratorType": null,
+      "enumNameGeneratorType": null,
+      "serviceHost": null,
+      "serviceSchemes": null,
+      "output": "ApiClient.cs"
+    }
+  }
+}
+```
+
+**Using Generated Client:**
+```csharp
+// Register the HTTP client
+builder.Services.AddHttpClient<IProductsClient, ProductsClient>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7001/");
+});
+
+// Usage in a service or controller
+public class ProductService
+{
+    private readonly IProductsClient _productsClient;
+
+    public ProductService(IProductsClient productsClient)
+    {
+        _productsClient = productsClient;
+    }
+
+    public async Task<IEnumerable<Product>> GetProductsAsync()
+    {
+        return await _productsClient.GetProductsAsync();
+    }
+
+    public async Task<Product> GetProductAsync(int id)
+    {
+        return await _productsClient.GetProductAsync(id);
+    }
+}
+```
+
+### 5. Best Practices for Middleware Design
+
+Finally, we will cover best practices for designing middleware in ASP.NET Core, ensuring your applications are efficient, scalable, and maintainable.
+
+**Middleware Ordering Best Practices:**
+```csharp
+var app = builder.Build();
+
+// Exception handling should be first
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+// HTTPS redirection
+app.UseHttpsRedirection();
+
+// Static files (if needed)
+app.UseStaticFiles();
+
+// Routing
+app.UseRouting();
+
+// CORS (if needed)
+app.UseCors();
+
+// Authentication
+app.UseAuthentication();
+
+// Authorization
+app.UseAuthorization();
+
+// Custom middleware
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+// Endpoints
+app.MapControllers();
+```
+
+**Performance Considerations:**
+```csharp
+public class OptimizedMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<OptimizedMiddleware> _logger;
+    
+    // Use object pooling for frequently allocated objects
+    private readonly ObjectPool<StringBuilder> _stringBuilderPool;
+
+    public OptimizedMiddleware(RequestDelegate next, 
+        ILogger<OptimizedMiddleware> logger,
+        ObjectPool<StringBuilder> stringBuilderPool)
+    {
+        _next = next;
+        _logger = logger;
+        _stringBuilderPool = stringBuilderPool;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        // Avoid async/await when not necessary
+        if (!ShouldProcess(context))
+        {
+            await _next(context);
+            return;
+        }
+
+        // Use pooled objects
+        var sb = _stringBuilderPool.Get();
+        try
+        {
+            // Process request
+            await ProcessRequestAsync(context, sb);
+            await _next(context);
+        }
+        finally
+        {
+            _stringBuilderPool.Return(sb);
+        }
+    }
+
+    private bool ShouldProcess(HttpContext context)
+    {
+        // Quick checks to avoid unnecessary processing
+        return context.Request.Path.StartsWithSegments("/api");
+    }
+}
+```
+
+**Testable Middleware:**
+```csharp
+public class TestableMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly IService _service;
+
+    public TestableMiddleware(RequestDelegate next, IService service)
+    {
+        _next = next;
+        _service = service;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        await ProcessAsync(context);
+        await _next(context);
+    }
+
+    // Extract logic to separate method for easier testing
+    internal async Task ProcessAsync(HttpContext context)
+    {
+        var data = await _service.GetDataAsync();
+        context.Items["ProcessedData"] = data;
+    }
+}
+
+// Unit test example
+[Test]
+public async Task ProcessAsync_SetsContextItem()
+{
+    // Arrange
+    var service = new Mock<IService>();
+    var context = new DefaultHttpContext();
+    var middleware = new TestableMiddleware(null, service.Object);
+    
+    service.Setup(s => s.GetDataAsync()).ReturnsAsync("test data");
+
+    // Act
+    await middleware.ProcessAsync(context);
+
+    // Assert
+    Assert.AreEqual("test data", context.Items["ProcessedData"]);
+}
+```
+
+## Summary
+
+This module has covered the essential aspects of middleware and OpenAPI integration in ASP.NET Core. You've learned how to create custom middleware components, integrate common middleware for authentication and logging, set up comprehensive API documentation with Swagger, generate API clients, and follow best practices for maintainable and efficient middleware design.
+
+These skills will enhance your back-end development capabilities and help you build robust, well-documented APIs in ASP.NET Core.

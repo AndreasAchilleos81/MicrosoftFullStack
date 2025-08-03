@@ -1,0 +1,13 @@
+GET http://localhost:5000/
+
+###
+GET http://localhost:5000/blogs
+
+###
+GET http://localhost:5000/blogs/1
+
+###
+GET http://localhost:5000/swagger/v1/swagger.json
+
+###
+GET http://localhost:5000/api/User/1

@@ -1,0 +1,28 @@
+GET http://localhost:5130/
+
+###
+GET http://localhost:5130/items
+
+###
+GET http://localhost:5130/items/2
+
+###
+POST http://localhost:5130/items/
+Content-Type: application/json
+
+{
+    "Name": "Updated Item",
+    "Id": 20
+}
+
+###
+PUT http://localhost:5130/items/20
+Content-Type: application/json
+
+{
+    "Name": "PUTTED Item",
+    "Id": 20
+}
+
+###
+DELETE  http://localhost:5130/items/20

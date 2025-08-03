@@ -1,0 +1,497 @@
+# Unit Testing with Dependency Injection and Mocking
+
+## Introduction
+
+How do you ensure your code works well when depending on external systems like databases or services? Using Dependency Injection and Mocking, you can test your components in isolation, making your code more flexible and easier to maintain.
+
+In this guide, we'll explore how to write unit tests for components that use Dependency Injection.
+
+## What is Unit Testing?
+
+**Unit testing** is a software testing method where individual units or components of a software package are tested in isolation from the rest of the application. This approach provides several benefits:
+
+- **Catches bugs early** - Ensures each part works correctly before integration
+- **Improves code quality** - Forces you to write more modular, testable code
+- **Increases reliability** - Provides confidence that individual components work as expected
+- **Facilitates refactoring** - Makes it safer to change code with confidence
+
+## What is Mocking?
+
+**Mocking** involves creating simulated objects or services that replicate the behavior of real ones to isolate and test specific components. This approach offers several advantages:
+
+- **Faster tests** - No need to wait for real database or API calls
+- **More reliable** - Tests don't fail due to external service issues
+- **Better focus** - Tests concentrate solely on the unit's behavior
+- **Easier debugging** - Issues are isolated to the component under test
+- **Always available** - No dependency on external services being online
+
+## Setting Up Unit Tests with Mocking
+
+### Step 1: Install Required Packages
+
+First, install the necessary testing and mocking packages:
+
+```xml
+<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+<PackageReference Include="xunit" Version="2.4.2" />
+<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
+<PackageReference Include="Moq" Version="4.20.69" />
+<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
+```
+
+### Step 2: Create Service Interfaces
+
+Define clear interfaces for your services to enable easy mocking:
+
+```csharp
+public interface IProductService
+{
+    Task<Product> GetProductAsync(int productId);
+    Task<bool> IsProductAvailableAsync(int productId);
+}
+
+public interface ICartService
+{
+    Task<bool> AddToCartAsync(int userId, int productId, int quantity);
+    Task<Cart> GetCartAsync(int userId);
+}
+
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public int StockQuantity { get; set; }
+}
+
+public class Cart
+{
+    public int UserId { get; set; }
+    public List<CartItem> Items { get; set; } = new();
+}
+
+public class CartItem
+{
+    public int ProductId { get; set; }
+    public string ProductName { get; set; }
+    public decimal Price { get; set; }
+    public int Quantity { get; set; }
+}
+```
+
+### Step 3: Create the Component to Test
+
+Here's a shopping cart manager that depends on external services:
+
+```csharp
+public class CartManager
+{
+    private readonly IProductService _productService;
+    private readonly ICartService _cartService;
+
+    public CartManager(IProductService productService, ICartService cartService)
+    {
+        _productService = productService;
+        _cartService = cartService;
+    }
+
+    public async Task<bool> AddItemToCartAsync(int userId, int productId, int quantity)
+    {
+        // Validate input
+        if (userId <= 0 || productId <= 0 || quantity <= 0)
+        {
+            return false;
+        }
+
+        // Check if product exists and is available
+        var product = await _productService.GetProductAsync(productId);
+        if (product == null)
+        {
+            return false;
+        }
+
+        var isAvailable = await _productService.IsProductAvailableAsync(productId);
+        if (!isAvailable)
+        {
+            return false;
+        }
+
+        // Check if there's enough stock
+        if (product.StockQuantity < quantity)
+        {
+            return false;
+        }
+
+        // Add to cart
+        return await _cartService.AddToCartAsync(userId, productId, quantity);
+    }
+
+    public async Task<decimal> GetCartTotalAsync(int userId)
+    {
+        var cart = await _cartService.GetCartAsync(userId);
+        return cart.Items.Sum(item => item.Price * item.Quantity);
+    }
+}
+```
+
+## Writing Unit Tests with Mocking
+
+### Complete Test Class Example
+
+```csharp
+using Moq;
+using Xunit;
+
+public class CartManagerTests
+{
+    private readonly Mock<IProductService> _mockProductService;
+    private readonly Mock<ICartService> _mockCartService;
+    private readonly CartManager _cartManager;
+
+    public CartManagerTests()
+    {
+        // Step 1: Set up the test environment
+        _mockProductService = new Mock<IProductService>();
+        _mockCartService = new Mock<ICartService>();
+        _cartManager = new CartManager(_mockProductService.Object, _mockCartService.Object);
+    }
+
+    [Fact]
+    public async Task AddItemToCartAsync_ValidInput_ReturnsTrue()
+    {
+        // Step 2: Configure the mocking framework
+        // Arrange - Set up mock data
+        var userId = 1;
+        var productId = 101;
+        var quantity = 2;
+        
+        var mockProduct = new Product
+        {
+            Id = productId,
+            Name = "Test Product",
+            Price = 20.00m,
+            StockQuantity = 10
+        };
+
+        // Step 3: Set up the mock to simulate external service behavior
+        _mockProductService
+            .Setup(x => x.GetProductAsync(productId))
+            .ReturnsAsync(mockProduct);
+
+        _mockProductService
+            .Setup(x => x.IsProductAvailableAsync(productId))
+            .ReturnsAsync(true);
+
+        _mockCartService
+            .Setup(x => x.AddToCartAsync(userId, productId, quantity))
+            .ReturnsAsync(true);
+
+        // Step 4: Write the unit test
+        // Act - Call the method being tested
+        var result = await _cartManager.AddItemToCartAsync(userId, productId, quantity);
+
+        // Assert - Verify the expected behavior
+        Assert.True(result);
+        
+        // Verify that the mock services were called correctly
+        _mockProductService.Verify(x => x.GetProductAsync(productId), Times.Once);
+        _mockProductService.Verify(x => x.IsProductAvailableAsync(productId), Times.Once);
+        _mockCartService.Verify(x => x.AddToCartAsync(userId, productId, quantity), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddItemToCartAsync_ProductNotFound_ReturnsFalse()
+    {
+        // Arrange
+        var userId = 1;
+        var productId = 999; // Non-existent product
+        var quantity = 1;
+
+        _mockProductService
+            .Setup(x => x.GetProductAsync(productId))
+            .ReturnsAsync((Product)null); // Return null to simulate product not found
+
+        // Act
+        var result = await _cartManager.AddItemToCartAsync(userId, productId, quantity);
+
+        // Assert
+        Assert.False(result);
+        
+        // Verify that GetProductAsync was called, but other methods were not
+        _mockProductService.Verify(x => x.GetProductAsync(productId), Times.Once);
+        _mockProductService.Verify(x => x.IsProductAvailableAsync(It.IsAny<int>()), Times.Never);
+        _mockCartService.Verify(x => x.AddToCartAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task AddItemToCartAsync_ProductNotAvailable_ReturnsFalse()
+    {
+        // Arrange
+        var userId = 1;
+        var productId = 101;
+        var quantity = 1;
+
+        var mockProduct = new Product
+        {
+            Id = productId,
+            Name = "Out of Stock Product",
+            Price = 15.00m,
+            StockQuantity = 0
+        };
+
+        _mockProductService
+            .Setup(x => x.GetProductAsync(productId))
+            .ReturnsAsync(mockProduct);
+
+        _mockProductService
+            .Setup(x => x.IsProductAvailableAsync(productId))
+            .ReturnsAsync(false); // Product is not available
+
+        // Act
+        var result = await _cartManager.AddItemToCartAsync(userId, productId, quantity);
+
+        // Assert
+        Assert.False(result);
+        
+        // Verify the call sequence
+        _mockProductService.Verify(x => x.GetProductAsync(productId), Times.Once);
+        _mockProductService.Verify(x => x.IsProductAvailableAsync(productId), Times.Once);
+        _mockCartService.Verify(x => x.AddToCartAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task AddItemToCartAsync_InsufficientStock_ReturnsFalse()
+    {
+        // Arrange
+        var userId = 1;
+        var productId = 101;
+        var quantity = 5; // Requesting more than available
+
+        var mockProduct = new Product
+        {
+            Id = productId,
+            Name = "Limited Stock Product",
+            Price = 25.00m,
+            StockQuantity = 3 // Only 3 available
+        };
+
+        _mockProductService
+            .Setup(x => x.GetProductAsync(productId))
+            .ReturnsAsync(mockProduct);
+
+        _mockProductService
+            .Setup(x => x.IsProductAvailableAsync(productId))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _cartManager.AddItemToCartAsync(userId, productId, quantity);
+
+        // Assert
+        Assert.False(result);
+        
+        // Verify that cart service was never called due to insufficient stock
+        _mockCartService.Verify(x => x.AddToCartAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
+    [Theory]
+    [InlineData(0, 101, 1)] // Invalid user ID
+    [InlineData(1, 0, 1)]   // Invalid product ID
+    [InlineData(1, 101, 0)] // Invalid quantity
+    [InlineData(-1, 101, 1)] // Negative user ID
+    public async Task AddItemToCartAsync_InvalidInput_ReturnsFalse(int userId, int productId, int quantity)
+    {
+        // Act
+        var result = await _cartManager.AddItemToCartAsync(userId, productId, quantity);
+
+        // Assert
+        Assert.False(result);
+        
+        // Verify that no external services were called due to invalid input
+        _mockProductService.Verify(x => x.GetProductAsync(It.IsAny<int>()), Times.Never);
+        _mockProductService.Verify(x => x.IsProductAvailableAsync(It.IsAny<int>()), Times.Never);
+        _mockCartService.Verify(x => x.AddToCartAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task GetCartTotalAsync_WithItems_ReturnsCorrectTotal()
+    {
+        // Arrange
+        var userId = 1;
+        var mockCart = new Cart
+        {
+            UserId = userId,
+            Items = new List<CartItem>
+            {
+                new CartItem { ProductId = 101, ProductName = "Product 1", Price = 20.00m, Quantity = 2 },
+                new CartItem { ProductId = 102, ProductName = "Product 2", Price = 15.00m, Quantity = 1 }
+            }
+        };
+
+        _mockCartService
+            .Setup(x => x.GetCartAsync(userId))
+            .ReturnsAsync(mockCart);
+
+        // Act
+        var total = await _cartManager.GetCartTotalAsync(userId);
+
+        // Assert
+        var expectedTotal = (20.00m * 2) + (15.00m * 1); // 40.00 + 15.00 = 55.00
+        Assert.Equal(expectedTotal, total);
+        
+        _mockCartService.Verify(x => x.GetCartAsync(userId), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetCartTotalAsync_EmptyCart_ReturnsZero()
+    {
+        // Arrange
+        var userId = 1;
+        var emptyCart = new Cart { UserId = userId, Items = new List<CartItem>() };
+
+        _mockCartService
+            .Setup(x => x.GetCartAsync(userId))
+            .ReturnsAsync(emptyCart);
+
+        // Act
+        var total = await _cartManager.GetCartTotalAsync(userId);
+
+        // Assert
+        Assert.Equal(0, total);
+    }
+}
+```
+
+## Test Execution and Analysis
+
+### Running the Tests
+
+You can run these tests using various methods:
+
+```bash
+# Using .NET CLI
+dotnet test
+
+# Using Visual Studio Test Explorer
+# Or using your IDE's test runner
+```
+
+### Understanding Test Results
+
+When tests run, you'll see output like:
+
+```
+Starting test execution, please wait...
+A total of 7 tests ran in 543 ms
+✓ AddItemToCartAsync_ValidInput_ReturnsTrue
+✓ AddItemToCartAsync_ProductNotFound_ReturnsFalse
+✓ AddItemToCartAsync_ProductNotAvailable_ReturnsFalse
+✓ AddItemToCartAsync_InsufficientStock_ReturnsFalse
+✓ AddItemToCartAsync_InvalidInput_ReturnsFalse (4 test cases)
+✓ GetCartTotalAsync_WithItems_ReturnsCorrectTotal
+✓ GetCartTotalAsync_EmptyCart_ReturnsZero
+
+Test run: 7 passed, 0 failed, 0 skipped
+```
+
+## Advanced Mocking Scenarios
+
+### Mocking Exceptions
+
+```csharp
+[Fact]
+public async Task AddItemToCartAsync_ServiceThrowsException_ReturnsFalse()
+{
+    // Arrange
+    var userId = 1;
+    var productId = 101;
+    var quantity = 1;
+
+    _mockProductService
+        .Setup(x => x.GetProductAsync(productId))
+        .ThrowsAsync(new Exception("Database connection failed"));
+
+    // Act & Assert
+    await Assert.ThrowsAsync<Exception>(() => 
+        _cartManager.AddItemToCartAsync(userId, productId, quantity));
+}
+```
+
+### Conditional Mocking
+
+```csharp
+[Fact]
+public async Task AddItemToCartAsync_DifferentProductBehaviors_WorksCorrectly()
+{
+    // Arrange
+    _mockProductService
+        .Setup(x => x.GetProductAsync(101))
+        .ReturnsAsync(new Product { Id = 101, Name = "Available Product", Price = 10m, StockQuantity = 5 });
+    
+    _mockProductService
+        .Setup(x => x.GetProductAsync(102))
+        .ReturnsAsync((Product)null); // Product not found
+
+    _mockProductService
+        .Setup(x => x.IsProductAvailableAsync(101))
+        .ReturnsAsync(true);
+
+    // Act & Assert
+    var result1 = await _cartManager.AddItemToCartAsync(1, 101, 1);
+    var result2 = await _cartManager.AddItemToCartAsync(1, 102, 1);
+
+    Assert.True(result1);
+    Assert.False(result2);
+}
+```
+
+## Best Practices for Unit Testing with DI and Mocking
+
+### 1. Follow the AAA Pattern
+- **Arrange**: Set up test data and configure mocks
+- **Act**: Execute the method being tested
+- **Assert**: Verify the expected behavior
+
+### 2. Use Descriptive Test Names
+```csharp
+// Good
+[Fact]
+public async Task AddItemToCartAsync_WhenProductNotFound_ReturnsFalse()
+
+// Avoid
+[Fact]
+public async Task Test1()
+```
+
+### 3. Test Both Success and Failure Scenarios
+```csharp
+// Test successful operations
+[Fact]
+public async Task AddItemToCartAsync_ValidInput_ReturnsTrue()
+
+// Test edge cases and failures
+[Fact]
+public async Task AddItemToCartAsync_ProductNotFound_ReturnsFalse()
+```
+
+### 4. Verify Mock Interactions
+```csharp
+// Verify methods were called correctly
+_mockProductService.Verify(x => x.GetProductAsync(productId), Times.Once);
+
+// Verify methods were NOT called when they shouldn't be
+_mockCartService.Verify(x => x.AddToCartAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+```
+
+### 5. Keep Tests Independent
+Each test should be able to run in isolation without depending on other tests.
+
+## Key Takeaways
+
+1. **Unit testing with DI and mocking** enables isolated testing of components
+2. **Mocking frameworks** like Moq make it easy to simulate external dependencies
+3. **Clear interfaces** are essential for effective mocking
+4. **Comprehensive test coverage** should include both success and failure scenarios
+5. **Verification of mock interactions** ensures your code behaves as expected
+6. **Fast, reliable tests** help catch bugs early and enable confident refactoring
+
+Using unit tests with dependency injection and mocking frameworks ensures that your code works as expected, even when it depends on external services. This method helps you build more reliable and maintainable software.

@@ -1,0 +1,186 @@
+# .NET Serialization Tutorial
+
+## Introduction
+
+Serialization is the process of converting objects from computer memory into a format that can be transmitted over a network, then reconstructed on the client side. This tutorial explores various serialization techniques in .NET, from manual approaches to automatic serialization.
+
+## Sample Person Class
+
+Let's start with our basic Person class:
+
+```csharp
+public class Person
+{
+    public required string Username { get; set; }
+    public required int UserAge { get; set; }
+}
+
+// Create a sample person
+var samplePerson = new Person 
+{ 
+    Username = "Alice", 
+    UserAge = 30 
+};
+```
+
+## Serialization Methods
+
+### 1. Manual JSON Serialization
+
+The most explicit way to serialize data:
+
+```csharp
+app.MapGet("/manual-json", () =>
+{
+    var jsonString = JsonSerializer.Serialize(samplePerson);
+    return TypedResults.Text(jsonString, "application/json");
+});
+```
+
+This approach:
+- Explicitly calls `JsonSerializer.Serialize()`
+- Returns the serialized string as text
+- Sets the content type to `application/json`
+
+### 2. Custom Serializer Options
+
+When you need control over serialization behavior:
+
+```csharp
+app.MapGet("/custom-serializer", () =>
+{
+    var options = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+    };
+    
+    var customJsonString = JsonSerializer.Serialize(samplePerson, options);
+    return TypedResults.Text(customJsonString, "application/json");
+});
+```
+
+This converts Pascal case properties (like `Username`) to snake case (`username`), which is useful when your API will be consumed by Python services or other systems that expect snake case naming.
+
+### 3. TypedResults.Json Method
+
+A simplified approach using built-in methods:
+
+```csharp
+app.MapGet("/json", () =>
+{
+    return TypedResults.Json(samplePerson);
+});
+```
+
+This method:
+- Automatically serializes the object to JSON
+- Sets the proper content type headers
+- Uses default serialization settings
+
+### 4. Automatic Serialization (Recommended)
+
+The simplest and most common approach:
+
+```csharp
+app.MapGet("/auto", () =>
+{
+    return samplePerson;
+});
+```
+
+.NET automatically:
+- Serializes the object to JSON
+- Sets appropriate headers
+- Handles the response formatting
+
+This is the **recommended approach** for most scenarios because it's:
+- Simple and clean
+- Less error-prone
+- Easy to maintain
+- Uses sensible defaults
+
+## XML Serialization (Not Recommended)
+
+While possible, XML serialization is much more complex:
+
+```csharp
+app.MapGet("/xml", () =>
+{
+    var xmlSerializer = new XmlSerializer(typeof(Person));
+    var stringWriter = new StringWriter();
+    
+    xmlSerializer.Serialize(stringWriter, samplePerson);
+    var xmlOutput = stringWriter.ToString();
+    
+    return TypedResults.Text(xmlOutput, "application/xml");
+});
+```
+
+**Why XML is problematic:**
+- Requires explicit serializer creation
+- Needs type specification
+- More complex string handling
+- Additional steps compared to JSON
+
+**Recommendation:** Use JSON whenever possible as it's the de facto standard for web APIs.
+
+## Global Serialization Settings
+
+You can set application-wide serialization policies:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Configure global JSON options
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseUpper;
+});
+
+var app = builder.Build();
+```
+
+## Testing Different Serialization Methods
+
+Here's how different methods affect output:
+
+### Original Object
+```csharp
+var person = new Person { Username = "Alice", UserAge = 30 };
+```
+
+### Output Examples
+
+**Manual JSON (Pascal Case):**
+```json
+{"Username":"Alice","UserAge":30}
+```
+
+**Custom Serializer (Snake Case):**
+```json
+{"username":"alice","user_age":30}
+```
+
+**Global Settings (Kebab Case Upper):**
+```json
+{"USERNAME":"Alice","USER-AGE":30}
+```
+
+## Key Takeaways
+
+1. **Use automatic serialization** (`return object`) whenever possible
+2. **JSON is preferred** over XML for web APIs
+3. **Global settings** affect routes using default serialization
+4. **Custom serializers** override global settings
+5. **TypedResults.Json()** is good for simple customization
+6. **Manual serialization** gives maximum control but requires more code
+
+## Best Practices
+
+- Default to automatic serialization for simplicity
+- Use custom serializers only when you need specific control
+- Prefer JSON over XML for web APIs
+- Set global naming policies that match your API consumers' expectations
+- Keep serialization logic simple and maintainable
+
+The beauty of modern .NET is that you rarely need to think about serialization details - the framework handles it intelligently with sensible defaults.

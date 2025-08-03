@@ -1,0 +1,387 @@
+# Generating API Clients with Swagger
+
+## Introduction
+
+Up to this point, we've been learning how to build code that will run on our API server. But the whole goal of this back-end code is to provide a useful utility for a client. And for that to happen, the client has to send requests to our server and work with the responses. 
+
+Manually writing the code to handle these operations is time-consuming and incredibly error-prone. But it doesn't have to be that way. In this guide, we will describe the process of generating API clients using Swagger.
+
+## What is Swagger?
+
+Using Swagger, we can automatically generate client code that contains functions to handle the front-end communications with our server and all the types of data it will transact. This code is often referred to as a **Software Developer Kit (SDK)**. It's like a set of building blocks that a front-end developer can use to build client applications that communicate with our back-end.
+
+This allows developers to focus on building the front-end's core functionality while ensuring consistent and reliable API interactions across projects.
+
+**Swagger** is a toolset that turns the API blueprint into an interactive, user-friendly experience. It helps developers:
+- Design REST APIs
+- Build REST APIs
+- Document REST APIs
+- Consume REST APIs
+- Automate tasks that developers would otherwise have to do manually
+
+Swagger is useful because it automates the generation of client code using **OpenAPI Specification**, which outlines the API's endpoints and data formats. This saves developers time, ensures consistency, and reduces errors when interacting with APIs.
+
+## The Four-Step Process
+
+### Step 1: Create the API Specification with OpenAPI
+
+The first step is to create the API specification using the OpenAPI format. This specification describes your API's endpoints, parameters, and responses. It acts as a blueprint for how your API works and ensures consistent communication between it and other systems.
+
+**Example OpenAPI Specification:**
+
+```yaml
+openapi: 3.0.3
+info:
+  title: User Management API
+  version: 1.0.0
+  description: API for managing user information
+
+paths:
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        permissions:
+          type: array
+          items:
+            type: string
+```
+
+### Step 2: Serve the API Specification with Swagger Middleware
+
+You can utilize Swagger Middleware to serve that API specification as JSON on a specific route. This exposes your API specification so your code, other software, and even other developers can utilize it.
+
+**Example in ASP.NET Core:**
+
+```csharp
+// Program.cs or Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers();
+    
+    // Add Swagger services
+    services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo 
+        { 
+            Title = "User Management API", 
+            Version = "v1" 
+        });
+    });
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+        
+        // Enable Swagger middleware
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "User Management API V1");
+        });
+    }
+
+    app.UseRouting();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+}
+```
+
+This will serve your API specification at: `/swagger/v1/swagger.json`
+
+### Step 3: Generate Client Code with NSwag
+
+Use NSwag to generate client code that handles API requests and responses. This saves you from manually writing the logic to interact with the API, since everything is already set up to send and receive data exactly the way your API expects.
+
+**NSwag CLI Example:**
+
+```bash
+# Install NSwag CLI globally
+npm install -g nswag
+
+# Generate C# client code
+nswag swagger2csclient /input:http://localhost:5000/swagger/v1/swagger.json /output:ApiClient.cs /namespace:MyApp.ApiClient
+```
+
+**Generated Client Code Example:**
+
+```csharp
+// This code is automatically generated by NSwag
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace MyApp.ApiClient
+{
+    public partial class UserApiClient
+    {
+        private readonly HttpClient _httpClient;
+        private readonly string _baseUrl;
+
+        public UserApiClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+            _baseUrl = "https://api.example.com";
+        }
+
+        /// <summary>
+        /// Get user by ID
+        /// </summary>
+        /// <param name="id">User ID</param>
+        /// <returns>User details</returns>
+        public async Task<User> GetUserAsync(long id)
+        {
+            var url = $"{_baseUrl}/users/{id}";
+            var response = await _httpClient.GetAsync(url);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<User>(json);
+            }
+            
+            throw new ApiException("User not found", (int)response.StatusCode);
+        }
+
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <returns>List of users</returns>
+        public async Task<List<User>> GetUsersAsync()
+        {
+            var url = $"{_baseUrl}/users";
+            var response = await _httpClient.GetAsync(url);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<User>>(json);
+            }
+            
+            throw new ApiException("Failed to retrieve users", (int)response.StatusCode);
+        }
+    }
+
+    public partial class User
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public List<string> Permissions { get; set; }
+    }
+}
+```
+
+### Step 4: Integrate the Generated Client Code
+
+In the final step, you will integrate the generated client code into your C# project like any external library. Once added, you can easily call methods to retrieve data from the API without worrying about low-level communication.
+
+**Integration Example:**
+
+```csharp
+// In your application code
+using MyApp.ApiClient;
+using Microsoft.Extensions.DependencyInjection;
+
+// Register the HTTP client and API client
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddHttpClient<UserApiClient>();
+}
+
+// Using the generated client in your application
+public class UserService
+{
+    private readonly UserApiClient _userApiClient;
+
+    public UserService(UserApiClient userApiClient)
+    {
+        _userApiClient = userApiClient;
+    }
+
+    public async Task<User> GetUserDetailsAsync(long userId)
+    {
+        try
+        {
+            // Use IntelliSense to discover available methods and their parameters
+            var user = await _userApiClient.GetUserAsync(userId);
+            return user;
+        }
+        catch (ApiException ex)
+        {
+            // Handle API-specific exceptions
+            Console.WriteLine($"API Error: {ex.Message} (Status: {ex.StatusCode})");
+            return null;
+        }
+    }
+
+    public async Task<List<User>> GetAllUsersAsync()
+    {
+        return await _userApiClient.GetUsersAsync();
+    }
+}
+```
+
+## Practical Example: Building a User Management Web App
+
+Let's bring everything together with a practical example. Imagine you're building a web app that manages user information from an external API.
+
+### 1. Define API Routes
+
+First, you define the API routes that perform operations like getting all users, deleting a user, and changing user permissions:
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class UsersController : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<List<User>>> GetUsers()
+    {
+        // Implementation to get all users
+        var users = await _userService.GetAllUsersAsync();
+        return Ok(users);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteUser(long id)
+    {
+        // Implementation to delete a user
+        await _userService.DeleteUserAsync(id);
+        return NoContent();
+    }
+
+    [HttpPut("{id}/permissions")]
+    public async Task<ActionResult> UpdateUserPermissions(long id, [FromBody] List<string> permissions)
+    {
+        // Implementation to update user permissions
+        await _userService.UpdateUserPermissionsAsync(id, permissions);
+        return Ok();
+    }
+}
+```
+
+### 2. Serve API Specification
+
+Next, you use the Swagger Middleware to serve this data at a specific path, typically: `/swagger/v1/swagger.json`
+
+### 3. Generate Client Functions
+
+Then you can use NSwag to generate client functions like:
+- `GetUsersAsync()`
+- `DeleteUserAsync(long id)`
+- `UpdateUserPermissionsAsync(long id, List<string> permissions)`
+
+You can generate this client through:
+- **NSwag CLI**
+- **NSwag Desktop Application**
+- **NSwag C# Libraries**
+
+### 4. Integrate and Use
+
+Finally, you integrate the client code into your app:
+
+```csharp
+public class UserManagementViewModel
+{
+    private readonly UserApiClient _apiClient;
+
+    public UserManagementViewModel(UserApiClient apiClient)
+    {
+        _apiClient = apiClient;
+    }
+
+    public async Task LoadUsersAsync()
+    {
+        // All client code methods know exactly what data the routes expect
+        // and what they should return
+        var users = await _apiClient.GetUsersAsync();
+        
+        // The code has appropriate types, so you can use IntelliSense
+        foreach (var user in users)
+        {
+            Console.WriteLine($"User: {user.Name} ({user.Email})");
+            Console.WriteLine($"Permissions: {string.Join(", ", user.Permissions)}");
+        }
+    }
+
+    public async Task DeleteUserAsync(long userId)
+    {
+        await _apiClient.DeleteUserAsync(userId);
+        await LoadUsersAsync(); // Refresh the list
+    }
+
+    public async Task UpdatePermissionsAsync(long userId, List<string> newPermissions)
+    {
+        await _apiClient.UpdateUserPermissionsAsync(userId, newPermissions);
+    }
+}
+```
+
+## Benefits
+
+With this approach, you can:
+
+- **Use IntelliSense** to quickly understand exactly how to interact with your API without needing to understand the server code
+- **Maintain consistency** across different client applications
+- **Reduce errors** by having strongly-typed client code
+- **Save development time** by not writing HTTP communication code manually
+- **Easy updates**: Anytime you change your API, you can regenerate the client code and update it
+
+## Summary
+
+In this guide, you learned how to generate API clients using Swagger. We covered:
+
+- How Swagger uses the OpenAPI specification to document API endpoints
+- How NSwag automates client code generation
+- How the generated code integrates into a project, making API requests easier and more reliable
+- The complete workflow from API specification to client integration
+
+This approach saves time and reduces errors while ensuring consistent and reliable API interactions across your projects.

@@ -1,0 +1,211 @@
+# Custom Middleware in ASP.NET Core Tutorial
+
+## Introduction
+
+While .NET provides excellent built-in middleware, creating custom middleware is often necessary when building unique software solutions. This tutorial demonstrates how to implement custom middleware in ASP.NET Core using a simple CRUD API example.
+
+## Understanding Middleware Pipeline
+
+Middleware in ASP.NET Core works as a pipeline where each component can:
+- Execute code before passing the request to the next component
+- Execute code after the next component returns
+
+The middleware pipeline processes requests in order and responses in reverse order. Each middleware can choose to:
+- Pass the request to the next middleware by calling `next.Invoke()`
+- Terminate the pipeline by not calling `next.Invoke()` (becoming terminal middleware)
+
+## Basic Middleware Structure
+
+Here's the fundamental structure of custom middleware:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    // Code executed before next middleware
+    
+    await next.Invoke(); // Pass to next middleware
+    
+    // Code executed after next middleware returns
+});
+```
+
+### Parameters Explained
+- **context**: Contains information about the HTTP request and response
+- **next**: A delegate representing the next middleware in the pipeline
+
+## Example 1: Simple Logging Middleware
+
+This middleware logs the request path and response status code:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    // Log request path before processing
+    Console.WriteLine($"Request Path: {context.Request.Path}");
+    
+    await next.Invoke();
+    
+    // Log response status after processing
+    Console.WriteLine($"Response Status: {context.Response.StatusCode}");
+});
+```
+
+## Example 2: Request Duration Middleware
+
+This middleware measures how long each request takes to process:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    var startTime = DateTime.UtcNow;
+    
+    await next.Invoke();
+    
+    var duration = DateTime.UtcNow - startTime;
+    Console.WriteLine($"Request duration: {duration}");
+});
+```
+
+## Example 3: Conditional API Key Authentication Middleware
+
+This more complex example implements API key authentication for non-GET requests:
+
+```csharp
+app.UseWhen(context => context.Request.Method != "GET", appBuilder =>
+{
+    appBuilder.Use(async (context, next) =>
+    {
+        // Extract API key from headers
+        var extractedPassword = context.Request.Headers["XAPIKey"].FirstOrDefault();
+        
+        // Validate API key (Note: In production, use environment variables)
+        if (extractedPassword == "thisIsABadPassword")
+        {
+            await next.Invoke(); // Valid key, continue pipeline
+        }
+        else
+        {
+            // Invalid key, return 401 Unauthorized
+            context.Response.StatusCode = 401;
+            await context.Response.WriteAsync("Invalid API key");
+        }
+    });
+});
+```
+
+## Testing the API Key Middleware
+
+### GET Request (No authentication required)
+```http
+GET http://localhost:5228/blogs
+```
+
+### POST Request without API Key (Returns 401)
+```http
+POST http://localhost:5228/blogs
+Content-Type: application/json
+
+{
+    "title": "My Title",
+    "body": "My Body"
+}
+```
+
+### POST Request with Valid API Key (Success)
+```http
+POST http://localhost:5228/blogs
+Content-Type: application/json
+XAPIKey: thisIsABadPassword
+
+{
+    "title": "My Title",
+    "body": "My Body"
+}
+```
+
+## Complete Example Setup
+
+Here's how to configure all three middleware components in your `Program.cs`:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// 1. Request duration middleware (should be first to measure total time)
+app.Use(async (context, next) =>
+{
+    var startTime = DateTime.UtcNow;
+    await next.Invoke();
+    var duration = DateTime.UtcNow - startTime;
+    Console.WriteLine($"Duration: {duration} for {context.Request.Path}");
+});
+
+// 2. Request/Response logging middleware
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Request: {context.Request.Path}");
+    await next.Invoke();
+    Console.WriteLine($"Response: {context.Response.StatusCode}");
+});
+
+// 3. Conditional API key authentication
+app.UseWhen(context => context.Request.Method != "GET", appBuilder =>
+{
+    appBuilder.Use(async (context, next) =>
+    {
+        var apiKey = context.Request.Headers["XAPIKey"].FirstOrDefault();
+        
+        if (apiKey == "thisIsABadPassword")
+        {
+            await next.Invoke();
+        }
+        else
+        {
+            context.Response.StatusCode = 401;
+            await context.Response.WriteAsync("Invalid API key");
+        }
+    });
+});
+
+// Your API endpoints would be configured here
+// app.MapGet("/blogs", () => { ... });
+// app.MapPost("/blogs", () => { ... });
+
+app.Run();
+```
+
+## Key Concepts
+
+### Middleware Order Matters
+The order in which you register middleware is crucial:
+- **Request flow**: First registered → Last registered → Route handler
+- **Response flow**: Route handler → Last registered → First registered
+
+### UseWhen vs Use
+- **`app.Use()`**: Runs for every request
+- **`app.UseWhen()`**: Runs conditionally based on a predicate function
+
+### Security Best Practices
+- Never hardcode passwords or API keys in your source code
+- Use environment variables or secure configuration providers
+- Implement proper authentication and authorization mechanisms
+
+## Practical Applications
+
+This middleware pattern is useful for:
+- **Logging and monitoring**: Track request/response data and performance
+- **Authentication**: Validate API keys, tokens, or other credentials  
+- **Rate limiting**: Control request frequency from clients
+- **Request/response modification**: Transform data as it flows through the pipeline
+- **Error handling**: Catch and handle exceptions globally
+
+## Next Steps
+
+To deepen your understanding:
+1. Experiment with different middleware orders
+2. Add additional conditional logic
+3. Implement proper environment variable configuration
+4. Create reusable middleware classes instead of inline functions
+5. Explore built-in ASP.NET Core middleware for comparison
+
+Remember to always test your middleware thoroughly and consider the security implications of any authentication mechanisms you implement.

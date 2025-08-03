@@ -120,7 +120,7 @@ app.MapGet("/search", (string? q, int page = 1) =>
 
 ### Usage Examples
 ```http
-GET /search?q=.net&page=2
+GET /search?q=dotnet&page=2
 # Returns: "Searching for: .net on page 2"
 
 GET /search?q=aspnet

@@ -1,0 +1,295 @@
+# Serialization Security Lab - .NET Console Application
+
+## Overview
+This lab demonstrates how to protect serialization operations using the .NET framework. We'll build a console application that implements various security measures to protect user data during serialization and deserialization.
+
+## Step 1: Project Setup
+
+### 1.1 Create New Project
+Create a new .NET console application called "SerializationSecurityApp".
+
+### 1.2 Basic Template Setup
+Set up a basic template that we can modify to practice security skills.
+
+### 1.3 Create User Class
+Modify your `Program.cs` file by creating a User class with basic properties:
+
+```csharp
+public class Program
+{
+    public class User
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+    
+    static void Main(string[] args)
+    {
+        // Main method implementation will be added in later steps
+    }
+}
+```
+
+**Note:** This object includes a password property, which we'll need to protect to keep it safe.
+
+## Step 2: Basic Serialization Operations
+
+### 2.1 Create Serialize Method
+Add a method to serialize user data to JSON:
+
+```csharp
+static string SerializeUserData(User user)
+{
+    return JsonSerializer.Serialize(user);
+}
+```
+
+This method takes a User object (C# object) and serializes it to a JSON string.
+
+### 2.2 Update Main Method
+Modify the main method to test the serialization:
+
+```csharp
+static void Main(string[] args)
+{
+    var user = new User
+    {
+        Name = "Alice",
+        Email = "alice@example.com",
+        Password = "mySecretPassword123"
+    };
+    
+    string serializedData = SerializeUserData(user);
+    Console.WriteLine(serializedData);
+}
+```
+
+**Security Issue:** When this user object is serialized to JSON, the password appears in plain text. If transported over the internet, this data would be exposed to anyone who reads the JSON file.
+
+## Step 3: Add Data Validation
+
+### 3.1 Improve Serialize Method with Validation
+Add validation to prevent serialization of invalid data:
+
+```csharp
+static string SerializeUserData(User user)
+{
+    // Validate user data before serialization
+    if (string.IsNullOrWhiteSpace(user.Name) || 
+        string.IsNullOrWhiteSpace(user.Email) || 
+        string.IsNullOrWhiteSpace(user.Password))
+    {
+        Console.WriteLine("Invalid user data - serialization blocked");
+        return string.Empty;
+    }
+    
+    return JsonSerializer.Serialize(user);
+}
+```
+
+This validation checks that each property has valid data and doesn't contain only whitespace. If validation fails, it could indicate a security issue or data corruption.
+
+## Step 4: Secure Deserialization
+
+### 4.1 Create Deserialize Method with Trust Validation
+Add a method to safely deserialize data:
+
+```csharp
+static User DeserializeUserData(string jsonData, bool isTrustedSource)
+{
+    // Block deserialization if source is not trusted
+    if (!isTrustedSource)
+    {
+        Console.WriteLine("Untrusted source - deserialization blocked");
+        return null;
+    }
+    
+    return JsonSerializer.Deserialize<User>(jsonData);
+}
+```
+
+This method includes a trust check to prevent deserialization of data from untrusted sources, which is a common security vulnerability.
+
+## Step 5: Add Encryption
+
+### 5.1 Add Required Using Statement
+Add the cryptography library reference:
+
+```csharp
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+```
+
+### 5.2 Add Encryption Method to User Class
+Add an encryption method inside the User class:
+
+```csharp
+public class User
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    
+    public void EncryptPassword()
+    {
+        if (!string.IsNullOrEmpty(Password))
+        {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(Password);
+            Password = Convert.ToBase64String(passwordBytes);
+        }
+    }
+}
+```
+
+This method converts the password to a Base64 encoded string, making it unreadable if intercepted. You can call it using `user.EncryptPassword()` after creating a user object.
+
+## Step 6: Data Integrity Checks
+
+### 6.1 Add Hash Generation Method
+Add a method to generate a hash for data integrity verification:
+
+```csharp
+public class User
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    
+    public void EncryptPassword()
+    {
+        if (!string.IsNullOrEmpty(Password))
+        {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(Password);
+            Password = Convert.ToBase64String(passwordBytes);
+        }
+    }
+    
+    public string GenerateHash()
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            string userData = $"{Name}{Email}{Password}";
+            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(userData));
+            return Convert.ToBase64String(hashBytes);
+        }
+    }
+}
+```
+
+This method creates a SHA-256 hash of the user data. The hash can be used to verify that data hasn't been modified during transit by comparing hashes on both sides of the communication.
+
+## Step 7: Complete Implementation
+
+### 7.1 Final Program Structure
+Here's the complete implementation with all security measures:
+
+```csharp
+using System;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+
+public class Program
+{
+    public class User
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        
+        public void EncryptPassword()
+        {
+            if (!string.IsNullOrEmpty(Password))
+            {
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(Password);
+                Password = Convert.ToBase64String(passwordBytes);
+            }
+        }
+        
+        public string GenerateHash()
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                string userData = $"{Name}{Email}{Password}";
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(userData));
+                return Convert.ToBase64String(hashBytes);
+            }
+        }
+    }
+    
+    static string SerializeUserData(User user)
+    {
+        // Validate user data before serialization
+        if (string.IsNullOrWhiteSpace(user.Name) || 
+            string.IsNullOrWhiteSpace(user.Email) || 
+            string.IsNullOrWhiteSpace(user.Password))
+        {
+            Console.WriteLine("Invalid user data - serialization blocked");
+            return string.Empty;
+        }
+        
+        return JsonSerializer.Serialize(user);
+    }
+    
+    static User DeserializeUserData(string jsonData, bool isTrustedSource)
+    {
+        // Block deserialization if source is not trusted
+        if (!isTrustedSource)
+        {
+            Console.WriteLine("Untrusted source - deserialization blocked");
+            return null;
+        }
+        
+        return JsonSerializer.Deserialize<User>(jsonData);
+    }
+    
+    static void Main(string[] args)
+    {
+        var user = new User
+        {
+            Name = "Alice",
+            Email = "alice@example.com",
+            Password = "mySecretPassword123"
+        };
+        
+        // Generate hash before encryption for integrity check
+        string originalHash = user.GenerateHash();
+        Console.WriteLine($"Original hash: {originalHash}");
+        
+        // Encrypt password for security
+        user.EncryptPassword();
+        
+        // Serialize the user data
+        string serializedData = SerializeUserData(user);
+        Console.WriteLine($"Serialized data: {serializedData}");
+        
+        // Deserialize (assuming trusted source)
+        User deserializedUser = DeserializeUserData(serializedData, true);
+        
+        if (deserializedUser != null)
+        {
+            Console.WriteLine($"Deserialized user: {deserializedUser.Name}");
+        }
+    }
+}
+```
+
+## Security Benefits Implemented
+
+By implementing these security measures, we've achieved:
+
+1. **Data Validation**: Prevents serialization of invalid or potentially malicious data
+2. **Password Encryption**: Protects sensitive password data during transit
+3. **Trusted Source Validation**: Prevents deserialization from untrusted sources
+4. **Data Integrity Checks**: Allows verification that data hasn't been tampered with
+
+## Next Steps
+
+In a real-world application, you could expand on these features by:
+- Implementing stronger encryption algorithms
+- Adding digital signatures for authentication
+- Using secure transport protocols (HTTPS/TLS)
+- Implementing proper key management
+- Adding logging and monitoring for security events

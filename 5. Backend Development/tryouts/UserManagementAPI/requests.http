@@ -1,0 +1,42 @@
+GET http://localhost:5009
+
+###
+GET http://localhost:5009/users
+
+###
+GET http://localhost:5009/users/666
+
+###
+POST http://localhost:5009/users
+Content-Type: application/json
+
+{
+    "Id": "666",
+    "FirstName": "FirstName",
+    "LastName": "LastName",
+    "Email": "Email@Email.com",
+    "Department" : "Department",
+    "Position": "Position1",
+    "DateOfHire": "2023-11-19T23:17:05.7542464+02:00",
+    "IsActive": true
+}
+
+###
+PUT http://localhost:5009/users
+Content-Type: application/json
+
+{
+  "id": 666,
+  "firstName": "NewName",
+  "lastName": "NewLastName",
+  "email": "NewEmail@Email.com",
+  "department": "New Department",
+  "position": "New Position",
+  "dateOfHire": "2022-10-22T23:17:05.7542464+02:00",
+  "dateOfTermination": null,
+  "reasonOfTermination": null,
+  "isActive": true
+}
+
+###
+DELETE  http://localhost:5009/users/666

@@ -1,0 +1,358 @@
+# Implementing Dependency Injection in ASP.NET Core
+
+## Introduction
+
+Imagine you're building an app that needs to perform tasks like logging information, accessing a database, or handling user input. In a large application, these tasks are often handled by something called **services**. 
+
+We'll explore how to create services in ASP.NET Core, how to use and control their behavior, and how to use a powerful feature called Dependency Injection to make your app more organized and scalable.
+
+## Understanding Built-in Services
+
+ASP.NET Core comes with many built-in services that you can register:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Examples of built-in services
+builder.Services.AddAntiforgery();
+builder.Services.AddCertificateForwarding();
+builder.Services.AddControllers();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication();
+```
+
+All of these are examples of services. We could add any one of these, and often we will need to for authorization or authentication, but let's create a custom service to understand how dependency injection works.
+
+## Creating a Custom Service
+
+### Step 1: Define an Interface
+
+First, we need to define an interface that our service will implement:
+
+```csharp
+public interface IMyService
+{
+    void LogCreation(string message);
+}
+```
+
+### Step 2: Create the Service Class
+
+Next, we create a class that implements this interface:
+
+```csharp
+public class MyService : IMyService
+{
+    private readonly int _serviceId;
+    
+    public MyService()
+    {
+        // Generate a pseudo-unique 6-digit ID when the service is created
+        _serviceId = new Random().Next(100000, 999999);
+    }
+    
+    public void LogCreation(string message)
+    {
+        Console.WriteLine($"{message} - Service ID: {_serviceId}");
+    }
+}
+```
+
+**Key Points:**
+- The `_serviceId` is assigned when the constructor runs (when the service is created)
+- This helps us track when and how often service instances are created
+- Services are just objects that do something useful for your app
+
+## Registering Services with Different Lifetimes
+
+### Singleton Lifetime
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Register as Singleton - only one instance for the entire application
+builder.Services.AddSingleton<IMyService, MyService>();
+
+var app = builder.Build();
+```
+
+**Important:** Service registration must happen **before** calling `builder.Build()`. Once you call `Build()`, the service collection becomes read-only.
+
+### Using the Service in Endpoints
+
+```csharp
+app.MapGet("/", (IMyService myService) =>
+{
+    myService.LogCreation("Root");
+    return Results.Ok("Check the console for service creation log");
+});
+
+app.Run();
+```
+
+### Testing Singleton Behavior
+
+When you make multiple requests to the endpoint, you'll see the same Service ID every time:
+
+```
+Root - Service ID: 208310
+Root - Service ID: 208310
+Root - Service ID: 208310
+```
+
+## Using Services in Middleware
+
+You can also access services within middleware:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IMyService, MyService>();
+
+var app = builder.Build();
+
+// First middleware
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMyService>();
+    myService.LogCreation("First middleware");
+    await next.Invoke();
+});
+
+// Second middleware
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMyService>();
+    myService.LogCreation("Second middleware");
+    await next.Invoke();
+});
+
+app.MapGet("/", (IMyService myService) =>
+{
+    myService.LogCreation("Root");
+    return Results.Ok("Check the console for service creation log");
+});
+
+app.Run();
+```
+
+**Note:** In middleware, you access services using `context.RequestServices.GetRequiredService<T>()`, while in endpoints, services can be injected directly as parameters.
+
+### Singleton Output Example
+
+With singleton registration, all middleware and endpoints share the same instance:
+
+```
+First middleware - Service ID: 573320
+Second middleware - Service ID: 573320
+Root - Service ID: 573320
+```
+
+## Service Lifetimes Explained
+
+### 1. Singleton (`AddSingleton`)
+
+```csharp
+builder.Services.AddSingleton<IMyService, MyService>();
+```
+
+- **One instance** for the entire application lifetime
+- Same instance shared across all requests
+- Use when you need shared state or expensive-to-create objects
+
+**Example Output:**
+```
+Request 1: Service ID: 123456
+Request 2: Service ID: 123456
+Request 3: Service ID: 123456
+```
+
+### 2. Scoped (`AddScoped`)
+
+```csharp
+builder.Services.AddScoped<IMyService, MyService>();
+```
+
+- **One instance per HTTP request**
+- All middleware and endpoints within a single request share the same instance
+- New instance created for each new request
+
+**Example Output:**
+```
+Request 1: 
+  First middleware - Service ID: 123456
+  Second middleware - Service ID: 123456
+  Root - Service ID: 123456
+
+Request 2:
+  First middleware - Service ID: 789012
+  Second middleware - Service ID: 789012
+  Root - Service ID: 789012
+```
+
+### 3. Transient (`AddTransient`)
+
+```csharp
+builder.Services.AddTransient<IMyService, MyService>();
+```
+
+- **New instance every time** the service is requested
+- Each middleware and endpoint gets a fresh instance
+- Most resource-intensive but provides complete isolation
+
+**Example Output:**
+```
+Request 1:
+  First middleware - Service ID: 123456
+  Second middleware - Service ID: 789012
+  Root - Service ID: 345678
+
+Request 2:
+  First middleware - Service ID: 901234
+  Second middleware - Service ID: 567890
+  Root - Service ID: 234567
+```
+
+## Complete Working Example
+
+Here's a complete example that demonstrates all three lifetimes:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// You can switch between these to see different behaviors:
+builder.Services.AddSingleton<IMyService, MyService>();
+// builder.Services.AddScoped<IMyService, MyService>();
+// builder.Services.AddTransient<IMyService, MyService>();
+
+var app = builder.Build();
+
+// Middleware that uses the service
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMyService>();
+    myService.LogCreation("First middleware");
+    await next.Invoke();
+});
+
+app.Use(async (context, next) =>
+{
+    var myService = context.RequestServices.GetRequiredService<IMyService>();
+    myService.LogCreation("Second middleware");
+    await next.Invoke();
+});
+
+// Endpoint that uses the service
+app.MapGet("/", (IMyService myService) =>
+{
+    myService.LogCreation("Root endpoint");
+    return Results.Ok("Check the console for service creation log");
+});
+
+// Additional endpoint to test multiple calls
+app.MapGet("/test", (IMyService myService) =>
+{
+    myService.LogCreation("Test endpoint");
+    return Results.Ok("Test completed");
+});
+
+app.Run();
+
+// Interface definition
+public interface IMyService
+{
+    void LogCreation(string message);
+}
+
+// Service implementation
+public class MyService : IMyService
+{
+    private readonly int _serviceId;
+    
+    public MyService()
+    {
+        _serviceId = new Random().Next(100000, 999999);
+        Console.WriteLine($"*** NEW SERVICE INSTANCE CREATED: {_serviceId} ***");
+    }
+    
+    public void LogCreation(string message)
+    {
+        Console.WriteLine($"{message} - Service ID: {_serviceId}");
+    }
+}
+```
+
+## Testing Your Service
+
+Create a simple HTTP file to test your endpoints:
+
+```http
+### Test root endpoint
+GET http://localhost:5124
+
+### Test another endpoint
+GET http://localhost:5124/test
+
+### Make multiple requests to see behavior
+GET http://localhost:5124
+GET http://localhost:5124
+GET http://localhost:5124
+```
+
+## Real-World Service Example
+
+Here's a more practical example of a service you might use in a real application:
+
+```csharp
+public interface IUserService
+{
+    Task<User> GetUserAsync(int id);
+    Task<bool> CreateUserAsync(User user);
+}
+
+public class UserService : IUserService
+{
+    private readonly ILogger<UserService> _logger;
+    private readonly string _connectionString;
+    
+    public UserService(ILogger<UserService> logger, IConfiguration configuration)
+    {
+        _logger = logger;
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
+    }
+    
+    public async Task<User> GetUserAsync(int id)
+    {
+        _logger.LogInformation($"Getting user with ID: {id}");
+        // Database access logic here
+        return new User { Id = id, Name = "John Doe" };
+    }
+    
+    public async Task<bool> CreateUserAsync(User user)
+    {
+        _logger.LogInformation($"Creating user: {user.Name}");
+        // Database creation logic here
+        return true;
+    }
+}
+
+// Register the service
+builder.Services.AddScoped<IUserService, UserService>();
+```
+
+## Key Takeaways
+
+1. **Services are just objects** - Don't be intimidated by the terminology
+2. **Interfaces enable flexibility** - You can swap implementations without changing your code
+3. **Lifetime matters** - Choose the appropriate lifetime based on your needs:
+   - **Singleton**: Shared state, expensive to create
+   - **Scoped**: Per-request isolation, most common choice
+   - **Transient**: Complete isolation, highest resource usage
+4. **Registration order matters** - Register services before calling `builder.Build()`
+5. **Two ways to access services**:
+   - Direct injection in endpoints/controllers
+   - `context.RequestServices.GetRequiredService<T>()` in middleware
+
+Services and dependency injection make your applications more organized, testable, and scalable by promoting loose coupling and enabling easy replacement of implementations.

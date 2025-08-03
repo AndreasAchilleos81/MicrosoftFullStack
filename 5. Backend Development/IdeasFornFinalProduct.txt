@@ -1,0 +1,78 @@
+Centralize Error Handling: Set up one error-handling middleware to manage exceptions, reduce repetitive code, and speed up request handling
+More security ideas found in this document 26. Securing MW.txt
+
+1) Serialization adn deserialization safety abnd security
+	use global dersiarilazion options
+	
+		Step 2: Validate Incoming Data in Controllers
+	[ApiController]
+	[Route("api/[controller]")]
+	public class UsersController : ControllerBase
+	{
+		[HttpPost]
+		public IActionResult CreateUser([FromBody] User model)
+		{
+		// Attributs from system.component model
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			// Proceed with safe logic
+			return Ok("User created securely.");
+		}
+	}
+
+		Step 3: Use Data Protection for Sensitive Payloads
+		
+		public class SecurePayloadService
+		{
+			private readonly IDataProtector _protector;
+
+			public SecurePayloadService(IDataProtectionProvider provider)
+			{
+				_protector = provider.CreateProtector("SecurePayload");
+			}
+
+			public string Protect(string data) => _protector.Protect(data);
+			public string Unprotect(string protectedData) => _protector.Unprotect(protectedData);
+		}
+		services.AddDataProtection();
+		services.AddScoped<SecurePayloadService>();
+
+		
+		Step 4: Add Unit Tests for Deserialization Safety
+		[Fact]
+		public void Should_Throw_On_UnauthorizedType()
+		{
+			var json = "{\"$type\":\"System.IO.FileInfo, mscorlib\",\"Name\":\"test.txt\"}";
+			var settings = new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto,
+				SerializationBinder = new SafeBinder()
+			};
+
+			Assert.Throws<JsonSerializationException>(() =>
+				JsonConvert.DeserializeObject<object>(json, settings));
+		}
+
+
+	
+	use hashes, 
+	CHECK IF OBJECTS ARE VALID WHITH OBJECT ATTRIBUTES
+	catch extra json fields
+	only enable specific objects to be deserialized
+	sanitize by checking payload sizes 
+	check if values are present
+	check if json is of right structurd json.Parse
+	use NJsonSchema to force json schema
+	unit tests for services and Middleware
+	use serilog and Middleware like UseSerilogRequestLogging() condenses HTTP logs into a single structured event.
+	use a docker db 
+	Generate teh client code for your service using 
+		dotnet add package Swashbuckle.AspNetCore
+		dotnet add package NSwag.Core
+		dotnet add package NSwag.CodeGeneration.CSharp
+		dotnet add package NSwag.ApiDescription.Client
+
+
+
+	
