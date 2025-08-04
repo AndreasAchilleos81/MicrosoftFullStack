@@ -2,12 +2,15 @@ GET http://localhost:5009
 
 ###
 GET http://localhost:5009/users
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCIsImtpZCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCJ9
 
 ###
 GET http://localhost:5009/users/666
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCIsImtpZCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCJ9
 
 ###
 POST http://localhost:5009/users
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCIsImtpZCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCJ9
 Content-Type: application/json
 
 {
@@ -23,6 +26,7 @@ Content-Type: application/json
 
 ###
 PUT http://localhost:5009/users
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCIsImtpZCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCJ9
 Content-Type: application/json
 
 {
@@ -40,3 +44,4 @@ Content-Type: application/json
 
 ###
 DELETE  http://localhost:5009/users/666
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCIsImtpZCI6ImhYZWVFLUpLN2kxT2pLTm03emN4ZlRFdDV6OCJ9

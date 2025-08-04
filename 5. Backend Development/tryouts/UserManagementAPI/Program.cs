@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementAPI.Models;
 using Microsoft.AspNetCore.HttpLogging;
+using System.Text.Json;
 
 internal class Program
 {
@@ -21,6 +22,7 @@ internal class Program
         builder.Services.AddHttpLogging(options =>
         {
             options.LoggingFields = HttpLoggingFields.RequestPath |
+                                    HttpLoggingFields.ResponseStatusCode|
                                     HttpLoggingFields.RequestBody |
                                     HttpLoggingFields.Duration |
                                     HttpLoggingFields.ResponseBody |
@@ -29,10 +31,9 @@ internal class Program
             options.ResponseHeaders.Add("RS-logged");
 
         });
-        // Add services to the container.
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
 
+        builder.Services.AddOpenApi();
+        builder.Services.AddSingleton<Configuration>();
         var app = builder.Build();
         app.UseHttpLogging();
 
@@ -44,6 +45,7 @@ internal class Program
 
         app.UseHttpsRedirection(); // TODO: setup https
 
+        // Exception handling MW
         app.Use(async  (context, next) =>
         {
             try
@@ -52,10 +54,62 @@ internal class Program
             }
             catch (Exception ex)
             {
-                Console.WriteLine(context.Request.Path);
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.ContentType = "application/json";
+                var errorResponse = new
+                {
+                    error = "internal server error",
+                    path = context.Request.Path,
+                    details = ex.Message
+                };
+                var json = JsonSerializer.Serialize(errorResponse);
+                await context.Response.WriteAsync(json);
+
+                Console.WriteLine($"Exception was caught at {context.Request.Path}");
                 Console.WriteLine(ex.ToString());
             }
         });
+
+        // Authorization MW
+        app.Use(async (context, next) =>
+        {
+            var token = context.Request.Headers["Authorization"].FirstOrDefault();
+            if (string.IsNullOrEmpty(token) ||
+                isValidToken(token))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                var unAuth = new
+                { 
+                    error = "User is unauthorized",
+                    path = context.Request.Path,
+                    details = "Provide authorized token for access"
+                };
+
+                await context.Response.WriteAsJsonAsync(unAuth);
+                return;
+            }
+
+            await next.Invoke();
+        });
+
+        // Logging MW
+        app.Use(async (context, next) =>
+        {
+            var method = context.Request.Method;
+            var path = context.Request.Path;
+
+            await next.Invoke();
+
+            var statusCode = context.Response.StatusCode;
+
+            Console.WriteLine($"Method: {method}, Path: {path}, Status Code: {statusCode}");
+        });
+
+
+        bool isValidToken(string token)
+        {
+            return app.Configuration["token"] != token; 
+        }
 
         app.MapGet("/", () => "I AM GET-ROOT");
 
@@ -97,14 +151,12 @@ internal class Program
             }
         });
 
-
         app.MapPut("/users", ([FromBody] User user) =>
         {
             var newId = user.Id;
             var result = users.AddOrUpdate(newId, newId => user, (newId, existingUser) => user);
             return Results.Ok($"User with Id:{result.Id} was updated");
         });
-
 
         app.MapDelete("/users/{id:int}", (int id) =>
         {
@@ -119,6 +171,9 @@ internal class Program
             }
         });
 
+
+
         app.Run();
     }
+
 }
