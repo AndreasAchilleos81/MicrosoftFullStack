@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementAPI.Models;
-
+using Microsoft.AspNetCore.HttpLogging;
 
 internal class Program
 {
     static ConcurrentDictionary<int, User> users = new ConcurrentDictionary<int, User>();
-    private static void Main(string[] args)
+    private static void Main(string[] args) 
     {
         for (int i = 0; i < 10; i++)
         {
@@ -18,11 +18,23 @@ internal class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddHttpLogging(options =>
+        {
+            options.LoggingFields = HttpLoggingFields.RequestPath |
+                                    HttpLoggingFields.RequestBody |
+                                    HttpLoggingFields.Duration |
+                                    HttpLoggingFields.ResponseBody |
+                                    HttpLoggingFields.ResponseStatusCode;
+            options.RequestHeaders.Add("RQ-logged");
+            options.ResponseHeaders.Add("RS-logged");
+
+        });
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
+        app.UseHttpLogging();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -65,7 +77,7 @@ internal class Program
         app.MapPost("/users", ([FromBody] User user) =>
         {
             var validationResults = new List<ValidationResult>();
-            if (Validator.TryValidateObject(user, new ValidationContext(user), validationResults, true))
+            if (!Validator.TryValidateObject(user, new ValidationContext(user), validationResults, true))
             {
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (var issue in validationResults)
