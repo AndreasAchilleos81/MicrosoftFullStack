@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:oraclelinux9
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Password1
+      MYSQL_DATABASE: technocorp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: Password1
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # networks:
+    #   - backend
+
+volumes:
+  mysql_data:
+    driver: local
+
+# networks:
+#   backend:
+#     driver: bridge

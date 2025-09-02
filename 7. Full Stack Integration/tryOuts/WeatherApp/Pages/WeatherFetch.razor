@@ -1,0 +1,83 @@
+@page "/weatherFetch";
+@inject HttpClient Http;
+
+<div class="flex-container leftAlign">
+    <div> 
+        <h1>WeatherFetch</h1>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="@FetchWeather">Fetch Weather</button>
+    </div>
+</div>
+
+@if (IsLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (weatherData != null)
+{
+    <div>
+        <h3>Weather in @weatherData.location.name, @weatherData.location.country</h3>
+        <p>Temperature: @weatherData.current.Temp_C °C</p>
+        <p>Condition: @weatherData.current.Condition.text</p>
+        <img src="https:@weatherData.current.Condition.icon" alt="Weather Icon" />
+    </div>
+}
+else if (!string.IsNullOrEmpty(ErrorMeessage))
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Error:</strong> @ErrorMeessage
+    </div>
+}
+
+
+@code{
+
+    private WeatherData? weatherData;
+    private bool IsLoading = false;
+    private string ErrorMeessage = string.Empty;    
+
+    async Task FetchWeather()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            weatherData = await Http.GetFromJsonAsync<WeatherData>("https://api.weatherapi.com/v1/current.json?key=c6c4ddafa7b449a7aba81757250209&q=Phoenix");
+        }
+        catch(Exception ex)
+        {
+            ErrorMeessage = ex.Message;
+            Console.WriteLine(ex.Message);
+        }
+         IsLoading = false;
+        StateHasChanged();
+    }
+
+
+    internal class WeatherData
+    {
+        public Location location { get; set; }
+        public Current current { get; set; }
+    }
+
+    internal class Location
+    {
+        public required string name { get; set; }
+        public required string country { get; set; }
+    }
+
+    internal class Current
+    {
+        public required double Temp_C { get; set; }
+        public required Condition Condition { get; set; }
+    }
+
+    internal class Condition
+    {
+        public required string text { get; set; }
+        public required string icon { get; set; }
+    }
+
+}
+

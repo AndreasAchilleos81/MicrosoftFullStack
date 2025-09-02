@@ -1,0 +1,43 @@
+﻿@page "/"
+@inject HttpClient client;
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<h4>Weather forecast:</h4>
+<ul>
+    @foreach(var forecast in forecasts)
+       {
+           <li>@forecast</li>
+       }
+    }
+</ul>
+
+
+@code{
+
+    private WeatherForecast[]? forecasts;
+    private string rootMessage = string.Empty;  
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        forecasts = await client.GetFromJsonAsync<WeatherForecast[]>("/weatherforecast");
+
+        rootMessage = await client.GetStringAsync("/");
+    }
+
+    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+{
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+
+}
+
+
+
+
+
