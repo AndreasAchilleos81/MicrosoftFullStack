@@ -1,0 +1,59 @@
+@page "/fetchdata";
+@rendermode InteractiveServer
+@using BlazorServerApp.Services;
+@using BlazorServerApp.Models;
+@inject HttpClient Http;
+@inject IConfiguration Configuration;
+@inject CacheService CacheService;
+
+<h1>Fetch weeather data with Caching</h1>
+<button class="btn btn-primary" @onclick="@GetWeather">Get Weather</button>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (weatherData != null)
+{
+    <p>Data loaded. Check console for details.</p>
+    <div>
+        <h3>Weather in @weatherData.location.name, @weatherData.location.country</h3>
+        <p>Temperature: @weatherData.current.Temp_C °C</p>
+        <p>Condition: @weatherData.current.Condition.text</p>
+        <img src="https:@weatherData.current.Condition.icon" alt="Weather Icon" />
+    </div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger">Error: @errorMessage</p>
+}
+else
+{
+    <p>Fetch data by presssing button</p>
+}
+
+
+@code {
+    private string url = $"https://api.weatherapi.com/v1/current.json?key={{0}}&q=Phoenix";
+    private string city = "London";
+    private WeatherData weatherData = null;
+    private bool isLoading = false;
+    private string errorMessage = string.Empty;
+
+    private async Task GetWeather()
+    {
+        var apiKey = Configuration["token"];
+        var request = string.Format(url, apiKey);
+        try
+        {
+            weatherData = await CacheService.GetOrCreateAsync<WeatherData>(request, async () =>
+            {
+                return await Http.GetFromJsonAsync<WeatherData>(request);
+            }, TimeSpan.FromMinutes(1));
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

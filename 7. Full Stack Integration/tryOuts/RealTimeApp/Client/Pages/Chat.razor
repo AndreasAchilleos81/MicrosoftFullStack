@@ -1,0 +1,41 @@
+@page "/chat"
+@using Services;
+@using Shared.Models
+@inject ChatService ChatService;
+
+<h3>Chat</h3>
+<input @bind="user" placeholder="Enter user id" />
+<input @bind="message" placeholder="Enter message" />
+<button @onclick="@Send">Send Message</button>
+<ul>
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+@code {
+    private List<ChatMessage> messages = new();
+    private string user = string.Empty;
+    private string message = string.Empty;
+    private ChatMessage newMessage = new ChatMessage();
+    protected override async Task OnInitializedAsync()
+    {
+        ChatService.OnMessageReceived += (message) =>
+        {
+            messages.Add(message);
+            newMessage = new ChatMessage();
+            InvokeAsync(StateHasChanged);
+        };
+
+        await ChatService.StartAsync();
+    }
+
+    private async Task Send()
+    {
+        newMessage.Timestamp = DateTime.Now;
+        newMessage.User = user;
+        newMessage.Message = message;
+        await ChatService.SendMessageAsync(newMessage);
+    }
+}

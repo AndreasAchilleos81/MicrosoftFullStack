@@ -1,0 +1,52 @@
+@page "/cart"
+@using Blazored.LocalStorage
+@using Blazored.SessionStorage
+@inject ISessionStorageService sessionStorage;
+@inject IJSRuntime jsRuntime;
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<button class="btn btn-primary" @onclick="@AddCartItem">Add Cart Item</button>
+<input @ref="myInput" placeholder="Type something..." />
+<button class="btn btn-primary" @onclick="@ShowCartValues">Show Cart Values</button>
+
+<ul>
+    @foreach (var entry in cartItems)
+    {
+        <li>@entry</li>
+    }
+</ul>
+
+
+@code {
+    private int count = 0;
+    private string theme = string.Empty;
+    private ElementReference myInput;
+    private List<string> cartItems = new List<string>();
+
+    private async Task AddCartItem()
+    {
+        var itemName = $"CartItem{count}";
+        count++;
+
+        var input = await jsRuntime.InvokeAsync<string>("getInputValue", myInput);
+        await sessionStorage.SetItemAsStringAsync(itemName, input); // the input part can be a list apparently try it
+        await jsRuntime.InvokeVoidAsync("clearInputValue", myInput);
+        StateHasChanged();
+    }
+
+    private async Task ShowCartValues()
+    {
+        for (int i = 0; i < count; i++)
+        {
+            var itemName = $"CartItem{i}";
+            var itemValue = await sessionStorage.GetItemAsStringAsync(itemName);
+            cartItems.Add(itemValue);
+        }
+        StateHasChanged();
+    }
+}

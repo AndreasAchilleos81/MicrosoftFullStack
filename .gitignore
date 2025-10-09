@@ -51,3 +51,6 @@ secrets.json
 *Logs*
 **/Logs/log*.txt
 /4. blazor-for-front-end-development/tryOuts/EventEaseAppPart1/BlazorApp1/BlazorApp1/Hubs/DataHub.cs
+**/mssql_data/**
+**/log/**
+**/client_secret_*

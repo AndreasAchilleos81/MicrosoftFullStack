@@ -1,0 +1,78 @@
+@page "/fetchproducts" // Defines the route for this page.
+@inject HttpClient Http // Injects an HttpClient instance for making HTTP requests.
+@using Shared.Models // Imports the namespace containing the Product model.
+
+<h3>Product List</h3>
+
+<button @onclick="LoadProductsAsync">Refresh</button> <!-- Refresh button triggers data reload -->
+
+<ul>
+    @* Display loading message if products are not yet loaded and no error has occurred *@
+    @if (products == null && string.IsNullOrEmpty(errorMessage))
+    {
+        <li><em>Loading...</em></li>
+    }
+    @* Display error message if an error occurred during data fetching *@
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <li><em>Error: @errorMessage</em></li>
+    }
+    @* Display message if no products are found *@
+    else if (products?.Length == 0)
+    {
+        <li><em>No products found.</em></li>
+    }
+    @* Display the list of products *@
+    else
+    {
+        foreach (var product in products!)
+        {
+            <li>@product</li>
+            // Renders each product in the list.
+        }
+    }
+</ul>
+
+@code {
+    private const string apiUrl = "api/productlist"; // API endpoint for fetching products.
+    private string? errorMessage; // Stores any error messages encountered during fetch.
+    private Product[]? products; // Stores the fetched products.
+    private bool isLoading = false; // Flag to prevent redundant API calls.
+
+    // Called when the component is initialized.
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProductsAsync(); // Loads products once when the component initializes.
+    }
+
+    // Loads products from the API, prevents redundant calls if already loading.
+    private async Task LoadProductsAsync()
+    {
+        if (isLoading) return; // If already loading, do not make another API call.
+        isLoading = true;
+        errorMessage = null;
+        try
+        {
+            products = await Http.GetFromJsonAsync<Product[]>(apiUrl);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load products: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // Why LoadProductsAsync and the refresh button work in tandem:
+    // The refresh button allows users to manually reload the product list.
+    // The isLoading flag inside LoadProductsAsync ensures that only one API call is made at a time,
+    // even if the refresh button is clicked multiple times quickly or if the component is initializing.
+    // This prevents redundant API calls and unnecessary network traffic, improving performance and reliability.
+}
+
+@* // Copilot Contribution:
+// GitHub Copilot suggested the use of a loading flag to prevent redundant API calls and provided the async data
+fetching logic.
+// Copilot also helped with the conditional rendering, refresh button implementation, and *@

@@ -1,0 +1,74 @@
+@page "/weatherapi";
+
+@using OpenWeatherAPI.Models;
+@using OpenWeatherAPI.Services
+@inject HttpClient Http;
+@inject IConfiguration Configuration;
+@inject WeatherApiService WeatherApiService;
+
+
+<h1>Weather Data - rate limitting - caching</h1>
+<button class="btn btn-primary" onclick="@GetWeatherData">Get Weather Data</button>
+
+@if (isLoading)
+{
+	<p>Loading...</p>
+}
+else if (weatherData != null)
+{
+	<p>Data loaded. Check console for details.</p>
+	<div>
+		<h3>Weather in @weatherData.location.name, @weatherData.location.country</h3>
+		<p>Temperature: @weatherData.current.Temp_C °C</p>
+		<p>Condition: @weatherData.current.Condition.text</p>
+		<img src="https:@weatherData.current.Condition.icon" alt="Weather Icon" />
+	</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+	<p class="text-danger">Error: @errorMessage</p>
+}
+else
+{
+	<p>Fetch data by presssing button</p>
+}
+
+
+@code {
+
+	private bool isLoading = false;
+	private WeatherData weatherData = null;
+	private string url = $"https://api.weatherapi.com/v1/current.json?key={{0}}&q=Phoenix";
+	private string city = "London";
+	private string errorMessage = null;
+
+	protected async Task GetWeatherData()
+	{
+		var apiKey = Configuration["token"];
+		errorMessage = null;
+
+		try
+		{
+			isLoading = true;
+			StateHasChanged();
+			var url12313 = string.Format(url, apiKey);
+			weatherData =  await WeatherApiService.MakeRequest<WeatherData>(string.Format(url, apiKey));
+
+			// Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+			// weatherData = await Http.GetFromJsonAsync<WeatherData>(string.Format(url, apiKey));
+			weatherData = weatherData ?? new WeatherData();
+			StateHasChanged();
+			Console.WriteLine(weatherData.ToString());
+		}
+		catch (Exception ex)
+		{
+			errorMessage = ex.Message;
+			Console.WriteLine($"Error fetching weather data: {ex.Message}");
+		}
+		finally
+		{
+			isLoading = false;
+			StateHasChanged();
+		}
+	}
+}

@@ -1,0 +1,12 @@
+.flex-container {
+     display: grid;
+     grid-auto-flow: column;
+     column-gap: 50px;
+     justify-content: last baseline;
+}
+.leftAlign {
+    display: flex;
+    align-self:normal ;
+}
+
+

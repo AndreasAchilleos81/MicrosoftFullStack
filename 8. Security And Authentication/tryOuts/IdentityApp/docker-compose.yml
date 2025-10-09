@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: IdentityAppDB
+    ports:
+      - "1430:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password1!"
+    volumes:
+      - C:/Users/a.achilleos/code/Databases/IdentityApp:/var/opt/mssql/data
+    restart: unless-stopped

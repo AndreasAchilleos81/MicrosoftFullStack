@@ -1,0 +1,12 @@
+
+POST http://localhost:5244/User/login
+Content-Type: application/json
+
+{
+  "Email": "testuser",
+  "Password": "password123"
+}
+
+###
+GET http://localhost:5244/User/secure-data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOTNlOTZkNy05NDkyLTRlYjEtYmVmMi0wZjdkNDFhYzExMzUiLCJlbWFpbCI6InRlc3R1c2VyIiwianRpIjoiYWZmYzJjMmUtNTg4Ni00ZDY0LWFkNmItZDY0YzExYmNiMGRjIiwiZXhwIjoxNzU5ODcxMjI0LCJpc3MiOiJKd3RBdXRoRGVtbyIsImF1ZCI6Ikp3dEF1dGhEZW1vVXNlcnMifQ.vF_ROwORidNz4_7XQVN2xvAcorL9VvcGAJnAWRxoqRQ

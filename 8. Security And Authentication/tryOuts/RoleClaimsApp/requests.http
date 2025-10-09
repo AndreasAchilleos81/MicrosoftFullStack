@@ -1,0 +1,9 @@
+GET http://localhost:5215/weatherforecast
+
+
+###
+http://localhost:5215/role-based
+
+
+###
+http://localhost:5215/claim-based

@@ -1,0 +1,38 @@
+@page "/dynamicweather"
+@using WeatherApp.Models;
+@using WeatherApp.Services;
+@inject WeatherStateService WeatherStateService;
+@inject HttpClient Http;
+@implements IDisposable;
+
+<h3>Dynamic Weather</h3>
+<button class="btn btn-primary" @onclick="@FetchUsers">Fetch Users</button>
+@if (WeatherStateService.Users != null)
+{
+    <ul>
+        @foreach (var user in WeatherStateService.Users)
+        {
+            <li>@user</li>
+        }
+    </ul>
+}
+
+@code{
+private List<User> users;
+private CancellationTokenSource cts = new CancellationTokenSource();
+    async Task FetchUsers()
+    {
+        WeatherStateService.OnChange += StateHasChanged;
+        cts.Cancel();
+        cts = new CancellationTokenSource();
+        var result = await Http.GetFromJsonAsync<List<User>>($"https://jsonplaceholder.typicode.com/users?_limit={new Random().Next(5, 10)}", cts.Token);
+        WeatherStateService.SetUsers(result ?? new List<User>());
+    }
+
+    public void Dispose()
+    {
+        WeatherStateService.OnChange -= StateHasChanged;
+        cts.Cancel();
+        cts.Dispose();
+    }   
+}

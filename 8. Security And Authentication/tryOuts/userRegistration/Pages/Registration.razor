@@ -1,0 +1,45 @@
+@page "/registration"
+<form id="registrationForm">
+    <label for="name">Name:</label>
+
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required pattern="[a-zA-Z0-9]{4,12}"
+        title="Username must be 4 to 12 Alpha and or numeric characters"><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required minlength="6"><br><br>
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required pattern=".{6,}"
+        title="Must match the password"><br><br>
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required pattern="\d{10}" title="Must be 10 digits"><br><br>
+
+    <button type="submit" id=”btnSubmit”>Register</button>
+    <script>
+        const registrationForm = document.getElementById("registrationForm");
+        registrationForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirmPassword");
+            if (confirmPassword !== password) {
+                confirmPassword.setCustomValidity("Passwords do not match");
+                return false;
+            }
+            else {
+                confirmPassword.setCustomValidity("");
+                return true;
+            }
+        });
+    </script>
+</form>
+
+@code {
+
+}

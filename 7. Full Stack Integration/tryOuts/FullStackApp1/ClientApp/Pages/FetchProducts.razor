@@ -1,0 +1,45 @@
+@page "/fetchproducts"
+@inject HttpClient Http
+@using ClientApp.Models
+
+<h3>Product List</h3>
+
+<ul>
+    @if (products == null && string.IsNullOrEmpty(errorMessage))
+    {
+        <li><em>Loading...</em></li>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <li><em>Error: @errorMessage</em></li>
+    }
+    else if (products?.Length == 0)
+    {
+        <li><em>No products found.</em></li>
+    }
+    else
+    {
+        foreach (var product in products!)
+        {
+            <li>@product.Name - @product.Price.ToString("C")</li>
+        }
+    }
+</ul>
+
+@code {
+    private const string apiUrl = "api/products";
+    private string? errorMessage;
+    private Product[]? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            products = await Http.GetFromJsonAsync<Product[]>(apiUrl);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load products: {ex.Message}";
+        }
+    }
+}

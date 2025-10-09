@@ -1,0 +1,60 @@
+@page "/fetchUsers"
+@using AsyncApi.Models;
+@inject HttpClient Http;
+
+<h3>Fetch Users</h3>
+<button class="btn btn-primary" @onclick="@Fetch">Fetch Users</button>
+<br/>
+<br/>
+<br/>
+@if(IsLoading){
+<div class="spinner-border text-primary" role="status" id="spinner">
+</div>
+
+}
+else if (!string.IsNullOrEmpty(ErrorMessage)){
+    <p class="text-danger">Error: @ErrorMessage</p>
+}
+else{
+    foreach (var user in users ?? Array.Empty<User>())
+    {
+        <p>@user</p>
+    }
+}
+
+
+@code{
+    private User[]? users;
+    private bool IsLoading = false;
+    bool thereIsError = false;
+    private string ErrorMessage = null;
+
+    async Task Fetch()
+    {
+        string url = string.Empty;
+        thereIsError = false;
+        ErrorMessage = null;
+
+        if (Random.Shared.Next() % 2 == 0)
+        {
+            url = "https://jsonplaceholder.typicode.com/users";
+        }
+        else{
+            url = "https://jsonplaceholder.typicode.co";
+        }
+
+        IsLoading = true;
+        StateHasChanged();
+        await Task.Delay(2000); // Simulate a delay for demonstration purposes
+        try{
+            users = await Http.GetFromJsonAsync<User[]>(url);
+        }
+        catch(Exception ex){
+            Console.WriteLine(ex.Message);
+            ErrorMessage = ex.Message;
+            thereIsError = true;
+        }
+        IsLoading = false;
+        StateHasChanged();
+    }
+}
