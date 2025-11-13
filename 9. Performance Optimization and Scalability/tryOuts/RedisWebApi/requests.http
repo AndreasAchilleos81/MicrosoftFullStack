@@ -1,0 +1,17 @@
+POST https://localhost:7160/PostData
+Content-Type: application/json
+
+{
+  "Id": 1,
+  "Name": "ID ONE EVENT DATA",
+  "Date": "2024-06-10T12:00:00Z",
+   "Location": "Athens"
+}
+
+###
+GET https://localhost:7160/GetData/1
+Accept: application/json
+
+###
+DELETE https://localhost:7160/DeleteData/1
+Accept: application/json

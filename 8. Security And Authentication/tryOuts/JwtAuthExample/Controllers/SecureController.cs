@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ public class SecureController : ControllerBase
     }
 
     [HttpGet("protected")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin, User")]
     public IActionResult ProtectedEndpoint()
     {
         var userName = User.Identity?.Name ?? "Unknown";
@@ -49,5 +50,14 @@ public class SecureController : ControllerBase
     public IActionResult WhoAmI()
     {
         return Ok(User.Identity?.Name ?? "No identity");
+    }
+
+    [HttpGet("validate")]
+    public IActionResult ValidateToken([FromHeader(Name = "Authorization")] string authHeader)
+    {
+        var token = authHeader?.Replace("Bearer ", "").Trim();
+        var handler = new JwtSecurityTokenHandler();
+        var jwt = handler.ReadJwtToken(token);
+        return Ok(jwt);
     }
 }

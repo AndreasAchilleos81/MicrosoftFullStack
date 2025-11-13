@@ -14,24 +14,55 @@ builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.UseSecurityTokenValidators = true;
         options.IncludeErrorDetails = true;
-
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
-                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                var authHeader = context.Request.Headers["Authorization"].ToString();
+                Console.WriteLine($"Authorization Header: {authHeader}");
                 if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
                 {
-                    context.Token = authHeader.Substring("Bearer ".Length).Trim();
+                    var token = authHeader.Substring("Bearer ".Length).Trim();
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwt = handler.ReadJwtToken(token);
+                    Console.WriteLine(jwt.Header.Alg); // Should print "HS256"
+
+                    if (!string.IsNullOrWhiteSpace(token) && token.Count(c => c == '.') == 2)
+                    {
+                        context.Token = token;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Malformed token detected.");
+                    }
                 }
                 else
                 {
                     // Fallback to cookie
-                    var token = context.Request.Cookies["accessToken"];
-                    if (!string.IsNullOrEmpty(token))
+                    if (context.Request.Cookies.Count() != 0)
                     {
-                        context.Token = token;
+                        var token = context.Request.Cookies["accessToken"];
+                        var handler = new JwtSecurityTokenHandler();
+                        var jwt = handler.ReadJwtToken(token);
+                        Console.WriteLine(jwt.Header.Alg); // Should print "HS256"
+                        Console.WriteLine($"Cookie Token: {token}");
+
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            if (
+                                !string.IsNullOrWhiteSpace(token)
+                                && token.Count(c => c == '.') == 2
+                            )
+                            {
+                                context.Token = token;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Malformed token detected.");
+                            }
+                        }
                     }
                 }
                 return Task.CompletedTask;
@@ -39,6 +70,7 @@ builder
             OnAuthenticationFailed = context =>
             {
                 Console.WriteLine($"JWT Error: {context.Exception.Message}");
+                Console.WriteLine(context.Exception.StackTrace);
                 return Task.CompletedTask;
             },
         };
@@ -55,6 +87,8 @@ builder
             RoleClaimType = "role",
         };
     });
+
+Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
 var app = builder.Build();
 app.MapControllers();
