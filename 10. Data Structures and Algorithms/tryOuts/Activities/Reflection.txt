@@ -1,0 +1,59 @@
+Activity 1 Binary tree to AVL tree:
+How did the LLM assist in refining the code?
+    The LLM provided suggestions with clear explanations as to why
+Were any LLM-generated suggestions inaccurate or unnecessary?
+    For Activity 1 nothing inaccruate or unecessary
+What were the most impactful improvements you implemented?
+    ✔ RECURSIVE OPTIMIZATION: Only recurse into the necessary subtree (left or right).
+    ✔ MEMORY & PERFORMANCE: Height is updated in O(1) using cached child heights.
+    ✔ TREE BALANCING: Compute balance factor to detect imbalance.
+    ✔ TREE BALANCING: Four AVL rotation cases to maintain O(log n) height.
+    ✔ SEARCH FUNCTIONALITY: Iterative search avoids recursion overhead and stack usage. Runs in O(log n) due to AVL balancing.
+-------------------------------------------------------------------------------------------------------------------------------
+Activity 2 Task Scheduling Algorithm:
+
+How did the LLM assist in refining the algorithm?
+  The LLM identified inefficiencies in the original design—specifically the repeated List.Sort() calls—and proposed replacing the 
+  entire structure with a binary min‑heap. It also introduced thread‑safety, batch processing, and optimized O(log n) operations.
+
+Were any LLM-generated suggestions inaccurate or unnecessary?
+  No. All suggestions aligned with standard data‑structure optimization principles. The heap implementation, thread‑safety, 
+  and batch‑enqueue logic were appropriate and beneficial.
+
+What were the most impactful improvements you implemented?
+  Replacing List.Sort() with a binary min‑heap
+  Reducing insertion and removal to O(log n)
+  Adding thread‑safe locking
+  Adding batch enqueue with O(n) heap construction
+  These changes transformed the queue from a slow, repeatedly sorted list into a high‑performance, scalable priority queue.
+-------------------------------------------------------------------------------------------------------------------------------
+Activity 3 Sorting:
+How did the LLM assist in refining the algorithm?
+ The LLM identified Bubble Sort as the primary performance bottleneck and recommended replacing it with an in‑place QuickSort implementation. 
+ It also introduced parallel sorting and improved space efficiency by avoiding extra arrays.
+ It also recommened pivot logic multiple times that was plainly said wrong 
+
+Were any LLM-generated suggestions inaccurate or unnecessary?
+ The quick sort that was first recommended was much slower than bubble sort due to picking a bad pivot and because it would run parallel thread with no limit
+ over how many thread to be spawned causing massive overhead
+
+What were the most impactful improvements you implemented?
+ Replacing Bubble Sort with QuickSort (O(n log n))
+ Adding parallel sorting for multi-core performance
+ Using in‑place partitioning to keep memory usage minimal
+ These changes transformed the algorithm from a slow quadratic sorter into a highly efficient, scalable solution.
+ -------------------------------------------------------------------------------------------------------------------------------
+Activity 4 Debugged Executed Code:
+How did the LLM assist in debugging and optimizing the code?
+  The LLM identified crash‑prone areas such as unhandled exceptions, missing null checks, and lack of logging. It proposed structured error handling, retry logic, and centralized logging, transforming the code into a more resilient and maintainable system.
+
+Were any LLM-generated suggestions inaccurate or unnecessary?
+ No. All suggestions aligned with standard defensive programming practices and directly improved reliability, readability, and runtime stability.
+
+What were the most impactful improvements you implemented?
+ Adding null checks to prevent invalid input from crashing the program
+
+Replacing exception‑driven crashes with structured logging
+ Introducing retry logic to handle transient failures gracefully
+ Wrapping execution in safe error‑handling blocks
+
