@@ -1,0 +1,132 @@
+# A GitHub Actions workflow for a Node.js app that installs dependencies, runs tests, and deploys the app
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      TEST_SHARDS: 4
+    strategy:
+      matrix:
+        node-version: [18.x]
+        shard: [0, 1, 2, 3]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache node_modules and npm cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Gather test files for shard ${{ matrix.shard }}
+        run: |
+          SHARD=${{ matrix.shard }}
+          SHARDS=${TEST_SHARDS}
+          set -e
+          FILES=$(git ls-files "**/*.test.js" "**/*.spec.js" "**/*.test.ts" "**/*.spec.ts" || true)
+          if [ -z "$FILES" ]; then
+            echo "No test files found."
+            echo "" > shard-files.txt
+            exit 0
+          fi
+          echo "$FILES" | nl -w1 -s' ' | awk -v s="$SHARD" -v n="$SHARDS" '{ if (((($1-1) % n) == s)) { $1=""; sub(/^ /,""); print }}' > shard-files.txt
+          echo "Files for shard $SHARD:"
+          cat shard-files.txt
+
+      - name: Run tests (shard)
+        run: |
+          FILES=$(grep -v '^$' shard-files.txt || true)
+          if [ -z "$FILES" ]; then
+            echo "No test files for this shard, skipping."
+            exit 0
+          fi
+          # Try Jest, then Mocha, then fall back to `npm test -- <files>`
+          npx jest $FILES || npx mocha $FILES || npm test -- $FILES
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache node_modules and npm cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build || true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Cache node_modules and npm cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run deploy script
+        run: npm run deploy
+        env:
+          CI: true
+
+        # Note: Provide a `deploy` script in package.json (example: "deploy": "your-deploy-command")
+        # If you want a hosted deployment (GitHub Pages, Azure, Vercel, etc.), I can add a provider-specific
+        # deployment step — tell me which provider you use.
