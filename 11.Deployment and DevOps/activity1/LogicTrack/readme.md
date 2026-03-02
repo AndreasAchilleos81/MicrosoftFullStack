@@ -1,4 +1,5 @@
-- Two working classes: InventoryItem and Order 
+## Activity 1:
+ - Two working classes: InventoryItem and Order 
 	- Created three classes
 		- OrderItem
 		- OrderSummaryDto for performance as there is not tracking from EF
