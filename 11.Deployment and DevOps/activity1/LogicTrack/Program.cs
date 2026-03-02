@@ -60,8 +60,3 @@ app.MapGet("/ordersummaries",
 .WithName("GetOrderSummaries");
 
 app.Run();
-
-// Chage Price to be decimla
-// Change Date in orders table to be DateTime
-// Seed the Database
-
