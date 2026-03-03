@@ -20,4 +20,12 @@
 
 ## Activity 2:
 
-- Swagger Link: 
+- Two API controllers: Inventory and Order - Done
+
+- Working GET, POST, DELETE routes for both controllers - Done
+
+- Routes tested in Swagger or Postman - Done
+
+- Microsoft Copilot suggestions applied - Done
+
+- Code saved for use in Part 3 - Done

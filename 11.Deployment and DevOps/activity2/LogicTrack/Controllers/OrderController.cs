@@ -23,19 +23,6 @@ namespace LogicTrack.Controllers
 
 			var sum = await _db.GetOrderSummaries();
 			return Ok(await sum.ToListAsync());
-			//var summaries = await _db.Orders
-			//	.AsNoTracking()
-			//	.OrderByDescending(o => o.DatePlaced)
-			//	.Select(o => new OrderSummaryDto
-			//	{
-			//		OrderId = o.OrderId,
-			//		CustomerName = o.CustomerName,
-			//		ItemCount = o.Items.Count(),
-			//		DatePlaced = o.DatePlaced
-			//	})
-			//	.ToListAsync();
-
-			//return Ok(summaries);
 		}
 
 		// GET /api/orders/{id}
@@ -81,7 +68,8 @@ namespace LogicTrack.Controllers
 			_db.Orders.Add(order);
 			await _db.SaveChangesAsync();
 
-			return CreatedAtRoute("GetOrderById", new { id = order.OrderId }, order);
+			return CreatedAtAction(nameof(GetById), new { id = order.OrderId }, order);
+
 		}
 
 		// DELETE /api/orders/{id}

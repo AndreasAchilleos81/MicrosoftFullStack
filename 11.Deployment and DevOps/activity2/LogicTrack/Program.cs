@@ -11,12 +11,19 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();	
+builder.Services
+	.AddControllers()
+	.AddJsonOptions(options => 
+	{ options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; options.JsonSerializerOptions.WriteIndented = true; });
+
 builder.Services.AddDbContext<LogicTrackContext>(options =>
 	options.UseSqlite(builder.Configuration.GetConnectionString("DbPath")));
 
 builder.Services.AddMemoryCache();
 var app = builder.Build();
+
+app.UseRouting();
+app.MapControllers();
 
 app.UseSwagger(); 
 app.UseSwaggerUI();
@@ -38,7 +45,7 @@ app.UseHttpsRedirection();
 
 // Efficient, paged, filtered and cached order summaries endpoint
 app.MapGet("/ordersummaries", 
-	async (int page, int pageSize, string? customer, DateTime? from, DateTime? to, LogicTrackContext db, IMemoryCache cache) 
+	async (int page, int pageSize, string? customer, DateTime from, DateTime to, LogicTrackContext db, IMemoryCache cache) 
 	=>
 {
 	// normalize paging
@@ -46,7 +53,7 @@ app.MapGet("/ordersummaries",
 	pageSize = Math.Clamp(pageSize == 0 ? 20 : pageSize, 1, 200);
 
 	// build cache key from parameters
-	string cacheKey = $"orders:page={page}:size={pageSize}:customer={customer ?? "null"}:from={(from?.ToString("O") ?? "null")}:to={(to?.ToString("O") ?? "null")}";
+	string cacheKey = $"orders:page={page}:size={pageSize}:customer={customer ?? "null"}:from={(from.ToString("O") ?? "null")}:to={(to.ToString("O") ?? "null")}";
 
 	if (cache.TryGetValue(cacheKey, out List<OrderSummaryDto>? cached))
 	{

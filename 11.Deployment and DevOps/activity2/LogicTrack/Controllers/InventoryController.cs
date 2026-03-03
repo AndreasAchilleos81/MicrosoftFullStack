@@ -31,7 +31,7 @@ namespace LogicTrack.Controllers
 		public async Task<ActionResult<InventoryItem>> GetById(int id)
 		{
 			var item = await _db.InventoryItems.FindAsync(id);
-			if (item is null) return NotFound();
+			if (item is null) return NotFound($"Inventory Item with Id {id} was not found");
 			return Ok(item);
 		}
 
@@ -51,7 +51,7 @@ namespace LogicTrack.Controllers
 		public async Task<IActionResult> Delete(int id)
 		{
 			var item = await _db.InventoryItems.FindAsync(id);
-			if (item is null) return NotFound();
+			if (item is null) return NotFound($"Inventory Item with Id {id} was not found");
 
 			_db.InventoryItems.Remove(item);
 			await _db.SaveChangesAsync();

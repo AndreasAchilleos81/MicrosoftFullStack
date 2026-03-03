@@ -42,7 +42,7 @@ namespace LogicTrack
 		public DbSet<OrderItem> OrderItems { get; set; }
 
 		// retrieve order summaries removing tracking this way we can retrieve order summaries without loading the entire order and its items into memory, improving performance when we only need summary information
-		public async Task<IQueryable<OrderSummaryDto>> GetOrderSummaries(int page, int pageSize, string? customer, DateTime? from, DateTime? to)
+		public async Task<IQueryable<OrderSummaryDto>> GetOrderSummaries(int page, int pageSize, string? customer, DateTime from, DateTime to)
 		{
 			// Base query (AsNoTracking for faster read-only queries)
 			var query = Orders.AsNoTracking();
@@ -51,11 +51,7 @@ namespace LogicTrack
 			if (!string.IsNullOrWhiteSpace(customer))
 				query = query.Where(o => o.CustomerName.Contains(customer));
 
-			if (from.HasValue)
-				query = query.Where(o => o.DatePlaced >= from.Value);
-
-			if (to.HasValue)
-				query = query.Where(o => o.DatePlaced <= to.Value);
+			query = query.Where(o => o.DatePlaced >= from && o.DatePlaced <= to);
 
 			// Projection to DTO -- EF will translate Items.Count() to SQL subquery
 			var projected = (await GetOrderSummaries())
