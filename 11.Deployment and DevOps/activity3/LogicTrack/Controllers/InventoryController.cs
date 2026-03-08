@@ -1,0 +1,66 @@
+﻿using LogicTrack.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace LogicTrack.Controllers
+{
+	[ApiController]
+	[Route("api/[controller]")]
+	public class InventoryController : ControllerBase
+	{
+		private readonly LogicTrackContext _db;
+
+		public InventoryController(LogicTrackContext db)
+		{
+			_db = db;
+		}
+
+		// GET /api/inventory
+		[Authorize(Roles = "Manager")]
+		[HttpGet]
+		public async Task<ActionResult<List<InventoryItem>>> GetAll()
+		{
+			var items = await _db.InventoryItems
+				.AsNoTracking()
+				.ToListAsync();
+
+			return Ok(items);
+		}
+
+		// GET /api/inventory/{id} (used by POST CreatedAtAction)
+		[HttpGet("{id}", Name = "GetInventoryById")]
+		public async Task<ActionResult<InventoryItem>> GetById(int id)
+		{
+			var item = await _db.InventoryItems.FindAsync(id);
+			if (item is null) return NotFound($"Inventory Item with Id {id} was not found");
+			return Ok(item);
+		}
+
+		// POST /api/inventory
+		[Authorize(Roles = "Manager")]
+		[HttpPost]
+		public async Task<ActionResult<InventoryItem>> Create([FromBody] InventoryItem item)
+		{
+			_db.InventoryItems.Add(item);
+			await _db.SaveChangesAsync();
+
+			// Returns 201 with Location header pointing to GET /api/inventory/{id}
+			return CreatedAtRoute("GetInventoryById", new { id = item.ItemId }, item);
+		}
+
+		// DELETE /api/inventory/{id}
+		[Authorize(Roles = "Manager")]
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			var item = await _db.InventoryItems.FindAsync(id);
+			if (item is null) return NotFound($"Inventory Item with Id {id} was not found");
+
+			_db.InventoryItems.Remove(item);
+			await _db.SaveChangesAsync();
+
+			return NoContent();
+		}
+	}
+}
