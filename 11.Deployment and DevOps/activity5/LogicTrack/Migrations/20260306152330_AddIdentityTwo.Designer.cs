@@ -3,6 +3,7 @@ using System;
 using LogicTrack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicTrack.Migrations
 {
     [DbContext(typeof(LogicTrackContext))]
-    partial class LogicTrackContextModelSnapshot : ModelSnapshot
+    [Migration("20260306152330_AddIdentityTwo")]
+    partial class AddIdentityTwo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
@@ -44,6 +47,10 @@ namespace LogicTrack.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
@@ -88,9 +95,6 @@ namespace LogicTrack.Migrations
 
                     b.HasKey("ItemId");
 
-                    b.HasIndex("Name")
-                        .HasDatabaseName("IX_InventoryItem_Name");
-
                     b.ToTable("InventoryItems");
                 });
 
@@ -108,12 +112,6 @@ namespace LogicTrack.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("CustomerName")
-                        .HasDatabaseName("IX_Order_CustomerName");
-
-                    b.HasIndex("DatePlaced")
-                        .HasDatabaseName("IX_Order_DatePlaced");
 
                     b.ToTable("Orders");
                 });
@@ -143,58 +141,6 @@ namespace LogicTrack.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityUserClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.ToTable("IdentityUserRoles");
                 });
 
             modelBuilder.Entity("LogicTrack.Models.OrderItem", b =>

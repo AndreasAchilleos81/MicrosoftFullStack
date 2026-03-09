@@ -1,26 +1,32 @@
 using LogicTrack;
 using LogicTrack.Identity;
-using LogicTrack.Models;
+using LogicTrack.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
-	
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICacheService, MemoryCacheService>();
 
 builder.Services
-	.AddControllers()
-	.AddJsonOptions(options => 
-	{ options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; options.JsonSerializerOptions.WriteIndented = true; });
+    .AddControllers(options => options.Filters.Add<LogicTrack.Filters.ApiResponseFilter>())
+    .AddJsonOptions(options => 
+    { options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; options.JsonSerializerOptions.WriteIndented = true; });
 
-builder.Services.AddDbContext<LogicTrackContext>(options =>
-	options.UseSqlite(builder.Configuration.GetConnectionString("DbPath")));
+// Build full SQLite file path from configuration (key "DbPath" expected to be the relative filename)
+var dbRelativePath = builder.Configuration["DbPath"] ?? "logictrack.db";
+var dbFile = Path.Combine(AppContext.BaseDirectory, dbRelativePath);
+var sqliteConnectionString = $"Data Source={dbFile}";
+
+builder.Services.AddDbContextPool<LogicTrackContext>(options =>
+    options.UseSqlite(sqliteConnectionString));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<LogicTrackContext>().AddDefaultTokenProviders();
 
@@ -37,7 +43,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 	options.Password.RequireLowercase = false;
 });
 
-builder.Services.AddMemoryCache();
 // Configure JWT authentication
 var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key");
 var jwtIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer");
@@ -87,39 +92,5 @@ if (app.Environment.IsDevelopment())
 	app.MapOpenApi();
 }
 
-
 app.UseHttpsRedirection();
-
-
-// Efficient, paged, filtered and cached order summaries endpoint
-app.MapGet("/ordersummaries", 
-	async (int page, int pageSize, string? customer, DateTime from, DateTime to, LogicTrackContext db, IMemoryCache cache) 
-	=>
-{
-	// normalize paging
-	page = Math.Max(1, page == 0 ? 1 : page);
-	pageSize = Math.Clamp(pageSize == 0 ? 20 : pageSize, 1, 200);
-
-	// build cache key from parameters
-	string cacheKey = $"orders:page={page}:size={pageSize}:customer={customer ?? "null"}:from={(from.ToString("O") ?? "null")}:to={(to.ToString("O") ?? "null")}";
-
-	if (cache.TryGetValue(cacheKey, out List<OrderSummaryDto>? cached))
-	{
-		return Results.Ok(cached);
-	}
-
-    var projected = db.GetOrderSummaries(page, pageSize, customer, from, to);
-    var list = await projected.ToListAsync();
-
-	// Cache the page for a short duration (tune as needed)
-	var cacheEntryOptions = new MemoryCacheEntryOptions
-		().SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
-
-	cache.Set(cacheKey, list, cacheEntryOptions);
-
-	return Results.Ok(list);
-})
-.WithName("GetOrderSummaries")
-.RequireAuthorization("Manager");
-
 app.Run();

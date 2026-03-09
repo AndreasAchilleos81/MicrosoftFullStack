@@ -3,6 +3,7 @@ using System;
 using LogicTrack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicTrack.Migrations
 {
     [DbContext(typeof(LogicTrackContext))]
-    partial class LogicTrackContextModelSnapshot : ModelSnapshot
+    [Migration("20260306163310_PendingChanges")]
+    partial class PendingChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
@@ -88,9 +91,6 @@ namespace LogicTrack.Migrations
 
                     b.HasKey("ItemId");
 
-                    b.HasIndex("Name")
-                        .HasDatabaseName("IX_InventoryItem_Name");
-
                     b.ToTable("InventoryItems");
                 });
 
@@ -108,12 +108,6 @@ namespace LogicTrack.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("CustomerName")
-                        .HasDatabaseName("IX_Order_CustomerName");
-
-                    b.HasIndex("DatePlaced")
-                        .HasDatabaseName("IX_Order_DatePlaced");
 
                     b.ToTable("Orders");
                 });

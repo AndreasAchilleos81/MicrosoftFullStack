@@ -41,6 +41,23 @@ namespace LogicTrack
 				entity.HasKey(r => new { r.UserId, r.RoleId });
 			});
 
+			// Indexes to improve query performance for commonly filtered/sorted columns
+			// Add migrations after this change: `dotnet ef migrations add AddOrderIndexes` and `dotnet ef database update`
+			modelBuilder.Entity<Order>()
+				.HasIndex(o => o.DatePlaced)
+				.HasDatabaseName("IX_Order_DatePlaced");
+
+			// Consider indexing a normalized customer name column for case-insensitive searches.
+			// For now we index the raw CustomerName; for large datasets add a NormalizedCustomerName column and index that instead.
+			modelBuilder.Entity<Order>()
+				.HasIndex(o => o.CustomerName)
+				.HasDatabaseName("IX_Order_CustomerName");
+
+			// Consider indexing InventoryItem.Name for search performance
+			modelBuilder.Entity<InventoryItem>()
+				.HasIndex(i => i.Name)
+				.HasDatabaseName("IX_InventoryItem_Name");
+
 			base.OnModelCreating(modelBuilder);
 		}
 
@@ -56,39 +73,47 @@ namespace LogicTrack
 		public DbSet<Order> Orders { get; set; }
 		public DbSet<OrderItem> OrderItems { get; set; }
 
-		// retrieve order summaries removing tracking this way we can retrieve order summaries without loading the entire order and its items into memory, improving performance when we only need summary information
-		public async Task<IQueryable<OrderSummaryDto>> GetOrderSummaries(int page, int pageSize, string? customer, DateTime from, DateTime to)
-		{
-			// Base query (AsNoTracking for faster read-only queries)
-			var query = Orders.AsNoTracking();
+        // retrieve order summaries without tracking; return IQueryable so caller can compose with paging asynchronously
+        public IQueryable<OrderSummaryDto> GetOrderSummaries(int page, int pageSize, string? customer, DateTime from, DateTime to)
+        {
+            // Base query (AsNoTracking for faster read-only queries)
+            var query = Orders.AsNoTracking();
 
-			// Apply filters
-			if (!string.IsNullOrWhiteSpace(customer))
-				query = query.Where(o => o.CustomerName.Contains(customer));
+            // Apply filters - use EF.Functions.Like for SQL LIKE translation when a customer filter is provided
+            if (!string.IsNullOrWhiteSpace(customer))
+                query = query.Where(o => EF.Functions.Like(o.CustomerName, $"%{customer}%"));
 
-			query = query.Where(o => o.DatePlaced >= from && o.DatePlaced <= to);
+            query = query.Where(o => o.DatePlaced >= from && o.DatePlaced <= to);
 
-			// Projection to DTO -- EF will translate Items.Count() to SQL subquery
-			var projected = (await GetOrderSummaries())
-				.Skip((page - 1) * pageSize)
-				.Take(pageSize);
+            // Project and apply ordering and paging on the server
+            var projected = query
+                .OrderByDescending(o => o.DatePlaced)
+                .Select(o => new OrderSummaryDto
+                {
+                    OrderId = o.OrderId,
+                    CustomerName = o.CustomerName,
+                    ItemCount = o.Items.Count(),
+                    DatePlaced = o.DatePlaced
+                })
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
 
-			return projected;
-		}
+            return projected;
+        }
 
-		public async Task<IQueryable<OrderSummaryDto>> GetOrderSummaries()
-		{
-			var projected = Orders
-				.AsNoTracking()
-				.OrderByDescending(o => o.DatePlaced)
-				.Select(o => new OrderSummaryDto
-				{
-					OrderId = o.OrderId,
-					CustomerName = o.CustomerName,
-					ItemCount = o.Items.Count(),
-					DatePlaced = o.DatePlaced
-				});
-			return projected;
-		}
+        // Non-paged variant
+        public IQueryable<OrderSummaryDto> GetOrderSummaries()
+        {
+            return Orders
+                .AsNoTracking()
+                .OrderByDescending(o => o.DatePlaced)
+                .Select(o => new OrderSummaryDto
+                {
+                    OrderId = o.OrderId,
+                    CustomerName = o.CustomerName,
+                    ItemCount = o.Items.Count(),
+                    DatePlaced = o.DatePlaced
+                });
+        }
 	}
 }

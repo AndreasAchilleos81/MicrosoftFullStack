@@ -109,3 +109,15 @@ Caching Improvements
 	- GetById = 0.01ms
 
 -------------------------------------------------------
+
+## Activity 5:
+
+Persistent state implementation verified  - Done
+
+Full workflow tested: authentication, caching, API behavior  - Done
+
+Code optimized using Copilot recommendations  - Done 
+
+Redundant or unnecessary logic removed  - Done
+
+Final version ready for peer submission  - Done
