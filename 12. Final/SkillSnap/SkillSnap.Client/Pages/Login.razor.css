@@ -1,0 +1,121 @@
+﻿/* Container and Layout */
+.login-container {
+    max-width: 400px;
+    margin: 4rem auto;
+    padding: 2rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+    .login-header h3 {
+        color: #1b6ec2; /* Blazor Brand Blue */
+        font-weight: 700;
+    }
+
+    .login-header p {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.label-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #495057;
+}
+
+/* Inputs */
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    .form-control:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(27, 110, 194, 0.25);
+    }
+
+/* Checkbox Styling */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-check-input {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+/* Buttons and Links */
+.btn-primary-blazor {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: #1b6ec2;
+    border: 1px solid #1861ac;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+    .btn-primary-blazor:hover {
+        background-color: #135ba1;
+    }
+
+.small-link {
+    font-size: 0.8rem;
+    color: #1b6ec2;
+    text-decoration: none;
+}
+
+.login-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.link-primary {
+    color: #1b6ec2;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+    .link-primary:hover {
+        text-decoration: underline;
+    }

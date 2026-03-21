@@ -1,0 +1,66 @@
+﻿@page "/signIn"
+@using Shared.Models.DTO
+@using SkillSnap.Client.Services
+@inject AuthService AuthService;
+
+
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (successfulLogin)
+{
+    <div>Login Successful!!</div>
+}
+
+@if (failedToLogin)
+{
+    <div>Login Attempt Failed please try again</div>
+}
+@if (failedToLogin == false && successfulLogin == false)
+{
+    <div class="login-container">
+        <div class="login-header">
+            <h3>Login</h3>
+            <p>Please enter your credentials to access your account.</p>
+        </div>
+        <form @onsubmit="() => HandleLogin()" @onsubmit:preventDefault>
+            <div class="form-group">
+                <label for="username">User Name</label>
+                <input type="text" id="username" @bind="login.UserName" class="form-control" placeholder="myAwesomeUserName" />
+            </div>
+
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <label for="password">Password</label>
+                </div>
+                <input type="password" id="password" @bind="login.Password" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn-primary-blazor">Log in</button>
+        </form>
+
+        <div class="login-footer">
+            <span>Don't have an account?</span> <a href="/register" class="link-primary">Register here</a>
+        </div>
+
+    </div>
+}
+
+
+
+@code {
+
+    private Shared.Models.DTO.Login login = new();
+    private string errorMessage = string.Empty;
+    private bool failedToLogin = false;
+    private bool successfulLogin = false;
+    private async Task HandleLogin()
+    {
+        successfulLogin = await AuthService.SignIn(login);
+        failedToLogin = !successfulLogin;
+        StateHasChanged();
+    }
+}
