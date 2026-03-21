@@ -18,10 +18,10 @@ public class ProjectsController : ControllerBase
 
 	[HttpGet]
 	[Route("GetProjects")]
-	public async Task<IActionResult> GetProjects()
+	public async Task<List<Project>> GetProjects()
 	{
 		var projects = await _skillSnapContext.Projects.ToListAsync();
-		return Ok(projects);
+		return projects;
 	}
 
 	[HttpPost]

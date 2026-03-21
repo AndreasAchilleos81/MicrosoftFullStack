@@ -22,7 +22,10 @@ namespace SkillSnap.Client.Services
 				{
 					portfolioUsers = await _httpClient.GetFromJsonAsAsyncEnumerable<PortfolioUser>(getProjectsEndpoint).ToListAsync();
 				}
-				catch { }
+				catch(Exception ex) 
+				{
+					Console.WriteLine(ex.Message);
+				}
 			}
 
 			return portfolioUsers;

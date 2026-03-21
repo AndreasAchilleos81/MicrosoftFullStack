@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shared.Models;
 using SkillSnap.Api.DbContext;
 
 namespace SkillSnap.Api.Controllers
@@ -17,10 +18,10 @@ namespace SkillSnap.Api.Controllers
 
 		[HttpGet]
 		[Route("GetPortfolioUser")]
-		public async Task<IActionResult> GetPortfolioUserAsync()
+		public async Task<List<PortfolioUser>> GetPortfolioUserAsync()
 		{
 			var portfolioUsers = await _skillSnapContext.PortfolioUsers.ToListAsync();
-			return Ok(portfolioUsers);
+			return portfolioUsers;
 		}
 	}
 }

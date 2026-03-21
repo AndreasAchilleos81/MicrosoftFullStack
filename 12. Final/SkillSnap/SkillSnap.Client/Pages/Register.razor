@@ -4,40 +4,53 @@
 @inject AuthService AuthService;
 <h3>Register</h3>
 
-<div class="registration-container">
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger">@errorMessage</div>
-    }
+@if (successfulRegistration == false)
+{
+    <div class="registration-container">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
 
-    <div class="form-group">
-        <label>Email:</label>
-        <input type="email" @bind="registration.Email" class="form-control" />
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" @bind="registration.Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Username:</label>
+            <input type="text" @bind="registration.UserName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" @bind="registration.Password" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Confirm Password:</label>
+            <input type="password" @bind="registration.ConfirmPassword" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary" @onclick="() => HandleSubmit()">Register</button>
     </div>
-
-    <div class="form-group">
-        <label>Username:</label>
-        <input type="text" @bind="registration.UserName" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Password:</label>
-        <input type="password" @bind="registration.Password" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Confirm Password:</label>
-        <input type="password" @bind="registration.ConfirmPassword" class="form-control" />
-    </div>
-
-    <button class="btn btn-primary" @onclick="HandleSubmit">Register</button>
-</div>
+}
+else if (failedToRegister)
+{
+    <div class="alert alert-danger">Failed to register. Please try again.</div>
+}
+else
+{
+    <div>Successfull Registration!!</div>
+}
 
 
 @code {
 
     private Registration registration = new();
     private string errorMessage;
+    private bool successfulRegistration = false;
+    private bool failedToRegister = false;
 
     private async Task HandleSubmit()
     {
@@ -58,8 +71,13 @@
 
         // Logic to call your API or Service
         Console.WriteLine($"Registering: {registration.Email}");
-        
-        // await AuthService.Register(registrationModel);
+        if (await AuthService.Register(registration))
+        {
+            successfulRegistration = true;
+        }
+        else
+        {
+            failedToRegister = true;
+        }
     }
-
 }

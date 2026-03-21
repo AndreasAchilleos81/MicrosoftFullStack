@@ -25,7 +25,10 @@ public class ProjectService
 		{
 			projects =  await _httpClient.GetFromJsonAsAsyncEnumerable<Project>(getProjectsEndpoint).ToListAsync();
 		}
-		catch { }
+		catch(Exception ex) 
+		{
+			Console.WriteLine($"Error fetching projects: {ex.Message}");
+		}
 
 		return projects;
 	}
