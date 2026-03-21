@@ -1,0 +1,82 @@
+﻿@inject ProjectService _projectService;
+@using SkillSnap.Client.Services;
+@using Shared.Models
+@using System
+
+@if (projects == null || projects.Count == 0)
+{
+    <div class="projects-empty" role="status">No projects to show.</div>
+}
+else
+{
+    <section class="projects-grid" aria-label="Projects list">
+        @foreach (var project in projects)
+        {
+            <article class="project-card" role="group" aria-labelledby="@($"project-title-{project.Id}")">
+                <div class="project-media">
+                    <img src="@GetImageUrl(project.ImageUrl, project.Title)"
+                         alt="@(!string.IsNullOrWhiteSpace(project.Title) ? $"{project.Title} image" : "Project image")"
+                         onerror="this.onerror=null;this.src='@GetPlaceholderSvgDataUri(project.Title)';" />
+                </div>
+
+                <div class="project-body">
+                    <h4 id="@($"project-title-{project.Id}")" class="project-title">@project.Title</h4>
+                    @if (!string.IsNullOrWhiteSpace(project.Description))
+                    {
+                        <p class="project-description">@project.Description</p>
+                    }
+                    <div class="project-meta">
+                        <span class="project-id">#@project.Id</span>
+                        <a class="project-action" href="@($"/projects/{project.Id}")" aria-label="View details for @project.Title">Details</a>
+                    </div>
+                </div>
+            </article>
+        }
+    </section>
+}
+
+
+@code {
+    [Parameter]
+    public List<Project> projects { get; set; } = new List<Project>();
+
+    private string GetImageUrl(string? imageUrl, string? title)
+    {
+        return string.IsNullOrWhiteSpace(imageUrl) ? GetPlaceholderSvgDataUri(title) : imageUrl!;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (projects == null || projects.Count == 0)
+        {
+            projects = await _projectService.GetProjectsAsync();
+        }
+    }
+
+
+    private string GetPlaceholderSvgDataUri(string? title)
+    {
+        var initials = GetInitials(title);
+        var bg = "#F3F4F6"; // neutral bg
+        var fg = "#374151"; // text color
+        var svg = $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>
+            <rect width='100%' height='100%' fill='{bg}'/>
+            <text x='50%' y='55%' font-family='Segoe UI, Roboto, Arial' font-size='40' fill='{fg}' dominant-baseline='middle' text-anchor='middle'>{initials}</text>
+        </svg>";
+        return "data:image/svg+xml;utf8," + Uri.EscapeDataString(svg);
+    }
+
+    private static string GetInitials(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+
+        var parts = text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1)
+            return parts[0].Length <= 2 ? parts[0].ToUpperInvariant() : parts[0].Substring(0, 2).ToUpperInvariant();
+
+        var first = parts[0].Substring(0, 1);
+        var last = parts[^1].Substring(0, 1);
+        return (first + last).ToUpperInvariant();
+    }
+}

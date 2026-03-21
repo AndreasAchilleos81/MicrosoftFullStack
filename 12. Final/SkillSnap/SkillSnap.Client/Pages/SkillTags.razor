@@ -1,0 +1,52 @@
+﻿@inject SkillService _skillService;
+@using SkillSnap.Client.Services;
+@using Shared.Models
+@using System
+
+@if (skills == null || skills.Count == 0)
+{
+    <div class="skills-empty" role="status">No skills available.</div>
+}
+else
+{
+    <ul class="skill-tags" role="list" aria-label="Skill tags">
+        @foreach (var skill in skills)
+        {
+            <li class="skill-tag @GetLevelClass(skill.Level)" role="listitem" title="@skill.Level">
+                <span class="skill-name">@skill.Name</span>
+                @if (!string.IsNullOrWhiteSpace(skill.Level))
+                {
+                    <span class="skill-level">@skill.Level</span>
+                }
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public List<Skill> skills { get; set; } = new List<Skill>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (skills == null || skills.Count == 0)
+        {
+            skills = await _skillService.GetSkillsAsync();
+        }
+    }
+
+
+    private static string GetLevelClass(string? level)
+    {
+        if (string.IsNullOrWhiteSpace(level))
+            return "level-unknown";
+
+        return level.Trim().ToLowerInvariant() switch
+        {
+            "beginner" => "level-beginner",
+            "intermediate" => "level-intermediate",
+            "advanced" => "level-advanced",
+            _ => "level-unknown"
+        };
+    }
+}

@@ -1,0 +1,56 @@
+﻿@using System
+
+<div class="profile-card" role="group" aria-label="Profile card for @Name">
+    <img class="profile-avatar"
+         src="@GetImageUrl()"
+         alt="@(!string.IsNullOrWhiteSpace(Name) ? $"{Name} profile picture" : "Profile picture")"
+         onerror="this.onerror=null;this.src='@GetPlaceholderSvgDataUri()'" />
+    <div class="profile-info">
+        <div class="profile-name">@Name</div>
+        @if (!string.IsNullOrWhiteSpace(Bio))
+        {
+            <p class="profile-bio">@Bio</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Bio { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProfilePictureUrl { get; set; } = string.Empty;
+
+    private string GetImageUrl()
+    {
+        return string.IsNullOrWhiteSpace(ProfilePictureUrl) ? GetPlaceholderSvgDataUri() : ProfilePictureUrl;
+    }
+
+    private string GetPlaceholderSvgDataUri()
+    {
+        var initials = GetInitials(Name);
+        // simple neutral background with initials
+        var svg = $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'>
+            <rect width='100%' height='100%' fill='#E6E9EE'/>
+            <text x='50%' y='55%' font-family='Segoe UI, Roboto, Arial' font-size='52' fill='#707A87' dominant-baseline='middle' text-anchor='middle'>{initials}</text>
+        </svg>";
+        return "data:image/svg+xml;utf8," + Uri.EscapeDataString(svg);
+    }
+
+    private static string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return string.Empty;
+
+        var parts = name.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1)
+            return parts[0].Substring(0, Math.Min(2, parts[0].Length)).ToUpperInvariant();
+
+        var first = parts[0].Substring(0, 1);
+        var last = parts[^1].Substring(0, 1);
+        return (first + last).ToUpperInvariant();
+    }
+}

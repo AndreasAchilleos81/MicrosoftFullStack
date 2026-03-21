@@ -1,0 +1,69 @@
+﻿.skill-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 8px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.skill-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 10px;
+	border-radius: 999px;
+	font-size: 0.9rem;
+	color: #0f172a;
+	background: #f1f5f9;
+	border: 1px solid rgba(15,23,42,0.04);
+	box-shadow: 0 1px 1px rgba(16,24,40,0.02);
+	min-height: 32px;
+}
+
+/* Name has slightly stronger weight */
+.skill-name {
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 10rem;
+}
+
+/* Level pill to the right */
+.skill-level {
+	background: rgba(255,255,255,0.6);
+	padding: 2px 6px;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	color: #374151;
+	border: 1px solid rgba(15,23,42,0.04);
+}
+
+/* Level variants */
+.level-beginner {
+	background: linear-gradient(180deg, #fff7ed, #ffedd5); /* warm */
+	color: #92400e;
+}
+
+.level-intermediate {
+	background: linear-gradient(180deg, #eff6ff, #dbeafe); /* cool */
+	color: #1e3a8a;
+}
+
+.level-advanced {
+	background: linear-gradient(180deg, #ecfdf5, #d1fae5); /* green */
+	color: #065f46;
+}
+
+.level-unknown {
+	background: #f8fafc;
+	color: #374151;
+}
+
+.skills-empty {
+	padding: 10px;
+	color: #6b7280;
+	background: #f8fafc;
+	border-radius: 8px;
+}
