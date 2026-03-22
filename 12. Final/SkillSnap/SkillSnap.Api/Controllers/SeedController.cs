@@ -2,6 +2,7 @@
 using SkillSnap.Api.DbContext;
 using Shared.Models;
 using Bogus;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SkillSnap.Api.Controllers;
 
@@ -17,6 +18,7 @@ public class SeedController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize(Roles ="Admin")]
 	public IActionResult Seed()
 	{
 		if (_context.PortfolioUsers.Any())
@@ -46,7 +48,8 @@ public class SeedController : ControllerBase
 
 
 	[HttpPost]
-	[Route("PopulateMore")]
+    [Authorize(Roles = "Admin")]
+    [Route("PopulateMore")]
 	public async Task<IActionResult> PopulateMore()
 	{
 		var portfolioUsersFaker = new Faker<PortfolioUser>()

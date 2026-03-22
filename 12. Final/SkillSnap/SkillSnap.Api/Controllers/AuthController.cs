@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using Shared.Models.DTO;
 using SkillSnap.Api.DbContext;
+using System.Security.Claims;
+using System.Text;
 
 namespace SkillSnap.Api.Controllers
 {
@@ -11,12 +15,14 @@ namespace SkillSnap.Api.Controllers
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly IConfiguration _configuration;
 
-		public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+		public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-		}
+            _configuration = configuration;
+        }
 
 		[HttpPost]
 		[Route("/api/auth/register")]
@@ -36,9 +42,46 @@ namespace SkillSnap.Api.Controllers
 		public async Task<IActionResult> Login([FromBody] Login login)
 		{
 			var loginResult = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false);
-			if (loginResult.Succeeded)
+			var user = await _userManager.FindByNameAsync(login.UserName);
+
+
+            if (loginResult.Succeeded)
 			{
-				return Ok("Logging in was successful");
+                // create claims
+                var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+                var roles = await _userManager.GetRolesAsync(user);
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                int expiryMinutes = 60;
+                if (int.TryParse(_configuration["Jwt:ExpiryMinutes"], out var v)) expiryMinutes = v;
+
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["Jwt:Issuer"],
+                    audience: _configuration["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+                    signingCredentials: creds
+                );
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                var isInRole = User.IsInRole("Admin");
+                var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+
+                return Ok(new { token = tokenString, expires = token.ValidTo });
 			}
 
 			return BadRequest("Failed to login");

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SkillSnap.Api.DbContext;
 using Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SkillSnap.Api.Controllers;
 
@@ -17,6 +18,7 @@ public class SkillsController : ControllerBase
 	}
 
 	[HttpGet]
+	[Authorize(Roles = "Admin, User")]
 	[Route("GetSkills")]
 	public async Task<IActionResult> GetSkills()
 	{
@@ -26,7 +28,8 @@ public class SkillsController : ControllerBase
 	}
 
 	[HttpPost]
-	[Route("AddSkill")]
+    [Authorize(Roles = "Admin")]
+    [Route("AddSkill")]
 	public async Task<IActionResult> AddSkill([FromBody]Skill skill)
 	{
 		await _skillSnapContext.Skills.AddAsync(skill);

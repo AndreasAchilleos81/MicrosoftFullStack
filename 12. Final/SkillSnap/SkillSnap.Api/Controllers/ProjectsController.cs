@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SkillSnap.Api.DbContext;
 using Shared.Models;
+using SkillSnap.Api.DbContext;
 
 namespace SkillSnap.Api.Controllers;
 
@@ -17,7 +18,8 @@ public class ProjectsController : ControllerBase
 	}
 
 	[HttpGet]
-	[Route("GetProjects")]
+    [Authorize(Roles = "Admin, User")]
+    [Route("GetProjects")]
 	public async Task<List<Project>> GetProjects()
 	{
 		var projects = await _skillSnapContext.Projects.ToListAsync();
@@ -25,7 +27,8 @@ public class ProjectsController : ControllerBase
 	}
 
 	[HttpPost]
-	[Route("AddProject")]
+    [Authorize(Roles = "Admin")]
+    [Route("AddProject")]
 	public async Task<IActionResult> AddProject([FromBody] Project project)
 	{
 		await _skillSnapContext.Projects.AddAsync(project);

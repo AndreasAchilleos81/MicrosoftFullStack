@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SkillSnap.Api.DbContext;
 using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,16 +48,50 @@ builder.Services.AddCors(options =>
 });
 
 
-var app = builder.Build();
+// Configure JWT authentication
+var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key");
+var jwtIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer");
+var jwtAudience = builder.Configuration.GetValue<string>("Jwt:Audience");
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = true;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
+            NameClaimType = System.Security.Claims.ClaimTypes.Name,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+app.UseHttpsRedirection();
 app.UseCors("AllowClient");
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+	app.UseSwagger();
+	app.UseSwaggerUI();
     app.MapOpenApi();
 }
-
 
 using (var scope = app.Services.CreateScope())
 {
@@ -62,13 +99,5 @@ using (var scope = app.Services.CreateScope())
 	db.Database.Migrate();
 }
 
-
-app.UseHttpsRedirection();
-
-
-app.UseSwagger();
-app.UseSwaggerUI();
 app.MapControllers();
-
 app.Run();
-
