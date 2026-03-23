@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 using SkillSnap.Api.DbContext;
+using SkillSnap.Api.Services;
 
 namespace SkillSnap.Api.Controllers;
 
@@ -11,10 +12,14 @@ namespace SkillSnap.Api.Controllers;
 public class ProjectsController : ControllerBase
 {
 	private readonly SkillSnapContext _skillSnapContext;
+	private readonly ICacheService _cacheService;	
+    private string cacheKey;
 
-	public ProjectsController(SkillSnapContext skillSnapContext)
+	public ProjectsController(SkillSnapContext skillSnapContext, ICacheService cacheService)
 	{
-		this._skillSnapContext = skillSnapContext;
+		_skillSnapContext = skillSnapContext;
+		_cacheService = cacheService;
+		cacheKey = _cacheService.MakeVersionedKey("projects");
 	}
 
 	[HttpGet]
@@ -22,8 +27,8 @@ public class ProjectsController : ControllerBase
     [Route("GetProjects")]
 	public async Task<List<Project>> GetProjects()
 	{
-		var projects = await _skillSnapContext.Projects.ToListAsync();
-		return projects;
+        var projects = await _cacheService.GetOrCreateAsync(cacheKey, async () => { return await _skillSnapContext.Projects.ToListAsync(); });
+        return projects;
 	}
 
 	[HttpPost]
@@ -33,6 +38,9 @@ public class ProjectsController : ControllerBase
 	{
 		await _skillSnapContext.Projects.AddAsync(project);
 		await _skillSnapContext.SaveChangesAsync();
+
+		// destroy cache key here to ensure we are getting the latest  
+		_cacheService.IncrementVersion(cacheKey);
 		return Ok(project);
 	}
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SkillSnap.Api.DbContext;
 using Shared.Models;
 using Microsoft.AspNetCore.Authorization;
+using SkillSnap.Api.Services;
 
 namespace SkillSnap.Api.Controllers;
 
@@ -11,10 +12,14 @@ namespace SkillSnap.Api.Controllers;
 public class SkillsController : ControllerBase
 {
 	private readonly SkillSnapContext _skillSnapContext;
+	private readonly ICacheService _cacheService;
+	private string cacheKey;
 
-	public SkillsController(SkillSnapContext skillSnapContext)
+    public SkillsController(SkillSnapContext skillSnapContext, ICacheService cacheService)
 	{
-		this._skillSnapContext = skillSnapContext;
+		_skillSnapContext = skillSnapContext;
+		_cacheService = cacheService;
+		cacheKey = _cacheService.MakeVersionedKey("skills");
 	}
 
 	[HttpGet]
@@ -23,7 +28,7 @@ public class SkillsController : ControllerBase
 	public async Task<IActionResult> GetSkills()
 	{
 		// make this a Pre compiled query for better performance
-		var skills = await _skillSnapContext.Skills.ToListAsync();
+		var skills = await _cacheService.GetOrCreateAsync(cacheKey, async () => { return await _skillSnapContext.Skills.ToListAsync(); });
 		return Ok(skills);
 	}
 
@@ -34,7 +39,9 @@ public class SkillsController : ControllerBase
 	{
 		await _skillSnapContext.Skills.AddAsync(skill);
 		await _skillSnapContext.SaveChangesAsync();
-		return Ok(skill);
-	}
 
+		// destroy cache key here to ensure we are getting the latest  
+		_cacheService.IncrementVersion(cacheKey);
+        return Ok(skill);
+	}
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SkillSnap.Api.DbContext;
+using SkillSnap.Api.Services;
 using System.Security.Claims;
 using System.Text;
 
@@ -12,6 +13,9 @@ var dbPrefix = builder.Configuration["DbSettings:DbPreFix"];
 var dbRelativePath = builder.Configuration["DbSettings:ConnectionString"] ?? "skillSnap.db";
 var dbFile = Path.Combine(AppContext.BaseDirectory, dbRelativePath);
 var sqliteConnectionString = $"{dbPrefix}{dbFile}";
+
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICacheService, MemoryCacheService>();
 
 builder.Services.AddDbContextPool<SkillSnapContext>(options =>
 	options.UseSqlite(sqliteConnectionString));
