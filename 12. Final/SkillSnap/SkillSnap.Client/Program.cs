@@ -22,6 +22,7 @@ builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<SkillService>();
 builder.Services.AddScoped<ProfilesService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserSessionService>();
 
 // FIX: Instead of 'new HttpClient', use the Factory to create the 'ServerApi' version
 builder.Services.AddScoped(sp =>

@@ -9,13 +9,17 @@ namespace SkillSnap.Client.Services
         private readonly IJSRuntime _jsRuntime;
         private const string TokenKey = "authToken";
         private readonly HttpClient _httpClient;
+        private readonly UserSessionService _userSessionService;
+               
+
 		private const string registrationUrl = "/api/auth/register";
 		private const string loginUrl = "/api/auth/login";
 
-		public AuthService(IHttpClientFactory factory, IJSRuntime jsRuntime)
+		public AuthService(IHttpClientFactory factory, IJSRuntime jsRuntime, UserSessionService userSessionService)
 		{
             _httpClient = factory.CreateClient("BaseClient");
             _jsRuntime = jsRuntime;
+            _userSessionService = userSessionService;   
         }
 
 		public async Task<bool> Register(Registration registration)
@@ -31,7 +35,7 @@ namespace SkillSnap.Client.Services
             {
                 var response = await result.Content.ReadFromJsonAsync<LoginResponse>();
                 // Check: Are you actually calling the save method here?
-                await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, response.Token);
+                await _userSessionService.SaveSession(response.userId, response.role, response.Token);
                 return true;
             }
             return false;

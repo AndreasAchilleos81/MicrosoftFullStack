@@ -76,12 +76,9 @@ namespace SkillSnap.Api.Controllers
                 );
 
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-                var isInRole = User.IsInRole("Admin");
                 var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
-
-                return Ok(new { token = tokenString, expires = token.ValidTo });
+                return Ok(new { token = tokenString, role = roleClaim, userId = user.Id, expires = token.ValidTo });
 			}
 
 			return BadRequest("Failed to login");
