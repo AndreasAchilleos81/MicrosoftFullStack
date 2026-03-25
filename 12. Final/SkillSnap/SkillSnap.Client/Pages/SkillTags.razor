@@ -1,16 +1,19 @@
 ﻿@inject SkillService _skillService;
+@using Shared.Models.DTO
 @using SkillSnap.Client.Services;
 @using Shared.Models
 @using System
 
-@if (skills == null || skills.Count == 0)
+<h2>Skills</h2>
+
+@if (skills == null || skills.value.Count == 0)
 {
     <div class="skills-empty" role="status">No skills available.</div>
 }
 else
 {
     <ul class="skill-tags" role="list" aria-label="Skill tags">
-        @foreach (var skill in skills)
+        @foreach (var skill in skills.value)
         {
             <li class="skill-tag @GetLevelClass(skill.Level)" role="listitem" title="@skill.Level">
                 <span class="skill-name">@skill.Name</span>
@@ -25,11 +28,11 @@ else
 
 @code {
     [Parameter]
-    public List<Skill> skills { get; set; } = new List<Skill>();
+    public Skills skills { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        if (skills == null || skills.Count == 0)
+        if (skills == null || skills.value.Count == 0)
         {
             skills = await _skillService.GetSkillsAsync();
         }

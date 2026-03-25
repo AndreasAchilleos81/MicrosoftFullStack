@@ -7,7 +7,7 @@ namespace SkillSnap.Client.Services
 	public class AuthService
 	{
         private readonly IJSRuntime _jsRuntime;
-        private const string TokenKey = "authToken";
+        private const string TokenKey = "token";
         private readonly HttpClient _httpClient;
         private readonly UserSessionService _userSessionService;
                
@@ -35,7 +35,7 @@ namespace SkillSnap.Client.Services
             {
                 var response = await result.Content.ReadFromJsonAsync<LoginResponse>();
                 // Check: Are you actually calling the save method here?
-                await _userSessionService.SaveSession(response.userId, response.role, response.Token);
+                await _userSessionService.SaveSession(response.value.userId, response.value.role, response.value.Token);
                 return true;
             }
             return false;

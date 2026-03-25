@@ -28,7 +28,11 @@ public class SkillsController : ControllerBase
 	public async Task<IActionResult> GetSkills()
 	{
 		// make this a Pre compiled query for better performance
-		var skills = await _cacheService.GetOrCreateAsync(cacheKey, async () => { return await _skillSnapContext.Skills.ToListAsync(); });
+		var skills = await _cacheService.GetOrCreateAsync(cacheKey, 
+				async () => 
+		{ 
+			return await _skillSnapContext.Skills.AsNoTracking().Include(p => p.PortfolioUsers).ToListAsync(); 
+		});
 		return Ok(skills);
 	}
 

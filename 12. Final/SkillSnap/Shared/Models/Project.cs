@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shared.Models;
 
@@ -11,7 +10,6 @@ public class Project
 	public string Description { get; set; }
 	public string ImageUrl { get; set; }
 	
-	[ForeignKey("PortfolioUserId")]
-	public int PortfolioUserId { get; set; }
+	public List<PortfolioUser> PortfolioUsers { get; set; }
 
 }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shared.Models;
 
@@ -10,6 +9,6 @@ public class Skill
 	public string Name { get; set; } = null!;
 	public string Level { get; set; }
 
-	[ForeignKey("PortfolioUserId")]
-	public int PortfolioUserId { get; set; }
+	public List<PortfolioUser> PortfolioUsers { get; set; }
+
 }

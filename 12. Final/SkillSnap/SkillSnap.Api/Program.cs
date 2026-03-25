@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SkillSnap.Api.DbContext;
+using SkillSnap.Api.Filters;
 using SkillSnap.Api.Services;
 using System.Security.Claims;
 using System.Text;
@@ -13,6 +14,9 @@ var dbPrefix = builder.Configuration["DbSettings:DbPreFix"];
 var dbRelativePath = builder.Configuration["DbSettings:ConnectionString"] ?? "skillSnap.db";
 var dbFile = Path.Combine(AppContext.BaseDirectory, dbRelativePath);
 var sqliteConnectionString = $"{dbPrefix}{dbFile}";
+
+builder.Services
+    .AddControllers(options => options.Filters.Add<ApiResponseFilter>());
 
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ICacheService, MemoryCacheService>();
@@ -37,7 +41,12 @@ builder.Services.Configure<IdentityOptions>(options =>
 	options.Password.RequireLowercase = false;
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(); // https://localhost:7238/swagger/index.html
 

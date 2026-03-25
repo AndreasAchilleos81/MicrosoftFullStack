@@ -1,29 +1,28 @@
 ﻿@inject ProfilesService ProfileService;
 @using SkillSnap.Client.Services;
-@using Shared.Models
+@using Shared.Models.DTO;
 
-<h3>Profiles</h3>
+<h2>Profiles</h2>
 
-@if (PortfolioUsers == null || PortfolioUsers.Count == 0)
+@if (PortfolioUsers == null || PortfolioUsers.value.Count == 0)
 {
         <div class="profiles-empty" role="status">No Profiles to show </div>
 }
 else
 {
-    foreach (var user in PortfolioUsers)
+    foreach (var user in PortfolioUsers.value)
     {
         <ProfileCard Name="@user.Name" Bio="@user.Bio" ProfilePictureUrl="@user.ProfilePictureUrl" />
     }
 }
 
-
 @code {
 
-    public List<PortfolioUser> PortfolioUsers { get; set; } = new List<PortfolioUser>();
+    public Shared.Models.DTO.Profiles PortfolioUsers { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        if (PortfolioUsers == null || PortfolioUsers.Count == 0)
+        if (PortfolioUsers == null || PortfolioUsers.value.Count == 0)
         {
             PortfolioUsers = await ProfileService.GetProfilesAsync();
         }

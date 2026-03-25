@@ -31,4 +31,5 @@ builder.Services.AddScoped(sp =>
     return factory.CreateClient("ServerApi");
 });
 
+
 await builder.Build().RunAsync();

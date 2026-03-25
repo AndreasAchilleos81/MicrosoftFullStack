@@ -1,4 +1,5 @@
 ﻿using Shared.Models;
+using Shared.Models.DTO;
 using System.Net.Http.Json;
 
 namespace SkillSnap.Client.Services;
@@ -14,16 +15,17 @@ public class ProjectService
 		_httpClient = httpClient;
 	}
 
-	public async Task<List<Project>> GetProjectsAsync()
+	public async Task<Projects> GetProjectsAsync()
 	{
-		var projects = new List<Project>();
+        Projects projects = new();
+
 		if (_httpClient == null)
 		{
 			return projects;
 		}
 		try
 		{
-			projects =  await _httpClient.GetFromJsonAsAsyncEnumerable<Project>(getProjectsEndpoint).ToListAsync();
+			projects =  await _httpClient.GetFromJsonAsync<Projects>(getProjectsEndpoint);
 		}
 		catch(Exception ex) 
 		{

@@ -1,16 +1,19 @@
 ﻿@inject ProjectService _projectService;
+@using Shared.Models.DTO
 @using SkillSnap.Client.Services;
 @using Shared.Models
 @using System
 
-@if (projects == null || projects.Count == 0)
+<h2>Projects</h2>
+
+@if (projects == null || projects.value.Count == 0)
 {
     <div class="projects-empty" role="status">No projects to show.</div>
 }
 else
 {
     <section class="projects-grid" aria-label="Projects list">
-        @foreach (var project in projects)
+        @foreach (var project in projects.value)
         {
             <article class="project-card" role="group" aria-labelledby="@($"project-title-{project.Id}")">
                 <div class="project-media">
@@ -38,7 +41,8 @@ else
 
 @code {
     [Parameter]
-    public List<Project> projects { get; set; } = new List<Project>();
+
+    public Projects projects { get; set; } = new();
 
     private string GetImageUrl(string? imageUrl, string? title)
     {
@@ -47,7 +51,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (projects == null || projects.Count == 0)
+        if (projects == null || projects.value.Count == 0)
         {
             projects = await _projectService.GetProjectsAsync();
         }

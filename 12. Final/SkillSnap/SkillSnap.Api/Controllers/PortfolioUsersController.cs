@@ -28,7 +28,11 @@ namespace SkillSnap.Api.Controllers
             var key = _cacheService.MakeVersionedKey("PortfolioUsers");
             var portfolioUsers = await  _cacheService.GetOrCreateAsync<List<PortfolioUser>>(key, async () =>
             {
-                return await _skillSnapContext.PortfolioUsers.ToListAsync();
+                return await _skillSnapContext.PortfolioUsers
+                                              .AsNoTracking()
+                                              .Include(p => p.Projects)
+                                              .Include(s => s.Skills)
+                                              .ToListAsync();
             });
 
             return portfolioUsers;

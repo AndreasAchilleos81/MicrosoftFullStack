@@ -18,7 +18,7 @@ public class SeedController : ControllerBase
 	}
 
 	[HttpPost]
-	[Authorize(Roles ="Admin")]
+	[Authorize(Roles = "Admin")]
 	public IActionResult Seed()
 	{
 		if (_context.PortfolioUsers.Any())
@@ -48,8 +48,8 @@ public class SeedController : ControllerBase
 
 
 	[HttpPost]
-    [Authorize(Roles = "Admin")]
-    [Route("PopulateMore")]
+	[Authorize(Roles = "Admin")]
+	[Route("PopulateMore")]
 	public async Task<IActionResult> PopulateMore()
 	{
 		var portfolioUsersFaker = new Faker<PortfolioUser>()

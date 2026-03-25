@@ -16,8 +16,11 @@ namespace SkillSnap.Api.Services
         {
             if (_cache.TryGetValue(key, out T? cached))
             {
+                Console.WriteLine($"Cache hit for key {key}");
                 return cached!;
             }
+
+            Console.WriteLine($"Cache miss for key {key}");
 
             var value = await factory();
             _cache.Set(key, value, options ?? new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(30)));

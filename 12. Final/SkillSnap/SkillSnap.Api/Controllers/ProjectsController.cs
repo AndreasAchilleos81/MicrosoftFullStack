@@ -27,7 +27,12 @@ public class ProjectsController : ControllerBase
     [Route("GetProjects")]
 	public async Task<List<Project>> GetProjects()
 	{
-        var projects = await _cacheService.GetOrCreateAsync(cacheKey, async () => { return await _skillSnapContext.Projects.ToListAsync(); });
+        var projects = await _cacheService.GetOrCreateAsync(cacheKey, 
+			async () => 
+		{ 
+			return await _skillSnapContext.Projects.AsNoTracking().Include(s => s.PortfolioUsers).ToListAsync(); 
+		});
+
         return projects;
 	}
 

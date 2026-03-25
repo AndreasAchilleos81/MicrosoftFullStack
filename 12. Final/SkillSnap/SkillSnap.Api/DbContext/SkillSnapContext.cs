@@ -29,24 +29,20 @@ public class SkillSnapContext : IdentityDbContext<ApplicationUser>
 	{
 		base.OnModelCreating(modelBuilder);
 
-
 		modelBuilder.Entity<PortfolioUser>()
 			.HasMany(p => p.Projects);
 
 		modelBuilder.Entity<PortfolioUser>()
 			.HasMany(p => p.Skills);
 
-		modelBuilder.Entity<Skill>()
-			.HasOne<PortfolioUser>()
-			.WithMany(p => p.Skills)
-			.HasForeignKey(s => s.PortfolioUserId);
+		//modelBuilder.Entity<Skill>()
+		//	.HasMany<PortfolioUser>()
+		//	.WithMany(p => p.Skills);
 
-		modelBuilder.Entity<Project>()
-			.HasOne<PortfolioUser>()
-			.WithMany(p => p.Projects)
-			.HasForeignKey(p => p.PortfolioUserId);
-
-
+		//modelBuilder.Entity<Project>()
+		//	.HasOne<PortfolioUser>()
+		//	.WithMany(p => p.Projects)
+		//	.HasForeignKey(p => p.PortfolioUserId);
 	}
 }
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SkillSnap.Api.DbContext;
 
@@ -10,9 +11,11 @@ using SkillSnap.Api.DbContext;
 namespace SkillSnap.Api.Migrations
 {
     [DbContext(typeof(SkillSnapContext))]
-    partial class SkillSnapContextModelSnapshot : ModelSnapshot
+    [Migration("20260324151654_ManyPortfolioUsersPerSkill")]
+    partial class ManyPortfolioUsersPerSkill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
@@ -145,21 +148,6 @@ namespace SkillSnap.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PortfolioUserProject", b =>
-                {
-                    b.Property<int>("PortfolioUsersId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("PortfolioUsersId", "ProjectsId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("PortfolioUserProject");
-                });
-
             modelBuilder.Entity("PortfolioUserSkill", b =>
                 {
                     b.Property<int>("PortfolioUsersId")
@@ -212,11 +200,16 @@ namespace SkillSnap.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("PortfolioUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PortfolioUserId");
 
                     b.ToTable("Projects");
                 });
@@ -355,21 +348,6 @@ namespace SkillSnap.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PortfolioUserProject", b =>
-                {
-                    b.HasOne("Shared.Models.PortfolioUser", null)
-                        .WithMany()
-                        .HasForeignKey("PortfolioUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Shared.Models.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PortfolioUserSkill", b =>
                 {
                     b.HasOne("Shared.Models.PortfolioUser", null)
@@ -383,6 +361,20 @@ namespace SkillSnap.Api.Migrations
                         .HasForeignKey("SkillsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Shared.Models.Project", b =>
+                {
+                    b.HasOne("Shared.Models.PortfolioUser", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("PortfolioUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shared.Models.PortfolioUser", b =>
+                {
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

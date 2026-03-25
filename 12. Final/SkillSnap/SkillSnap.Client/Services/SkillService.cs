@@ -1,4 +1,5 @@
 ﻿using Shared.Models;
+using Shared.Models.DTO;
 using System.Net.Http.Json;
 
 namespace SkillSnap.Client.Services;
@@ -15,16 +16,16 @@ public class SkillService
 		_httpClient = httpClient;
 	}
 
-	public async Task<List<Skill>> GetSkillsAsync()
+	public async Task<Skills> GetSkillsAsync()
 	{
-		List<Skill> skills = new List<Skill>();
+        Skills skills = new();
 		if (_httpClient == null)
 		{
 			return skills;
 		}
 		try
 		{
-			skills = await _httpClient.GetFromJsonAsAsyncEnumerable<Skill>(getSkillsEndpoint).ToListAsync();
+			skills = await _httpClient.GetFromJsonAsync<Skills>(getSkillsEndpoint);
 		}
 		catch (Exception ex) { }
 

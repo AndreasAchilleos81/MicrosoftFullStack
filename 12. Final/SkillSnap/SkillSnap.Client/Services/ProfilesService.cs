@@ -1,34 +1,33 @@
-﻿using Shared.Models;
+﻿using Shared.Models.DTO;
 using System.Net.Http.Json;
 
-namespace SkillSnap.Client.Services
+namespace SkillSnap.Client.Services;
+
+public class ProfilesService
 {
-	public class ProfilesService
+	private readonly HttpClient _httpClient;
+	private const string getProjectsEndpoint = "api/PortfolioUsers/GetPortfolioUser";
+
+	public ProfilesService(HttpClient httpClient)
 	{
-		private readonly HttpClient _httpClient;
-		private const string getProjectsEndpoint = "api/PortfolioUsers/GetPortfolioUser";
+		_httpClient = httpClient;
+	}
 
-		public ProfilesService(HttpClient httpClient)
+	public async Task<Profiles> GetProfilesAsync()
+	{
+            Profiles portfolioUsers = new();
+		if (_httpClient != null)
 		{
-			_httpClient = httpClient;
-		}
-
-		public async Task<List<PortfolioUser>> GetProfilesAsync()
-		{
-			List<PortfolioUser> portfolioUsers = new();
-			if (_httpClient != null)
+			try
 			{
-				try
-				{
-					portfolioUsers = await _httpClient.GetFromJsonAsAsyncEnumerable<PortfolioUser>(getProjectsEndpoint).ToListAsync();
-				}
-				catch(Exception ex) 
-				{
-					Console.WriteLine(ex.Message);
-				}
+				portfolioUsers = await _httpClient.GetFromJsonAsync<Profiles>(getProjectsEndpoint);
 			}
-
-			return portfolioUsers;
+			catch(Exception ex) 
+			{
+				Console.WriteLine(ex.Message);
+			}
 		}
+
+		return portfolioUsers;
 	}
 }
