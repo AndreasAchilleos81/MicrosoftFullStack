@@ -7,12 +7,14 @@ namespace SkillSnap.Client.Services;
 public class ProjectService
 {
 	private readonly HttpClient _httpClient;
-	private const string getProjectsEndpoint = "api/Projects/GetProjects";
-	private const string addProjectEndpoint = "api/Projects/AddProject";
-	private const string getProjectById = "api/Projects/GetProject?id={0}";
-	private const string updateProjectById = "api/Projects/UpdateProject";
+	private const string _getProjectsEndpoint = "api/Projects/GetProjects";
+	private const string _addProjectEndpoint = "api/Projects/AddProject";
+	private const string _getProjectById = "api/Projects/GetProject?id={0}";
+	private const string _updateProjectById = "api/Projects/UpdateProject";
+	private const string _updatePortfolioUsers = "/api/PortfolioUsers/UpdatePortfolioUsers";
 
-	public ProjectService(HttpClient httpClient)
+
+    public ProjectService(HttpClient httpClient)
 	{
 		_httpClient = httpClient;
 	}
@@ -27,7 +29,7 @@ public class ProjectService
 		}
 		try
 		{
-			projects =  await _httpClient.GetFromJsonAsync<Projects>(getProjectsEndpoint);
+			projects =  await _httpClient.GetFromJsonAsync<Projects>(_getProjectsEndpoint);
 		}
 		catch(Exception ex) 
 		{
@@ -47,7 +49,7 @@ public class ProjectService
 		try
 		{
 			//project = await _httpClient.GetFromJsonAsync<Project>($"api/Projects/GetProject?id={id}");
-			project = await _httpClient.GetFromJsonAsync<ProjectDto>(string.Format(getProjectById, id));
+			project = await _httpClient.GetFromJsonAsync<ProjectDto>(string.Format(_getProjectById, id));
 		}
 		catch (Exception ex)
 		{
@@ -58,18 +60,24 @@ public class ProjectService
 
     public async Task<HttpResponseMessage> AddProject(Project project)
 	{
-		var response = await _httpClient.PostAsJsonAsync(addProjectEndpoint, project);
+		var response = await _httpClient.PostAsJsonAsync(_addProjectEndpoint, project);
 		return response;
 	}
 
 	public async Task<HttpResponseMessage> UpdateProject(ProjectDto project)
 	{
-		var fromDto = project.value.ConverTo();
-        var response = await _httpClient.PutAsJsonAsync(updateProjectById, fromDto);
+		//var fromDto = project.value.ConverTo();
+        var response = await _httpClient.PutAsJsonAsync(_updateProjectById, project);
 		return response;
     }
 
-	public async Task<HttpResponseMessage> DeleteProject(int id)
+
+	public async Task<HttpResponseMessage> UpdatePortfolioUsers(IEnumerable<PortfolioUser> users) 
+	{
+		return await _httpClient.PostAsJsonAsync(_updatePortfolioUsers, users);		
+	}
+
+    public async Task<HttpResponseMessage> DeleteProject(int id)
 	{
 		var response = await _httpClient.DeleteAsync($"api/Projects/DeleteProject?id={id}");
 		return response;

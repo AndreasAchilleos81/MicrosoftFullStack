@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
+using Shared.Models.DTO;
 using SkillSnap.Api.DbContext;
 using SkillSnap.Api.Services;
 
@@ -45,9 +46,9 @@ public class ProjectsController : ControllerBase
     [Route("GetProject")]
     public async Task<Project> GetProject(int id)
     {
+        // we are keeping tracking for getting ONE project to make our lives easier when saving its and its navigatioal properties
         var project = await _skillSnapContext
                             .Projects
-                            .AsNoTracking()
                             .Include(p => p.PortfolioUsers).ThenInclude(s => s.Skills)
                             .FirstOrDefaultAsync(p => p.Id == id);
         return project!;
@@ -56,11 +57,49 @@ public class ProjectsController : ControllerBase
     [HttpPut]
     [Authorize(Roles = "Admin, User")]
     [Route("UpdateProject")]
-    public async Task<Project> UpdateProject(Project project)
+    public async Task<IActionResult> UpdateProject(ProjectDto dto)
     {
-        var entity = _skillSnapContext.Projects.Update(project);
+        var project = await _skillSnapContext.Projects
+                .Include(p => p.PortfolioUsers)
+                .FirstOrDefaultAsync(p => p.Id == dto.value.Id);
+
+        if (project == null)
+            return NotFound(dto.value);
+
+        // Update project fields
+        project.Title = dto.value.Title;
+        project.Description = dto.value.Description;
+        project.ImageUrl = dto.value.ImageUrl;
+
+        // Update or add users
+        foreach (var incoming in dto.value.PortfolioUsers)
+        {
+            var existing = project.PortfolioUsers
+                .FirstOrDefault(u => u.Id == incoming.Id);
+
+            if (existing != null)
+            {
+                existing.Name = incoming.Name;
+                existing.Bio = incoming.Bio;
+                existing.ProfilePictureUrl = incoming.ProfilePictureUrl;
+            }
+            else
+            {
+                project.PortfolioUsers.Add(incoming);
+            }
+        }
+
+        // Remove deleted users
+        var removed = project.PortfolioUsers
+            .Where(u => !dto.value.PortfolioUsers.Any(x => x.Id == u.Id))
+            .ToList();
+
+        foreach (var r in removed)
+            project.PortfolioUsers.Remove(r);
+
         await _skillSnapContext.SaveChangesAsync();
-        return project!;
+
+        return Ok(project);
     }
 
 

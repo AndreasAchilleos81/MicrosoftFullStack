@@ -37,5 +37,14 @@ namespace SkillSnap.Api.Controllers
 
             return portfolioUsers;
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, User")]
+        [Route("UpdatePortfolioUsers")]
+        public async Task UpdatePortfolioUsersAsync([FromBody] IEnumerable<PortfolioUser> users)
+        {
+            _skillSnapContext.PortfolioUsers.UpdateRange(users);
+            await _skillSnapContext.SaveChangesAsync();
+        }
     }
 }

@@ -3,6 +3,6 @@
     public class ProjectDto
     {
         public ProjectValue value { get; set; }
-        public string executionMs { get; set; }
+        public string? executionMs { get; set; }
     }
 }

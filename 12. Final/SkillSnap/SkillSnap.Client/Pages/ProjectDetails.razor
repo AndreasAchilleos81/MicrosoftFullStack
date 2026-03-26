@@ -2,11 +2,12 @@
 @using Shared.Models
 @using Shared.Models.DTO
 @using SkillSnap.Client.Services
+@using System.Linq;
 @inject ProjectService ProjectService
 
 <h3>Edit Project</h3>
 
-@if (Project is null || Project.value is null || Project.value.PortfolioUsers.Count == 0)
+@if (Project is null || Project.value is null )
 {
     <p>Loading...</p>
 }
@@ -92,8 +93,7 @@ else
 
         <button class="btn btn-secondary btn-add" @onclick="AddUser">
             Add Portfolio User
-        </button>
-
+        </button> 
     </div>
 }
 
@@ -113,17 +113,37 @@ else
     void AddUser()
     {
         Project.value.PortfolioUsers.Add(new PortfolioUser());
+        // StateHasChanged();
     }
 
     void RemoveUser(int index)
     {
-        Project.value.PortfolioUsers.RemoveAt(index);
+        Project.value.PortfolioUsers.RemoveAt((index - 1));
+        // StateHasChanged();
     }
 
-    async Task SaveProject()
+    private async Task SaveProject()
     {
-        // Save logic here
-        await ProjectService.UpdateProject(SendOnlyProjectToBeSaved());
+        await ProjectService.UpdateProject(Project);
+    }
+
+    private async Task SavePortfolioUsers()
+    {
+        // You may want to send only the users, not the whole project
+        var users = Project.value.PortfolioUsers;
+        await ProjectService.UpdatePortfolioUsers(SendOnlyPortfolioUsers(users));
+    }
+
+
+    private IEnumerable<PortfolioUser> SendOnlyPortfolioUsers(List<PortfolioUser> users)
+    {
+        var list = users.Select(s => { 
+            s.Projects = new();
+            s.Skills = new();
+            return s;
+        });
+
+        return list;
     }
 
     private ProjectDto SendOnlyProjectToBeSaved()

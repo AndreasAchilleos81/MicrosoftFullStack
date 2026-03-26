@@ -4,7 +4,7 @@
     {
         public Value value {get; set;}
 
-        public string executionMs { get; set; }
+        public string? executionMs { get; set; }
     }
 
     public class Value

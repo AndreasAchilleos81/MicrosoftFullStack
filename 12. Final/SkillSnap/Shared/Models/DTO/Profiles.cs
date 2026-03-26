@@ -6,7 +6,7 @@ public class Profiles
 
     public List<PortfolioUserValue> value { get; set; } = new();
 
-    public string executionMs { get; set; }
+    public string? executionMs { get; set; }
 }
 
 public class PortfolioUserValue

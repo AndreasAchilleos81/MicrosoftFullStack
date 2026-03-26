@@ -4,7 +4,7 @@
     {
         public List<SkillsValue> value { get; set; } = new();
 
-        public string executionMs { get; set; }
+        public string? executionMs { get; set; }
     }
 
     public class SkillsValue
