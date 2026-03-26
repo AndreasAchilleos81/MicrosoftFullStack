@@ -11,58 +11,70 @@ namespace SkillSnap.Api.Controllers;
 [Route("/api/[controller]")]
 public class ProjectsController : ControllerBase
 {
-	private readonly SkillSnapContext _skillSnapContext;
-	private readonly ICacheService _cacheService;	
+    private readonly SkillSnapContext _skillSnapContext;
+    private readonly ICacheService _cacheService;
     private string cacheKey;
 
-	public ProjectsController(SkillSnapContext skillSnapContext, ICacheService cacheService)
-	{
-		_skillSnapContext = skillSnapContext;
-		_cacheService = cacheService;
-		cacheKey = _cacheService.MakeVersionedKey("projects");
-	}
+    public ProjectsController(SkillSnapContext skillSnapContext, ICacheService cacheService)
+    {
+        _skillSnapContext = skillSnapContext;
+        _cacheService = cacheService;
+        cacheKey = _cacheService.MakeVersionedKey("projects");
+    }
 
-	[HttpGet]
+    [HttpGet]
     [Authorize(Roles = "Admin, User")]
     [Route("GetProjects")]
-	public async Task<List<Project>> GetProjects()
-	{
-        var projects = await _cacheService.GetOrCreateAsync(cacheKey, 
-			async () => 
-		{ 
-			return await _skillSnapContext
-							.Projects
-							.AsNoTracking()
-							.Include(s => s.PortfolioUsers)
-							.ToListAsync(); 
-		});
+    public async Task<List<Project>> GetProjects()
+    {
+        var projects = await _cacheService.GetOrCreateAsync(cacheKey,
+            async () =>
+        {
+            return await _skillSnapContext
+                            .Projects
+                            .AsNoTracking()
+                            .Include(s => s.PortfolioUsers)
+                            .ToListAsync();
+        });
 
         return projects;
-	}
-
-	[HttpGet]
-    [Authorize(Roles = "Admin, User")]
-	[Route("GetProject")]
-	public async Task<Project> GetProject(int id)
-	{
-		var project = await _skillSnapContext
-							.Projects
-							.AsNoTracking()
-							.Include(s => s.PortfolioUsers)
-							.FirstOrDefaultAsync(p => p.Id == id);
-		return project!;
     }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin, User")]
+    [Route("GetProject")]
+    public async Task<Project> GetProject(int id)
+    {
+        var project = await _skillSnapContext
+                            .Projects
+                            .AsNoTracking()
+                            .Include(p => p.PortfolioUsers).ThenInclude(s => s.Skills)
+                            .FirstOrDefaultAsync(p => p.Id == id);
+        return project!;
+    }
+
+    [HttpPut]
+    [Authorize(Roles = "Admin, User")]
+    [Route("UpdateProject")]
+    public async Task<Project> UpdateProject(Project project)
+    {
+        var entity = _skillSnapContext.Projects.Update(project);
+        await _skillSnapContext.SaveChangesAsync();
+        return project!;
+    }
+
+
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("AddProject")]
-	public async Task<IActionResult> AddProject([FromBody] Project project)
-	{
-		await _skillSnapContext.Projects.AddAsync(project);
-		await _skillSnapContext.SaveChangesAsync();
+    public async Task<IActionResult> AddProject([FromBody] Project project)
+    {
+        await _skillSnapContext.Projects.AddAsync(project);
+        await _skillSnapContext.SaveChangesAsync();
 
-		// destroy cache key here to ensure we are getting the latest  
-		_cacheService.IncrementVersion(cacheKey);
-		return Ok(project);
-	}
+        // destroy cache key here to ensure we are getting the latest  
+        _cacheService.IncrementVersion(cacheKey);
+        return Ok(project);
+    }
 }

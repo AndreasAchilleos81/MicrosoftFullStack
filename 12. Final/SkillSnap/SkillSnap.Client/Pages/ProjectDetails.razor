@@ -1,11 +1,143 @@
-﻿@page "/projectdetails/{id}"
+﻿@page "/projects/{projectId:int}"
 @using Shared.Models
-<h3>ProjectDetails</h3>
+@using Shared.Models.DTO
+@using SkillSnap.Client.Services
+@inject ProjectService ProjectService
 
+<h3>Edit Project</h3>
 
+@if (Project is null || Project.value is null || Project.value.PortfolioUsers.Count == 0)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="project-edit-container">
+
+        <div class="project-card">
+            <h3 class="section-title">Edit Project</h3>
+
+            <EditForm Model="Project" OnValidSubmit="SaveProject">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label>Project Id</label>
+                    <input class="form-control" value="@Project.value.Id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Title</label>
+                    <InputText class="form-control" @bind-Value="Project.value.Title" />
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <InputTextArea class="form-control" @bind-Value="Project.value.Description" />
+                </div>
+
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <InputText class="form-control" @bind-Value="Project.value.ImageUrl" />
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Project.value.ImageUrl))
+                {
+                    <img src="@Project.value.ImageUrl" class="image-preview" />
+                }
+
+                <button type="submit" class="btn btn-primary mt-3">Save</button>
+            </EditForm>
+        </div>
+
+        <h4 class="section-title">Portfolio Users</h4>
+
+        @for (int i = 0; i < Project.value.PortfolioUsers.Count; i++)
+        {
+            var user = Project.value.PortfolioUsers[i];
+
+            <div class="user-card">
+                <button type="button"
+                        class="btn btn-danger btn-sm btn-remove"
+                        @onclick="() => RemoveUser(i)">
+                    Remove
+                </button>
+
+                <div class="form-group">
+                    <label>User Id</label>
+                    <input class="form-control" value="@user.Id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <InputText class="form-control" @bind-Value="user.Name" />
+                </div>
+
+                <div class="form-group">
+                    <label>Bio</label>
+                    <InputTextArea class="form-control" @bind-Value="user.Bio" />
+                </div>
+
+                <div class="form-group">
+                    <label>Profile Picture URL</label>
+                    <InputText class="form-control" @bind-Value="user.ProfilePictureUrl" />
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(user.ProfilePictureUrl))
+                {
+                    <img src="@user.ProfilePictureUrl" class="image-preview" />
+                }
+            </div>
+        }
+
+        <button class="btn btn-secondary btn-add" @onclick="AddUser">
+            Add Portfolio User
+        </button>
+
+    </div>
+}
 
 @code {
-    Project projectDetails = new();
 
+    [Parameter]
+    public int ProjectId { get; set; }
 
+    public ProjectDto Project { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load the project using the ProjectId
+        Project = await ProjectService.GetProjectAsync(ProjectId);
+    }
+
+    void AddUser()
+    {
+        Project.value.PortfolioUsers.Add(new PortfolioUser());
+    }
+
+    void RemoveUser(int index)
+    {
+        Project.value.PortfolioUsers.RemoveAt(index);
+    }
+
+    async Task SaveProject()
+    {
+        // Save logic here
+        await ProjectService.UpdateProject(SendOnlyProjectToBeSaved());
+    }
+
+    private ProjectDto SendOnlyProjectToBeSaved()
+    {
+        return new ProjectDto
+        {
+            value = new ProjectValue
+            {
+                Id = Project.value.Id,
+                Title = Project.value.Title,
+                Description = Project.value.Description,
+                ImageUrl = Project.value.ImageUrl,
+                PortfolioUsers = new List<PortfolioUser>() // Clear users for now
+            }
+        };
+    }
 }
