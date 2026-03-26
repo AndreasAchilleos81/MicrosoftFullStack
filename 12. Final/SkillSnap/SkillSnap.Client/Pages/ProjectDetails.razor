@@ -4,10 +4,12 @@
 @using SkillSnap.Client.Services
 @using System.Linq;
 @inject ProjectService ProjectService
+@inject UserSessionService UserSessionState
+@inject IJSRuntime JS
 
 <h3>Edit Project</h3>
 
-@if (Project is null || Project.value is null )
+@if (Project is null || Project.value is null)
 {
     <p>Loading...</p>
 }
@@ -93,12 +95,11 @@ else
 
         <button class="btn btn-secondary btn-add" @onclick="AddUser">
             Add Portfolio User
-        </button> 
+        </button>
     </div>
 }
 
 @code {
-
     [Parameter]
     public int ProjectId { get; set; }
 
@@ -108,23 +109,37 @@ else
     {
         // Load the project using the ProjectId
         Project = await ProjectService.GetProjectAsync(ProjectId);
+        await UserSessionState.SetCurrentProjectId(Project.value.Id);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("skillSnap.onExit", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task ClearLocalStorage()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "projectId");
     }
 
     void AddUser()
     {
         Project.value.PortfolioUsers.Add(new PortfolioUser());
-        // StateHasChanged();
     }
 
     void RemoveUser(int index)
     {
         Project.value.PortfolioUsers.RemoveAt((index - 1));
-        // StateHasChanged();
     }
 
     private async Task SaveProject()
     {
         await ProjectService.UpdateProject(Project);
+        await UserSessionState.RemoveCurrentProjectId();
     }
 
     private async Task SavePortfolioUsers()
@@ -134,10 +149,10 @@ else
         await ProjectService.UpdatePortfolioUsers(SendOnlyPortfolioUsers(users));
     }
 
-
     private IEnumerable<PortfolioUser> SendOnlyPortfolioUsers(List<PortfolioUser> users)
     {
-        var list = users.Select(s => { 
+        var list = users.Select(s =>
+        {
             s.Projects = new();
             s.Skills = new();
             return s;

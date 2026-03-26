@@ -33,7 +33,7 @@ public class UserSessionService
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", projectkey, projectId.ToString());
     }
 
-    public async Task RemoveCurrentProjectId(int projectId)
+    public async Task RemoveCurrentProjectId()
     {
         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", projectkey);
     }
