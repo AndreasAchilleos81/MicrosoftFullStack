@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Shared.Models.DTO
+﻿namespace Shared.Models.DTO
 {
     public class Skills
     {

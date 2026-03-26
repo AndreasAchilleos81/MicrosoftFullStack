@@ -30,13 +30,30 @@ public class ProjectsController : ControllerBase
         var projects = await _cacheService.GetOrCreateAsync(cacheKey, 
 			async () => 
 		{ 
-			return await _skillSnapContext.Projects.AsNoTracking().Include(s => s.PortfolioUsers).ToListAsync(); 
+			return await _skillSnapContext
+							.Projects
+							.AsNoTracking()
+							.Include(s => s.PortfolioUsers)
+							.ToListAsync(); 
 		});
 
         return projects;
 	}
 
-	[HttpPost]
+	[HttpGet]
+    [Authorize(Roles = "Admin, User")]
+	[Route("GetProject")]
+	public async Task<Project> GetProject(int id)
+	{
+		var project = await _skillSnapContext
+							.Projects
+							.AsNoTracking()
+							.Include(s => s.PortfolioUsers)
+							.FirstOrDefaultAsync(p => p.Id == id);
+		return project!;
+    }
+
+    [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("AddProject")]
 	public async Task<IActionResult> AddProject([FromBody] Project project)

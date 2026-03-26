@@ -8,6 +8,7 @@ public class UserSessionService
     private const string userIdKey = "userId";
     private const string roleKey = "role";
     private const string tokenKey = "token";
+    private const string projectkey = "projectId";
 
     public UserSessionService(IJSRuntime jsRuntime)
     {
@@ -25,5 +26,15 @@ public class UserSessionService
         var userid = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", userIdKey);
         var userrole = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", roleKey); 
         return await Task.FromResult((userid, userrole));
+    }
+
+    public async Task SetCurrentProjectId(int projectId)
+    {
+        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", projectkey, projectId.ToString());
+    }
+
+    public async Task RemoveCurrentProjectId(int projectId)
+    {
+        await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", projectkey);
     }
 }

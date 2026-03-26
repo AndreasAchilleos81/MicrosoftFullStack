@@ -35,7 +35,25 @@ public class ProjectService
 		return projects;
 	}
 
-	public async Task<HttpResponseMessage> AddProject(Project project)
+	public async Task<Project> GetProjectAsync(int id)
+	{
+		Project project = new();
+		if (_httpClient == null)
+		{
+			return project;
+		}
+		try
+		{
+			project = await _httpClient.GetFromJsonAsync<Project>($"api/Projects/GetProject?id={id}");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching project with ID {id}: {ex.Message}");
+		}
+		return project;
+    }
+
+    public async Task<HttpResponseMessage> AddProject(Project project)
 	{
 		var response = await _httpClient.PostAsJsonAsync(addProjectEndpoint, project);
 		return response;

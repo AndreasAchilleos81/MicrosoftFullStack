@@ -1,9 +1,8 @@
 ﻿namespace Shared.Models.DTO
 {
-    public class Projects
+    public class ProjectDto
     {
-        public List<ProjectValue> value { get; set; } = new();
-
+        public ProjectValue value { get; set; }
         public string executionMs { get; set; }
     }
 }
