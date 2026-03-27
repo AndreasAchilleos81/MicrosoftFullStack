@@ -115,6 +115,28 @@ public class ProjectsController : ControllerBase
         return Ok(project);
     }
 
+    [HttpDelete]
+    [Authorize(Roles = "Admin")]
+    [Route("DeleteProject")]
+    public async Task<IActionResult> DeleteProject(int id)
+    {
+        var project = await _skillSnapContext.Projects
+                .Include(p => p.PortfolioUsers)
+                    .ThenInclude(u => u.Skills)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null)
+            return NotFound();
+
+        _skillSnapContext.Projects.Remove(project);
+        await _skillSnapContext.SaveChangesAsync();
+
+        // destroy cache key here to ensure we are getting the latest  
+        _cacheService.IncrementVersion(cacheKey);
+        return NoContent();
+    }
+
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("AddProject")]

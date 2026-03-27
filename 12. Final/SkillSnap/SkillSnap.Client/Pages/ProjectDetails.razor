@@ -6,8 +6,17 @@
 @inject ProjectService ProjectService
 @inject UserSessionService UserSessionState
 @inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+
 
 <h3>Edit Project</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-danger"
+            @onclick="ConfirmDeleteProject">
+        Delete Project
+    </button>
+</div>
 
 @if (Project is null || Project.value is null)
 {
@@ -49,7 +58,7 @@ else
                     <img src="@Project.value.ImageUrl" class="image-preview" />
                 }
 
-                <button type="submit" class="btn btn-primary mt-3">Save</button>
+                <button type="submit" class="btn btn-primary mt-3">Update Project</button>
             </EditForm>
         </div>
 
@@ -133,6 +142,39 @@ else
             Add Portfolio User
         </button>
     </div>
+
+    @if (showDeleteConfirm)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">Delete Project</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>
+                            Are you sure you want to delete this project?
+                            <strong>This action cannot be undone.</strong>
+                        </p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="() => showDeleteConfirm = false">
+                            Cancel
+                        </button>
+
+                        <button class="btn btn-danger" @onclick="DeleteProject">
+                            Yes, Delete
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
 }
 
 @code {
@@ -146,6 +188,9 @@ else
 
     private string newSkill = string.Empty;
     private string newSkillLevel = string.Empty;
+
+    bool showDeleteConfirm = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -173,6 +218,20 @@ else
         _objRef?.Dispose();
     }
 
+    void ConfirmDeleteProject()
+    {
+        showDeleteConfirm = true;
+    }
+
+    private async Task DeleteProject()
+    {
+        await ProjectService.DeleteProject(Project.value.Id);
+        await UserSessionState.RemoveCurrentProjectId();
+
+        // Redirect back to project list
+        NavigationManager.NavigateTo("/projects");
+    }
+
     void AddUser()
     {
         Project.value.PortfolioUsers.Add(new PortfolioUser().Convert());
@@ -187,10 +246,11 @@ else
     {
         if (!string.IsNullOrWhiteSpace(newSkill))
         {
-            var skillToAdd = new SkillDto() { 
+            var skillToAdd = new SkillDto()
+            {
                 Id = 0,
-                Name = this.newSkill.Trim(), 
-                Level = newSkillLevel 
+                Name = this.newSkill.Trim(),
+                Level = newSkillLevel
             };
             
             user.Skills.Add(skillToAdd);
