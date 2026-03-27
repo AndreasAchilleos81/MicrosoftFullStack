@@ -61,76 +61,59 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> UpdateProject(ProjectDto dto)
     {
         var project = await _skillSnapContext.Projects
-                .Include(p => p.PortfolioUsers).ThenInclude(s => s.Skills)
-                .FirstOrDefaultAsync(p => p.Id == dto.value.Id);
+            .Include(p => p.PortfolioUsers)
+                .ThenInclude(u => u.Skills)
+            .FirstOrDefaultAsync(p => p.Id == dto.value.Id);
 
         if (project == null)
-            return NotFound(dto.value);
+            return NotFound();
 
         // Update project fields
         project.Title = dto.value.Title;
         project.Description = dto.value.Description;
         project.ImageUrl = dto.value.ImageUrl;
 
-        // Update or add users
-        foreach (var incoming in dto.value.PortfolioUsers)
+        // Update users
+        foreach (var userDto in dto.value.PortfolioUsers)
         {
-            var existing = project.PortfolioUsers
-                .FirstOrDefault(u => u.Id == incoming.Id);
+            var user = project.PortfolioUsers.FirstOrDefault(u => u.Id == userDto.Id);
 
-            if (existing != null)
+            if (user == null)
             {
-                existing.Name = incoming.Name;
-                existing.Bio = incoming.Bio;
-                existing.ProfilePictureUrl = incoming.ProfilePictureUrl;
+                // New user
+                user = new PortfolioUser
+                {
+                    Name = userDto.Name,
+                    Bio = userDto.Bio,
+                    ProfilePictureUrl = userDto.ProfilePictureUrl
+                };
+
+                project.PortfolioUsers.Add(user);
             }
             else
             {
-                project.PortfolioUsers.Add(incoming.ConvertTo());
-            }
-        }
+                // Update existing user
+                user.Name = userDto.Name;
+                user.Bio = userDto.Bio;
+                user.ProfilePictureUrl = userDto.ProfilePictureUrl;
 
-        // Remove deleted users
-        var removed = project.PortfolioUsers
-            .Where(u => !dto.value.PortfolioUsers.Any(x => x.Id == u.Id))
-            .ToList();
+                // Replace skills
+                user.Skills.Clear();
 
-        foreach (var r in removed)
-            project.PortfolioUsers.Remove(r);
-
-        // Now that portfolio users are set we need to handle the Skills per portfolio user
-        // find removed skills for each user
-        foreach (var portfolioUser in project.PortfolioUsers)
-        {
-            var removedSkills = portfolioUser.Skills
-                .Where(s => !dto.value.PortfolioUsers
-                    .FirstOrDefault(pu => pu.Id == portfolioUser.Id)?
-                    .Skills.Any(x => x.Id == s.Id) == true)
-                .ToList();
-
-            foreach (var skill in removedSkills)
-            {
-                portfolioUser.Skills.Remove(skill);
-            }
-        }
-
-        // add incoming skills to existing portfolio users
-        foreach (var incoming in dto.value.PortfolioUsers)
-        {
-            var existing = project.PortfolioUsers
-                .FirstOrDefault(u => u.Id == incoming.Id);
-            if (existing != null)
-            {
-                existing.Skills.Clear();
-                existing.Skills.AddRange(incoming.Skills.Select(dtoSkill => dtoSkill.ConvertTo()));
+                foreach (var skillDto in userDto.Skills)
+                {
+                    user.Skills.Add(new Skill
+                    {
+                        Name = skillDto.Name,
+                        Level = skillDto.Level
+                    });
+                }
             }
         }
 
         await _skillSnapContext.SaveChangesAsync();
         return Ok(project);
     }
-
-
 
     [HttpPost]
     [Authorize(Roles = "Admin")]

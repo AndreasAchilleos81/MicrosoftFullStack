@@ -188,6 +188,7 @@ else
         if (!string.IsNullOrWhiteSpace(newSkill))
         {
             var skillToAdd = new SkillDto() { 
+                Id = 0,
                 Name = this.newSkill.Trim(), 
                 Level = newSkillLevel 
             };
