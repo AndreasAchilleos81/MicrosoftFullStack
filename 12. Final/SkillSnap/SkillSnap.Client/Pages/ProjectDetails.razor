@@ -18,6 +18,14 @@
     </button>
 </div>
 
+@if (!string.IsNullOrEmpty(deleteErrorMessage))
+{
+    <div class="alert alert-danger mt-2">
+        @deleteErrorMessage
+    </div>
+}
+
+
 @if (Project is null || Project.value is null)
 {
     <p>Loading...</p>
@@ -191,6 +199,8 @@ else
 
     bool showDeleteConfirm = false;
 
+    private string deleteErrorMessage = string.Empty;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -225,10 +235,17 @@ else
 
     private async Task DeleteProject()
     {
-        await ProjectService.DeleteProject(Project.value.Id);
-        await UserSessionState.RemoveCurrentProjectId();
+        var success = await ProjectService.DeleteProject(Project.value.Id);
 
-        // Redirect back to project list
+        if (!success)
+        {
+            deleteErrorMessage = "You are not authorized to delete this project.";
+            showDeleteConfirm = false;
+            StateHasChanged();
+            return;
+        }
+
+        await UserSessionState.RemoveCurrentProjectId();
         NavigationManager.NavigateTo("/projects");
     }
 

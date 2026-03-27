@@ -1,6 +1,7 @@
 ﻿using Shared.Models;
 using Shared.Models.DTO;
 using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 namespace SkillSnap.Client.Services;
 
@@ -76,10 +77,18 @@ public class ProjectService
 		return await _httpClient.PostAsJsonAsync(_updatePortfolioUsers, users);		
 	}
 
-    public async Task<HttpResponseMessage> DeleteProject(int id)
-	{
-		var response = await _httpClient.DeleteAsync($"api/Projects/DeleteProject?id={id}");
-		return response;
+    public async Task<bool> DeleteProject(int id)
+    {
+        var response = await _httpClient.DeleteAsync($"api/projects/DeleteProject?id={id}");
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden ||
+            response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            return false; // not allowed
+        }
+
+        response.EnsureSuccessStatusCode();
+        return true;
     }
 
 }
