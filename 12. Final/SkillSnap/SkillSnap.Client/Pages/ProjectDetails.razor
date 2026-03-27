@@ -126,9 +126,7 @@ else
                         <img src="@user.ProfilePictureUrl" class="image-preview-small" />
                     }
                 </details>
-
             </div>
-
         }
 
         <button class="btn btn-secondary btn-add" @onclick="AddUser">
@@ -177,7 +175,7 @@ else
 
     void AddUser()
     {
-        Project.value.PortfolioUsers.Add(new PortfolioUser());
+        Project.value.PortfolioUsers.Add(new PortfolioUser().Convert());
     }
 
     void RemoveUser(int index)
@@ -185,23 +183,22 @@ else
         Project.value.PortfolioUsers.RemoveAt((index - 1));
     }
 
-    void AddSkill(PortfolioUser user)
+    void AddSkill(PortfolioUserDto user)
     {
         if (!string.IsNullOrWhiteSpace(newSkill))
         {
-            var skillToAdd = new Skill() { 
+            var skillToAdd = new SkillDto() { 
                 Name = this.newSkill.Trim(), 
                 Level = newSkillLevel 
             };
             
-            skillToAdd.PortfolioUsers = new List<PortfolioUser> { user };
             user.Skills.Add(skillToAdd);
             newSkill = string.Empty;
             newSkillLevel = string.Empty;
         }
     }
 
-    void RemoveSkill(PortfolioUser user, Skill skill)
+    void RemoveSkill(PortfolioUserDto user, SkillDto skill)
     {
         user.Skills.Remove(skill);
     }

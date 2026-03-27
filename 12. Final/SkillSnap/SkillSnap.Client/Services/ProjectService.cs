@@ -66,7 +66,6 @@ public class ProjectService
 
 	public async Task<HttpResponseMessage> UpdateProject(ProjectDto project)
 	{
-		//var fromDto = project.value.ConverTo();
         var response = await _httpClient.PutAsJsonAsync(_updateProjectById, project);
 		return response;
     }

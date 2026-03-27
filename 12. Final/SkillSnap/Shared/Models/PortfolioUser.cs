@@ -1,4 +1,6 @@
-﻿namespace Shared.Models;
+﻿using Shared.Models.DTO;
+
+namespace Shared.Models;
 
 public class PortfolioUser
 {
@@ -9,4 +11,16 @@ public class PortfolioUser
 
 	public List<Skill> Skills { get; set; } = new();
 	public List<Project> Projects { get; set; } = new();
+
+	public PortfolioUserDto Convert()
+	{
+		return new PortfolioUserDto
+		{
+			Id = Id,
+			Name = Name,
+			Bio = Bio,
+			ProfilePictureUrl = ProfilePictureUrl,
+			Skills = Skills.Select(s => s.Convert()).ToList()
+		};
+    }
 }

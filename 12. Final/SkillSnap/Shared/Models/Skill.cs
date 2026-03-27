@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shared.Models.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Shared.Models;
 
@@ -11,4 +12,8 @@ public class Skill
 
 	public List<PortfolioUser> PortfolioUsers { get; set; }
 
+    public SkillDto Convert()
+    {
+		return new SkillDto { Id = Id, Name = Name, Level = Level };
+    }
 }

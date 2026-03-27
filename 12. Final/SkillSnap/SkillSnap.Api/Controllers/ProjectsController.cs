@@ -86,7 +86,7 @@ public class ProjectsController : ControllerBase
             }
             else
             {
-                project.PortfolioUsers.Add(incoming);
+                project.PortfolioUsers.Add(incoming.ConvertTo());
             }
         }
 
@@ -107,27 +107,22 @@ public class ProjectsController : ControllerBase
                     .FirstOrDefault(pu => pu.Id == portfolioUser.Id)?
                     .Skills.Any(x => x.Id == s.Id) == true)
                 .ToList();
-            
-            foreach(var skill in removedSkills)
+
+            foreach (var skill in removedSkills)
             {
                 portfolioUser.Skills.Remove(skill);
             }
         }
 
         // add incoming skills to existing portfolio users
-        foreach(var incoming in dto.value.PortfolioUsers)
+        foreach (var incoming in dto.value.PortfolioUsers)
         {
             var existing = project.PortfolioUsers
                 .FirstOrDefault(u => u.Id == incoming.Id);
             if (existing != null)
             {
-                foreach(var skill in incoming.Skills)
-                {
-                    if(!existing.Skills.Any(s => s.Id == skill.Id))
-                    {
-                        existing.Skills.Add(skill);
-                    }
-                }
+                existing.Skills.Clear();
+                existing.Skills.AddRange(incoming.Skills.Select(dtoSkill => dtoSkill.ConvertTo()));
             }
         }
 
