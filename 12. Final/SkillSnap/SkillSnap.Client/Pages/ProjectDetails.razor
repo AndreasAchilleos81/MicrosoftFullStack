@@ -59,38 +59,76 @@ else
         {
             var user = Project.value.PortfolioUsers[i];
 
-            <div class="user-card">
-                <button type="button"
-                        class="btn btn-danger btn-sm btn-remove"
-                        @onclick="() => RemoveUser(i)">
-                    Remove
-                </button>
+            <div class="user-card compact-card">
 
-                <div class="form-group">
-                    <label>User Id</label>
-                    <input class="form-control" value="@user.Id" readonly />
+                <div class="user-header">
+                    <img src="@user.ProfilePictureUrl" class="user-thumb" />
+
+                    <div class="user-main">
+                        <InputText class="form-control form-control-sm"
+                                   @bind-Value="user.Name"
+                                   placeholder="Name" />
+
+                        <InputTextArea class="form-control form-control-sm bio-box"
+                                       @bind-Value="user.Bio"
+                                       placeholder="Short bio..." />
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-danger btn-sm btn-remove"
+                            @onclick="() => RemoveUser(i)">
+                        ✕
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>Name</label>
-                    <InputText class="form-control" @bind-Value="user.Name" />
+                <div class="skills-section">
+                    <label>Skills</label>
+
+                    <div class="skills-list">
+                        @foreach (var skill in user.Skills)
+                        {
+                            <span class="skill-tag">
+                                @skill.Name
+                                <button type="button" class="remove-skill"
+                                        @onclick="() => RemoveSkill(user, skill)">
+                                    ×
+                                </button>
+                            </span>
+                        }
+                    </div>
+
+                    <div class="add-skill-row">
+                        <InputText @bind-Value="newSkill"
+                                   class="form-control form-control-sm"
+                                   placeholder="Add skill..." />
+                        <InputText @bind-Value="newSkillLevel"
+                                   class="form-control form-control-sm"
+                                   placeholder="evel..." />
+
+                        <button class="btn btn-primary btn-sm"
+                                @onclick="() => AddSkill(user)">
+                            Add
+                        </button>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Bio</label>
-                    <InputTextArea class="form-control" @bind-Value="user.Bio" />
-                </div>
+                <details class="advanced-details">
+                    <summary>More Details</summary>
 
-                <div class="form-group">
-                    <label>Profile Picture URL</label>
-                    <InputText class="form-control" @bind-Value="user.ProfilePictureUrl" />
-                </div>
+                    <div class="form-group mt-2">
+                        <label>Profile Picture URL</label>
+                        <InputText class="form-control form-control-sm"
+                                   @bind-Value="user.ProfilePictureUrl" />
+                    </div>
 
-                @if (!string.IsNullOrWhiteSpace(user.ProfilePictureUrl))
-                {
-                    <img src="@user.ProfilePictureUrl" class="image-preview" />
-                }
+                    @if (!string.IsNullOrWhiteSpace(user.ProfilePictureUrl))
+                    {
+                        <img src="@user.ProfilePictureUrl" class="image-preview-small" />
+                    }
+                </details>
+
             </div>
+
         }
 
         <button class="btn btn-secondary btn-add" @onclick="AddUser">
@@ -100,10 +138,16 @@ else
 }
 
 @code {
+
     [Parameter]
     public int ProjectId { get; set; }
 
     public ProjectDto Project { get; set; } = new();
+
+    private DotNetObjectReference<ProjectDetails>? _objRef;
+
+    private string newSkill = string.Empty;
+    private string newSkillLevel = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -126,6 +170,11 @@ else
         await JS.InvokeVoidAsync("localStorage.removeItem", "projectId");
     }
 
+    public void Dispose()
+    {
+        _objRef?.Dispose();
+    }
+
     void AddUser()
     {
         Project.value.PortfolioUsers.Add(new PortfolioUser());
@@ -136,43 +185,30 @@ else
         Project.value.PortfolioUsers.RemoveAt((index - 1));
     }
 
+    void AddSkill(PortfolioUser user)
+    {
+        if (!string.IsNullOrWhiteSpace(newSkill))
+        {
+            var skillToAdd = new Skill() { 
+                Name = this.newSkill.Trim(), 
+                Level = newSkillLevel 
+            };
+            
+            skillToAdd.PortfolioUsers = new List<PortfolioUser> { user };
+            user.Skills.Add(skillToAdd);
+            newSkill = string.Empty;
+            newSkillLevel = string.Empty;
+        }
+    }
+
+    void RemoveSkill(PortfolioUser user, Skill skill)
+    {
+        user.Skills.Remove(skill);
+    }
+
     private async Task SaveProject()
     {
         await ProjectService.UpdateProject(Project);
         await UserSessionState.RemoveCurrentProjectId();
-    }
-
-    private async Task SavePortfolioUsers()
-    {
-        // You may want to send only the users, not the whole project
-        var users = Project.value.PortfolioUsers;
-        await ProjectService.UpdatePortfolioUsers(SendOnlyPortfolioUsers(users));
-    }
-
-    private IEnumerable<PortfolioUser> SendOnlyPortfolioUsers(List<PortfolioUser> users)
-    {
-        var list = users.Select(s =>
-        {
-            s.Projects = new();
-            s.Skills = new();
-            return s;
-        });
-
-        return list;
-    }
-
-    private ProjectDto SendOnlyProjectToBeSaved()
-    {
-        return new ProjectDto
-        {
-            value = new ProjectValue
-            {
-                Id = Project.value.Id,
-                Title = Project.value.Title,
-                Description = Project.value.Description,
-                ImageUrl = Project.value.ImageUrl,
-                PortfolioUsers = new List<PortfolioUser>() // Clear users for now
-            }
-        };
     }
 }

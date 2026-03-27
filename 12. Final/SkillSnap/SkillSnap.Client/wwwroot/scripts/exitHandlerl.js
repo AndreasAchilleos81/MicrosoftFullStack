@@ -1,7 +1,10 @@
 ﻿window.skillSnap = {
     onExit: function (callback) {
-        window.addEventListener("beforeunload", () => {
-            callback.invokeMethodAsync("ClearLocalStorage");
-        });
+        if (!window._skillSnapExitRegistered) {
+            window.addEventListener("beforeunload", () => {
+                callback.invokeMethodAsync("ClearLocalStorage");
+            });
+            window._skillSnapExitRegistered = true;
+        }
     }
 };

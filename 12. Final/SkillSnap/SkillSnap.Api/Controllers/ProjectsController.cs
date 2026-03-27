@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Shared.Models;
 using Shared.Models.DTO;
 using SkillSnap.Api.DbContext;
@@ -60,7 +61,7 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> UpdateProject(ProjectDto dto)
     {
         var project = await _skillSnapContext.Projects
-                .Include(p => p.PortfolioUsers)
+                .Include(p => p.PortfolioUsers).ThenInclude(s => s.Skills)
                 .FirstOrDefaultAsync(p => p.Id == dto.value.Id);
 
         if (project == null)
@@ -97,8 +98,40 @@ public class ProjectsController : ControllerBase
         foreach (var r in removed)
             project.PortfolioUsers.Remove(r);
 
-        await _skillSnapContext.SaveChangesAsync();
+        // Now that portfolio users are set we need to handle the Skills per portfolio user
+        // find removed skills for each user
+        foreach (var portfolioUser in project.PortfolioUsers)
+        {
+            var removedSkills = portfolioUser.Skills
+                .Where(s => !dto.value.PortfolioUsers
+                    .FirstOrDefault(pu => pu.Id == portfolioUser.Id)?
+                    .Skills.Any(x => x.Id == s.Id) == true)
+                .ToList();
+            
+            foreach(var skill in removedSkills)
+            {
+                portfolioUser.Skills.Remove(skill);
+            }
+        }
 
+        // add incoming skills to existing portfolio users
+        foreach(var incoming in dto.value.PortfolioUsers)
+        {
+            var existing = project.PortfolioUsers
+                .FirstOrDefault(u => u.Id == incoming.Id);
+            if (existing != null)
+            {
+                foreach(var skill in incoming.Skills)
+                {
+                    if(!existing.Skills.Any(s => s.Id == skill.Id))
+                    {
+                        existing.Skills.Add(skill);
+                    }
+                }
+            }
+        }
+
+        await _skillSnapContext.SaveChangesAsync();
         return Ok(project);
     }
 

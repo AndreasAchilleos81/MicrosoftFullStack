@@ -36,7 +36,8 @@ public class SkillsController : ControllerBase
 		return Ok(skills);
 	}
 
-	[HttpPost]
+
+    [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("AddSkill")]
 	public async Task<IActionResult> AddSkill([FromBody]Skill skill)

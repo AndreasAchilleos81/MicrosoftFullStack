@@ -113,3 +113,76 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.compact-card {
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+.user-main {
+    flex-grow: 1;
+}
+
+.bio-box {
+    height: 50px;
+}
+
+.skills-section {
+    margin-top: 10px;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.skill-tag {
+    background: #e0e0e0;
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.remove-skill {
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add-skill-row {
+    display: flex;
+    gap: 6px;
+}
+
+.image-preview-small {
+    width: 120px;
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
+.advanced-details summary {
+    cursor: pointer;
+    font-weight: bold;
+}
