@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="SkillSnapProjectSummary.md" />
+  </Folder>
   <Project Path="Shared/Shared.csproj" Id="7b00b1d4-fa84-45ae-ad27-b600219026af" />
   <Project Path="SkillSnap.Api/SkillSnap.Api.csproj" />
   <Project Path="SkillSnap.Client/SkillSnap.Client.csproj" />
